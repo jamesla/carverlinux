@@ -39,6 +39,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     prl.customize ["set", :id, "--startup-view=fullscreen"]
     prl.customize ["set", :id, "--device-set=net0", "--adapter-type=e1000"]
+    prl.customize ["set", :id, "--device-set=hdd0", "--size=150G"]
   end
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
