@@ -1,0 +1,25 @@
+# file: roles/nodm/tasks/main.yml
+---
+- name: install nodm and x
+  apt:
+    name:
+      - libxft-dev
+      - xinit
+      - nodm
+
+- name: configure autologin
+  replace:
+    dest: /etc/default/nodm
+    regexp: 'NODM_USER=root'
+    replace: 'NODM_USER=vagrant' #TODO: fix this
+
+- name: enable nodm
+  replace:
+    dest: /etc/default/nodm
+    regexp: 'NODM_ENABLED=false'
+    replace: 'NODM_ENABLED=true'
+
+- name: set nodm service to automatically start
+  systemd:
+    name: nodm
+    enabled: true

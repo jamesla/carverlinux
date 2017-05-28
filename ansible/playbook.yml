@@ -1,0 +1,38 @@
+---
+# install python2.7 (ansible dependendy)
+# this can be removed once python3 support is official
+- hosts: all
+  become: true
+  gather_facts: false
+  pre_tasks:
+    - include: pre_tasks/install-python-2.7.yml
+
+- hosts: all
+  become: true
+  gather_facts: true
+  pre_tasks:
+    - include: pre_tasks/update-apt-cache.yml
+  roles:
+    - { role: ansible-curl }
+    - { role: ansible-role-git }
+    - { role: ansible-role-nodejs, nodejs_version: "4.x" }
+    - { role: ansible-pip }
+    - { role: rvm_io.ruby,
+        rvm1_rubies: ['ruby-2.4.1'],
+        rvm1_install_flags: '--auto-dotfiles',
+        rvm1_install_path: /usr/local/rvm,
+        rvm1_user: root
+      }
+    - { role: dotfiles }
+    - { role: spacemacs }
+    - { role: vim }
+    - { role: tmux }
+    - { role: xmonad }
+    - { role: fish }
+    - { role: cloud-extras }
+    - { role: parallel_tools_fixes }
+
+    - { role: docker-ubuntu, docker_group_members: [ vagrant ] }
+    - { role: ansible-packer }
+    - { role: ansible-vagrant }
+    - { role: ansible-role-chrome }

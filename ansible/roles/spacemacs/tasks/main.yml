@@ -1,0 +1,43 @@
+# file: roles/spacemacs/tasks/main.yml
+---
+
+- name: install emacs and dependencies
+  apt:
+    name:
+      - emacs
+      - ispell
+      - xclip
+
+- name: install ternjs #npm module currently in preview
+  npm:
+    global: yes
+    name: tern
+
+- name: install yaml-jsyaml
+  npm:
+    global: yes
+    name: js-yaml
+
+- name: clone spacemacs
+  become: false
+  git:
+    repo: https://github.com/syl20bnr/spacemacs
+    dest: ~/.emacs.d
+    clone: yes
+    update: no
+  tags:
+    - skip_ansible_lint
+
+- name: symlink spacemacs config
+  become: false
+  file:
+    src: ~/dotfiles/.spacemacs
+    dest: ~/.spacemacs
+    state: link
+    force: yes
+
+# - name: update spacemacs packages
+#   become: false
+#   shell: emacs --batch --load=~/.emacs.d/init.el && touch /tmp/spacemacs_updated
+#   args:
+#     creates: /tmp/spacemacs_updated

@@ -1,0 +1,28 @@
+---
+dependency:
+  name: galaxy
+  requirements_file: requirements.yml
+driver:
+  name: vagrant
+ansible:
+  # extra_vars: ansible_python_interpreter=/usr/bin/python2.7
+  config_file: ansible.cfg
+vagrant:
+  raw_config_args:
+    # - "ssh.insert_key = false"
+    - "ssh.forward_agent = true"
+  platforms:
+    - name: ubuntu
+      box: wholebits/ubuntu17.04-64
+  providers:
+    - name: virtualbox
+      type: virtualbox
+      options:
+        memory: 2500
+        cpus: 4
+  instances:
+    - name: ansible
+      ansible_groups:
+        - group1
+verifier:
+  name: serverspec

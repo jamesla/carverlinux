@@ -1,0 +1,30 @@
+# file: roles/vim/tasks/main.yml
+
+- name: install vim
+  apt:
+    name:
+      - vim
+
+# - name: install dependency exuberant ctags
+#   become: yes
+#   apt:
+#     name:
+#       exuberant-ctags
+
+# - name: install vundle
+#   git:
+#     repo: https://github.com/VundleVim/Vundle.vim.git
+#     dest: ~/.vim/bundle/Vundle.vim
+#     accept_hostkey: yes
+#     clone: yes
+#     update: no
+
+# - name: update plugins
+#   shell: vim +silent!PluginInstall +qall
+
+# - name: symlink vim config
+#   file:
+#     src: ~/dotfiles/.vimrc
+#     dest: ~/.vimrc
+#     state: link
+#     force: yes

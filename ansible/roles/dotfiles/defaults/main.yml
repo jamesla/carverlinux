@@ -1,0 +1,4 @@
+# file: roles/dotfiles/defaults/main.yml
+---
+#
+# foo: default

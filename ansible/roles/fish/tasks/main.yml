@@ -1,0 +1,62 @@
+# file: roles/fish/tasks/main.yml
+---
+- name: add fish repository
+  apt_repository:
+    repo: ppa:fish-shell/release-2
+
+- name: install fish shell
+  apt:
+    # update_cache: yes
+    name:
+      - fish
+
+- name: fish config directories (is there a better way to do this?)
+  become: false
+  file:
+    path: ~/.config/fish
+    state: directory
+
+- name: fish function directory
+  become: false
+  file:
+    path: ~/.config/fish/functions
+    state: directory
+
+- name: link fish config
+  become: false
+  file:
+    src: ~/dotfiles/.config/fish/config.fish
+    dest: ~/.config/fish/config.fish
+    state: link
+    force: yes
+
+- name: link fish functions
+  become: false
+  file:
+    src: ~/dotfiles/.config/fish/functions/fish_prompt.fish
+    dest: ~/.config/fish/functions/fish_prompt.fish
+    state: link
+    force: yes
+
+- name: set pam to allow shell change (possible bug in ubuntu 16)
+  replace:
+    dest: /etc/pam.d/chsh
+    regexp: 'auth       required   pam_shells.so'
+    replace: '#auth       required   pam_shells.so'
+
+- name: set as default shell
+  become: true
+  user:
+    name: root
+    shell: /usr/bin/fish
+
+- name: set as default shell
+  user:
+    name: vagrant
+    shell: /usr/bin/fish
+
+- name: set gem paths
+  become: false
+  shell: fish -c 'set -U fish_user_paths /usr/local/rvm/gems $fish_user_paths' && touch /tmp/ruby_paths_set
+  args:
+    creates: /tmp/ruby_paths_set

@@ -1,0 +1,23 @@
+# file: roles/dotfiles/tasks/main.yml
+---
+- name: clone dotfiles
+  become: false
+  git:
+    repo: git@bitbucket.org:jamesla/dotfiles.git
+    accept_hostkey: yes
+    dest: ~/dotfiles
+    clone: yes
+    update: yes
+  tags:
+    - skip_ansible_lint
+
+- name: symlink dotfiles
+  become: false
+  file:
+    src: '{{item.src}}'
+    dest: '{{item.dest}}'
+    state: link
+    force: yes
+  with_items:
+    - { src: '~/dotfiles/.gitconfig', dest: '~/.gitconfig' }
+    - { src: '~/dotfiles/.ssh/config', dest: '~/.ssh/config' }

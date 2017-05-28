@@ -1,0 +1,39 @@
+- src: https://github.com/geerlingguy/ansible-role-git.git
+  version: 1.3.0
+  name: ansible-role-git
+
+- src: https://github.com/angstwad/docker.ubuntu.git
+  version: v2.4.2
+  name: docker-ubuntu
+
+- src: https://github.com/rvm/rvm1-ansible.git
+  version: v2.0.0
+  name: rvm_io.ruby
+
+- src: https://github.com/andrewrothstein/ansible-curl.git
+  version: v1.0.1
+  name: ansible-curl
+
+- src: https://github.com/geerlingguy/ansible-role-nodejs.git
+  version: 4.1.1
+  name: ansible-role-nodejs
+
+- src: https://github.com/cmprescott/ansible-role-chrome.git
+  version: 0.2.2
+  name: ansible-role-chrome
+
+- src: https://github.com/bobbyrenwick/ansible-pip.git
+  version: v2.1.1
+  name: ansible-pip
+
+- src: https://github.com/geerlingguy/ansible-role-packer-debian.git
+  version: 1.2.5
+  name: ansible-role-packer-debian
+
+- src: https://github.com/andrewrothstein/ansible-vagrant.git
+  version: v1.0.9
+  name: ansible-vagrant
+
+- src: https://github.com/andrewrothstein/ansible-packer.git
+  version: v2.0.8
+  name: ansible-packer

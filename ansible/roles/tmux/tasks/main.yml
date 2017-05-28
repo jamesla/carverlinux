@@ -1,0 +1,30 @@
+# file: roles/tmux/tasks/main.yml
+---
+
+- name: install tmux
+  apt:
+    name:
+      - tmux
+
+- name: symlink tmux config
+  become: false
+  file:
+    src: ~/dotfiles/.tmux.conf
+    dest: ~/.tmux.conf
+    state: link
+    force: yes
+
+- name: install tmux plugins
+  become: false
+  git:
+    repo: https://github.com/tmux-plugins/tpm
+    dest: ~/.tmux/plugins/tpm
+    clone: yes
+    update: no
+    version: v3.0.0
+
+- name: update tmux plugins
+  become: false
+  shell: ~/.tmux/plugins/tpm/bin/install_plugins && touch ~/.tmux/tpm_output
+  args:
+    creates: ~/.tmux/tpm_output

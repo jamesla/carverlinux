@@ -1,0 +1,4 @@
+# file: roles/cloud-extras/defaults/main.yml
+---
+#
+# foo: default
