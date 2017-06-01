@@ -39,7 +39,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     prl.customize ["set", :id, "--startup-view=fullscreen"]
     prl.customize ["set", :id, "--device-set=net0", "--adapter-type=e1000"]
-    prl.customize ["set", :id, "--device-set=hdd0", "--size=150G"]
+    #prl.customize ["set", :id, "--device-set=hdd0", "--size=150G"]
   end
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
@@ -48,11 +48,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   SHELL
 
   config.vm.provision "ansible_local" do |ansible|
+    ansible.provisioning_path = "/vagrant/ansible/"
     ansible.verbose = true
     ansible.install = true
     ansible.install_mode = "pip"
-    ansible.playbook = "/vagrant/ansible/site.yml"
-    ansible.galaxy_role_file = "/vagrant/ansible/requirements.yml"
+    ansible.playbook = "playbook.yml"
+    ansible.galaxy_role_file = "requirements.yml"
     ansible.galaxy_roles_path = "/etc/ansible/roles"
     ansible.sudo = true
   end
