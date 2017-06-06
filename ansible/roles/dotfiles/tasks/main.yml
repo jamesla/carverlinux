@@ -11,13 +11,12 @@
   tags:
     - skip_ansible_lint
 
-- name: symlink dotfiles
-  become: false
-  file:
-    src: '{{item.src}}'
-    dest: '{{item.dest}}'
-    state: link
-    force: yes
-  with_items:
-    - { src: '~/dotfiles/.gitconfig', dest: '~/.gitconfig' }
-    - { src: '~/dotfiles/.ssh/config', dest: '~/.ssh/config' }
+# - name: symlink dotfiles
+#   become: false
+#   file:
+#     src: '{{item.src}}'
+#     dest: '{{item.dest}}'
+#     state: link
+#     force: yes
+#   with_items:
+    # - { src: '~/dotfiles/.ssh/config', dest: '~/.ssh/config' }

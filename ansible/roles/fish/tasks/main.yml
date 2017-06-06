@@ -57,6 +57,6 @@
 
 - name: set gem paths
   become: false
-  shell: fish -c 'set -U fish_user_paths /usr/local/rvm/gems $fish_user_paths' && touch /tmp/ruby_paths_set
+  shell: fish -c 'set -U fish_user_paths ~/.rvm/gems/ruby-2.4.1/wrappers $fish_user_paths' && touch /tmp/ruby_paths_set
   args:
     creates: /tmp/ruby_paths_set

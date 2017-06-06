@@ -36,8 +36,8 @@
     state: link
     force: yes
 
-# - name: update spacemacs packages
-#   become: false
-#   shell: emacs --batch --load=~/.emacs.d/init.el && touch /tmp/spacemacs_updated
-#   args:
-#     creates: /tmp/spacemacs_updated
+- name: update spacemacs packages
+  become: false
+  shell: emacs --batch --load=~/.emacs.d/init.el && touch /tmp/spacemacs_updated
+  args:
+    creates: /tmp/spacemacs_updated
