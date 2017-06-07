@@ -31,5 +31,5 @@
 - name: open a terminal on startup
   lineinfile:
     dest: /etc/X11/Xsession
-    line: 'st -e tmux &'
+    line: 'st -e tmux new-session -A -s carver'
     insertafter: '#!/bin/sh'
