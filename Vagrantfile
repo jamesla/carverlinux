@@ -26,6 +26,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Bridged networks make the machine appear as another physical device on
   # your network.
   # config.vm.network :public_network
+  config.vm.provision "file", source: "~/.gitconfig", destination: ".gitconfig"
+
+  config.vm.provision "shell", privileged: false, inline: <<-SHELL
+   rm ~/.ssh/id_rsa
+  SHELL
+
+  config.vm.provision "file", source: "~/.ssh/id_rsa", destination: "~/.ssh/id_rsa"
 
   # If true, then any SSH connections made will enable agent forwarding.
   # Default value: false
@@ -39,6 +46,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     prl.customize ["set", :id, "--startup-view=fullscreen"]
     prl.customize ["set", :id, "--device-set=net0", "--adapter-type=e1000"]
+    prl.customize ["set", :id, "--nested-virt", "on"]
     #prl.customize ["set", :id, "--device-set=hdd0", "--size=150G"]
   end
 
@@ -57,5 +65,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.galaxy_roles_path = "/etc/ansible/roles"
     ansible.sudo = true
   end
+
+  config.vm.provision "shell", privileged: false, inline: <<-SHELL
+    cd /vagrant
+    bundle
+    rake spec
+  SHELL
 
 end

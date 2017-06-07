@@ -28,13 +28,13 @@
       }
     - { role: cloud-extras }
     - { role: dotfiles }
-    # - { role: spacemacs }
-    # - { role: vim }
-    # - { role: tmux }
-    # - { role: xmonad }
-    # - { role: parallel_tools_fixes }
+    - { role: spacemacs }
+    - { role: vim }
+    - { role: tmux }
+    - { role: xmonad }
+    - { role: parallel_tools_fixes }
 
-    # - { role: docker-ubuntu, docker_group_members: [ vagrant ] }
-    # - { role: ansible-packer }
-    # - { role: ansible-vagrant }
-    # - { role: ansible-role-chrome }
+    - { role: docker-ubuntu, docker_group_members: [ vagrant ] }
+    - { role: ansible-packer }
+    - { role: ansible-vagrant }
+    - { role: ansible-role-chrome }
