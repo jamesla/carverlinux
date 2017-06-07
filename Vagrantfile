@@ -29,7 +29,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "file", source: "~/.gitconfig", destination: ".gitconfig"
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
-   rm ~/.ssh/id_rsa
+   rm ~/.ssh/id_rsa || true
   SHELL
 
   config.vm.provision "file", source: "~/.ssh/id_rsa", destination: "~/.ssh/id_rsa"
