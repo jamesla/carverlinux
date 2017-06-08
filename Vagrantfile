@@ -1,31 +1,14 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  # All Vagrant configuration is done here. The most common configuration
-  # options are documented and commented below. For a complete reference,
-  # please see the online documentation at vagrantup.com.
-#
-  # Every Vagrant virtual environment requires a box to build off of.
+
   config.vm.box = "wholebits/ubuntu17.04-64"
   config.vbguest.auto_update = true
   config.vm.hostname = "carveros"
 
-  # The url from where the 'config.vm.box' box will be fetched if it
-  # doesn't already exist on the user's system.
-  # config.vm.box_url = "http://domain.com/path/to/above.box"
-
-  # Create a private network, which allows host-only access to the machine
-  # using a specific IP.
-  # config.vm.network :private_network, ip: "192.168.33.10"
-
-  # Create a public network, which generally matched to bridged network.
-  # Bridged networks make the machine appear as another physical device on
-  # your network.
-  # config.vm.network :public_network
   config.vm.provision "file", source: "~/.gitconfig", destination: ".gitconfig"
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
@@ -34,8 +17,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision "file", source: "~/.ssh/id_rsa", destination: "~/.ssh/id_rsa"
 
-  # If true, then any SSH connections made will enable agent forwarding.
-  # Default value: false
   config.ssh.forward_agent = true
 
   config.vm.provider "parallels" do |prl|
@@ -48,7 +29,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     prl.customize ["set", :id, "--device-set=net0", "--adapter-type=e1000"]
     prl.customize ["set", :id, "--nested-virt", "on"]
     prl.customize ["set", :id, "--videosize", "64"]
-    #prl.customize ["set", :id, "--device-set=hdd0", "--size=150G"]
+    # prl.customize ["set", :id, "--device-set=hdd0", "--size=150G", "--type=plain"]
   end
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL

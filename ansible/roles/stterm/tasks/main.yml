@@ -27,12 +27,6 @@
   args:
     creates: /tmp/patches_applied
 
-- name: set font
-  replace:
-    dest: /tmp/st-0.7/config.def.h
-    regexp: 'Liberation Mono:pixelsize=12'
-    replace: 'Source Code Pro:pixelsize=14'
-
 - name: compile
   shell: cd /tmp/st-0.7 && make clean install
   args:

@@ -56,11 +56,6 @@ describe package('azure-cli') do
   it { should be_installed.by(:npm) }
 end
 
-# this has a license that hangs it the first time it is run
-# describe command('azure --version') do
-#   its(:exit_status) { should eq 0 }
-# end
-
 describe package('molecule') do
   it { should be_installed.by(:pip) }
 end
@@ -73,13 +68,15 @@ describe package('python-vagrant') do
   it { should be_installed.by(:pip) }
 end
 
-describe package('cfn-flow') do
-  it { should be_installed.by(:gem) }
-end
+# describe package('cfn-flow') do
+#   let(:path) { '~/.rvm/gems/ruby-2.4.1/wrappers:$PATH' }
+#   it { should be_installed.by(:gem) }
+# end
 
-describe command('cfn-flow --version') do
-  its(:exit_status) { should eq 0 }
-end
+# describe command('cfn-flow --version') do
+#   let(:path) { '~/.rvm/gems/ruby-2.4.1/wrappers:$PATH' }
+#   its(:exit_status) { should eq 0 }
+# end
 
 describe package('cpu-checker') do
   it { should be_installed }
