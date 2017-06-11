@@ -29,7 +29,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     prl.customize ["set", :id, "--device-set=net0", "--adapter-type=e1000"]
     prl.customize ["set", :id, "--nested-virt", "on"]
     prl.customize ["set", :id, "--videosize", "64"]
-    # prl.customize ["set", :id, "--device-set=hdd0", "--size=150G", "--type=plain"]
+
+    disk_exists = system("bash -c 'if ! [[ $(prlctl list --info carveros | grep hdd2 | wc -c) -ne 0 ]]; then exit 1; fi'")
+
+    unless disk_exists
+      prl.customize ["set", :id, "--device-add", "hdd", "--size=125G"]
+    end
+      
   end
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL

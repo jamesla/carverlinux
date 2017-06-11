@@ -12,6 +12,7 @@
   gather_facts: true
   pre_tasks:
     - include: pre_tasks/update-apt-cache.yml
+    - include: pre_tasks/set-timezone.yml
   roles:
     - { role: ansible-curl }
     - { role: ansible-role-git }
