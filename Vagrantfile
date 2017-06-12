@@ -9,6 +9,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vbguest.auto_update = true
   config.vm.hostname = "carveros"
 
+  config.vm.synced_folder "ansible", "/vagrant", group: 'vagrant', owner: 'vagrant', mount_options: ['share', 'nosuid']
+
   config.vm.provision "file", source: "~/.gitconfig", destination: ".gitconfig"
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
@@ -59,5 +61,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     bundle
     rake spec
   SHELL
+
 
 end
