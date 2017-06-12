@@ -28,6 +28,7 @@
         rvm1_install_flags: '--auto-dotfiles --user-install'
       }
     - { role: cloud-extras }
+    - { role: web-extras }
     - { role: dotfiles }
     - { role: spacemacs }
     - { role: vim }
