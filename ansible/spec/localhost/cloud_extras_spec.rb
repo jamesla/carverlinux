@@ -78,10 +78,26 @@ end
 #   its(:exit_status) { should eq 0 }
 # end
 
+describe package('aria2') do
+  it { should be_installed }
+end
+
+describe command('aria2c -v') do
+  its(:exit_status) { should eq 0 }
+end
+
 describe package('cpu-checker') do
   it { should be_installed }
 end
 
 describe command('kvm-ok') do
   its(:stdout) { should contain('KVM acceleration can be used') }
+end
+
+describe package('ionic') do
+  it { should be_installed.by(:npm) }
+end
+
+describe command('ionic -v') do
+  its(:exit_status) { should eq 0 }
 end

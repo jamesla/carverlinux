@@ -11,6 +11,7 @@
       - virtualbox
       - cpu-checker
       - unzip
+      - aria2
 
 - name: install npm extras
   become: false
@@ -22,6 +23,7 @@
     - generator-ansible
     - generator-ansible-2
     - azure-cli
+    - ionic
 
 - name: install pip cloud extras
   pip:

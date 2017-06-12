@@ -17,7 +17,7 @@
     - { role: home_drive }
     - { role: ansible-curl }
     - { role: ansible-role-git }
-    - { role: ansible-role-nodejs, nodejs_version: "4.x" }
+    - { role: ansible-role-nodejs, nodejs_version: "8.x" }
     - { role: ansible-pip }
     - { role: fish }
     - { role: rvm_io.ruby,
@@ -39,3 +39,6 @@
     - { role: ansible-packer }
     - { role: ansible-vagrant }
     - { role: ansible-role-chrome }
+    - { role: ansible-consul }
+    - { role: ansible-consul-template }
+    - { role: ansible-terraform }

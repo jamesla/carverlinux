@@ -37,3 +37,15 @@
 - src: https://github.com/andrewrothstein/ansible-packer.git
   version: master
   name: ansible-packer
+
+- src: https://github.com/andrewrothstein/ansible-consul.git
+  version: master
+  name: ansible-consul
+
+- src: https://github.com/mtchavez/ansible-consul-template.git
+  version: master
+  name: ansible-consul-template
+
+- src: https://github.com/FGtatsuro/ansible-terraform.git
+  version: master
+  name: ansible-terraform
