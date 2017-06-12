@@ -1,0 +1,4 @@
+# file: roles/web-extras/defaults/main.yml
+---
+#
+# foo: default
