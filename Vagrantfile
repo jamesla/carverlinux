@@ -9,7 +9,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vbguest.auto_update = true
   config.vm.hostname = "carveros"
 
-  config.vm.synced_folder "ansible", "/vagrant", group: 'vagrant', owner: 'vagrant', mount_options: ['share', 'nosuid']
+  config.vm.synced_folder ".", "/vagrant", group: 'vagrant', owner: 'vagrant', mount_options: ['share', 'nosuid']
 
   config.vm.provision "file", source: "~/.gitconfig", destination: ".gitconfig"
 

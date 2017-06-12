@@ -1,6 +1,5 @@
 # file: roles/home_drive/handlers/main.yml
 ---
-# For example,
-# 
-# - name: restart ntpd
-#   service: name=ntpd state=restarted
+
+- name: update mount points
+  shell: mount -a

@@ -14,13 +14,13 @@
     - include: pre_tasks/update-apt-cache.yml
     - include: pre_tasks/set-timezone.yml
   roles:
+    - { role: home_drive }
     - { role: ansible-curl }
     - { role: ansible-role-git }
     - { role: ansible-role-nodejs, nodejs_version: "4.x" }
     - { role: ansible-pip }
     - { role: fish }
     - { role: rvm_io.ruby,
-        tags: ruby,
         rvm1_rubies: ['ruby-2.4.1'],
         rvm1_user: 'vagrant',
         become: True,
