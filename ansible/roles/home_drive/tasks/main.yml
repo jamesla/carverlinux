@@ -20,7 +20,7 @@
     src: /home
     dest: /tmp
 
-- name: unmount home temporary location 
+- name: unmount home temporary location
   mount:
     path: /tmp/home
     src: /dev/sdc

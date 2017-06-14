@@ -1,0 +1,25 @@
+#npm
+nodejs_npm_global_packages:
+  - bower
+  - yo
+  - generator-ansible
+  - generator-ansible-2
+  - azure-cli
+  - ionic
+  - cordova
+  - grunt
+  - gulp
+
+nodejs_version: 8.x
+
+
+#docker
+docker_group_members: [ vagrant ]
+
+
+#ruby
+rvm1_rubies: ['ruby-2.4.1']
+rvm1_user: vagrant
+become: True
+rvm1_rvm_check_for_updates: False
+rvm1_install_flags: --auto-dotfiles --user-install

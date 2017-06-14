@@ -1,7 +1,0 @@
-# file: host_vars/db-bos-1.example.com
-#
-
-authorized_key_list_group:
-  - name: vagrant
-    authorized_keys:
-      - key: "{{ lookup('file', '/home/vagrant/.ssh/id_rsa') }}"

@@ -3,27 +3,21 @@
 
 - name: install apt cloud extras
   apt:
-    name:
-      - wget
-      - nmap
-      - awscli
-      - tree
-      - virtualbox
-      - cpu-checker
-      - unzip
-      - aria2
+   name:
+     - wget
+     - nmap
+     - awscli
+     - tree
+     - virtualbox
+     - cpu-checker
+     - unzip
+     - aria2
 
-- name: install npm extras
-  become: false
-  npm:
-    global: yes
-    name: "{{ item }}"
-  with_items:
-    - yo
-    - generator-ansible
-    - generator-ansible-2
-    - azure-cli
-    - ionic
+- name: "Add npm related paths"
+  shell: source /etc/profile.d/npm.sh
+  args:
+    executable: /bin/bash
+
 
 - name: install pip cloud extras
   pip:
