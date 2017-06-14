@@ -27,3 +27,11 @@ end
 describe file('/home/vagrant/.spacemacs') do
   it { should be_symlink }
 end
+
+describe package('silversearcher-ag') do
+  it { should be_installed }
+end
+
+describe command('ag -v') do
+  its(:exit_status) { should eq 0 }
+end

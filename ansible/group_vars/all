@@ -4,7 +4,6 @@ nodejs_npm_global_packages:
   - yo
   - generator-ansible
   - generator-ansible-2
-  - azure-cli
   - ionic
   - cordova
   - grunt
