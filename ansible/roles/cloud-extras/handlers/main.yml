@@ -1,5 +1,0 @@
-# file: roles/cloud-extras/handlers/main.yml
----
-# For example,
-# - name: restart ntpd
-#   service: name=ntpd state=restarted

@@ -2,34 +2,30 @@
 ---
 # For example,
 
-- name: format disk
+- name: install apt packages
+  apt: name={{ item }} state=present update_cache=yes cache_valid_time=3600
+  with_items:
+    - parted
+    - e2fsprogs
+- name: partition info
+  parted:
+    device: "/dev/sda"
+    number: "1"
+  register: partinfo
+- debug:
+    var: partinfo
+- set_fact:
+    gap_kb: "{{partinfo.disk.size - partinfo.partitions[0].end}}"
+- debug: 'msg="Gap after partition 1: {{gap_kb}}kiB"'
+# parted does not resize: https://github.com/ansible/ansible/issues/23914
+- name: grow too small partition to maximum
+# Request resize, ack resize of partition that is in use (when requested).
+# https://bugs.launchpad.net/ubuntu/+source/parted/+bug/1270203
+# https://unix.stackexchange.com/a/365657
+  command: 'parted ---pretend-input-tty /dev/sda resizepart 1 Yes 100%'
+  when: 1024 < gap_kb|int
+- name: grow filesystem until maximum block size
   filesystem:
     fstype: ext4
-    dev: /dev/sdc
-    resizefs: true
-
-- name: mount home drive at temporary location
-  mount:
-    path: /tmp/home
-    src: /dev/sdc
-    state: mounted
-    fstype: ext4
-
-- name: copy files from old home to new home
-  synchronize:
-    src: /home
-    dest: /tmp
-
-- name: unmount home temporary location
-  mount:
-    path: /tmp/home
-    src: /dev/sdc
-    state: unmounted
-    fstype: ext4
-
-- name: mount at /home
-  mount:
-    path: /home
-    src: /dev/sdc
-    state: mounted
-    fstype: ext4
+    dev: "/dev/sda1"
+    resizefs: yes

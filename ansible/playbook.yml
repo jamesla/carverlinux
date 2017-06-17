@@ -11,18 +11,17 @@
   become: true
   gather_facts: true
   pre_tasks:
-    - include: pre_tasks/update-apt-cache.yml
     - include: pre_tasks/set-timezone.yml
   roles:
     - { role: home_drive }
+    - { role: ansible-role-apt }
     - { role: ansible-curl }
     - { role: ansible-role-git }
     - { role: ansible-role-nodejs }
-    - { role: ansible-pip }
+    - { role: ansible-role-pip }
 
     - { role: fish }
-    - { role: rvm_io.ruby }
-    - { role: cloud-extras }
+    - { role: ansible-rbenv-role }
     - { role: dotfiles }
     - { role: spacemacs }
     - { role: vim }

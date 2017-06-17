@@ -22,20 +22,16 @@
   version: master
   name: ansible-role-chrome
 
-- src: https://github.com/bobbyrenwick/ansible-pip.git
+- src: https://github.com/geerlingguy/ansible-role-pip.git
   version: master
-  name: ansible-pip
-
-- src: https://github.com/geerlingguy/ansible-role-packer-debian.git
-  version: master
-  name: ansible-role-packer-debian
+  name: ansible-role-pip
 
 - src: https://github.com/andrewrothstein/ansible-vagrant.git
   version: master
   name: ansible-vagrant
 
 - src: https://github.com/andrewrothstein/ansible-packer.git
-  version: master
+  version: v2.0.8 
   name: ansible-packer
 
 - src: https://github.com/andrewrothstein/ansible-consul.git
@@ -49,3 +45,11 @@
 - src: https://github.com/FGtatsuro/ansible-terraform.git
   version: master
   name: ansible-terraform
+
+- src: https://github.com/zzet/ansible-rbenv-role.git
+  version: master
+  name: ansible-rbenv-role
+
+- src: https://github.com/sunscrapers/ansible-role-apt.git
+  version: 0.0.2
+  name: ansible-role-apt

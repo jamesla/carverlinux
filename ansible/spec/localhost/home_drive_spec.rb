@@ -1,5 +1,5 @@
 require 'spec_helper'
 
-describe file('/home') do
-  it { should be_mounted.with( :device => '/dev/sdc' ) }
+describe command('lsblk') do
+  its(:stdout) { should match /150G/ }
 end

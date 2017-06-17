@@ -1,4 +1,4 @@
-#npm
+nodejs_version: 8.x
 nodejs_npm_global_packages:
   - bower
   - yo
@@ -9,16 +9,47 @@ nodejs_npm_global_packages:
   - grunt
   - gulp
 
-nodejs_version: 8.x
 
+apt_cache_valid_time: 3600
+apt_setup_unattended_upgrades: no
+apt_install_packages:
+  - wget
+  - nmap
+  - awscli
+  - tree
+  - virtualbox
+  - cpu-checker
+  - unzip
+  - aria2
 
-#docker
 docker_group_members: [ vagrant ]
 
 
-#ruby
-rvm1_rubies: ['ruby-2.4.1']
-rvm1_user: vagrant
-become: True
-rvm1_rvm_check_for_updates: False
-rvm1_install_flags: --auto-dotfiles --user-install
+rbenv:
+  env: user
+  version: v1.0.0
+  default_ruby: 2.4.1
+  rubies:
+    - version: 2.4.1
+
+rbenv_plugins:
+  - { name: "rbenv-vars",         repo: "https://github.com/rbenv/rbenv-vars.git",         version: "v1.2.0" }
+  - { name: "ruby-build",         repo: "https://github.com/rbenv/ruby-build.git",         version: "master" }
+  - { name: "rbenv-default-gems", repo: "https://github.com/rbenv/rbenv-default-gems.git", version: "ead67889c91c53ad967f85f5a89d986fdb98f6fb" }
+  - { name: "rbenv-installer",    repo: "https://github.com/rbenv/rbenv-installer.git",    version: "bc21e7055dcc8f5f9bc66ce0c78cc9ae0c28cd7a" }
+  - { name: "rbenv-update",       repo: "https://github.com/rkh/rbenv-update.git",         version: "1961fa180280bb50b64cbbffe6a5df7cf70f5e50" }
+  - { name: "rbenv-whatis",       repo: "https://github.com/rkh/rbenv-whatis.git",         version: "v1.0.0" }
+  - { name: "rbenv-use",          repo: "https://github.com/rkh/rbenv-use.git",            version: "v1.0.0" }
+
+rbenv_root: "{% if rbenv.env == 'system' %}/usr/local/rbenv{% else %}$HOME/.rbenv{% endif %}"
+default_gems_file: '{{ playbook_dir }}/files/default-gems'
+rbenv_repo: "https://github.com/rbenv/rbenv.git"
+rbenv_clean_up: true
+rbenv_users:
+  - vagrant
+
+
+pip_install_packages:
+  - docker-compose
+  - molecule
+  - python-vagrant

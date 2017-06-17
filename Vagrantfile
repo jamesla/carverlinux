@@ -9,12 +9,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vbguest.auto_update = true
   config.vm.hostname = "carveros"
 
-  config.vm.synced_folder ".", "/vagrant", group: 'vagrant', owner: 'vagrant', mount_options: ['share', 'nosuid']
-
   config.vm.provision "file", source: "~/.gitconfig", destination: ".gitconfig"
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
-   rm ~/.ssh/id_rsa || true
+    rm ~/.ssh/id_rsa || true
   SHELL
 
   config.vm.provision "file", source: "~/.ssh/id_rsa", destination: "~/.ssh/id_rsa"
@@ -31,12 +29,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     prl.customize ["set", :id, "--device-set=net0", "--adapter-type=e1000"]
     prl.customize ["set", :id, "--nested-virt", "on"]
     prl.customize ["set", :id, "--videosize", "64"]
-
-    disk_exists = system("bash -c 'if ! [[ $(prlctl list --info carveros | grep hdd2 | wc -c) -ne 0 ]]; then exit 1; fi'")
-
-    unless disk_exists
-      prl.customize ["set", :id, "--device-add", "hdd", "--size=125G"]
-    end
+    prl.customize ["set", :id, "--device-set=hdd0", "--size=150G", "--no-fs-resize" ]
       
   end
 
@@ -61,6 +54,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     bundle
     rake spec
   SHELL
-
 
 end
