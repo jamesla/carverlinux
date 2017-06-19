@@ -1,9 +1,5 @@
 require 'spec_helper'
 
-describe package('docker-compose') do
-  it { should be_installed.by(:pip) }
-end
-
 describe command('docker-compose --version') do
   its(:exit_status) { should eq 0 }
 end
@@ -52,25 +48,11 @@ describe package('generator-ansible') do
   it { should be_installed.by(:npm) }
 end
 
-describe package('molecule') do
-  it { should be_installed.by(:pip) }
-end
-
-describe command('molecule --version') do
-  its(:exit_status) { should eq 0 }
-end
-
-describe package('python-vagrant') do
-  it { should be_installed.by(:pip) }
-end
-
 describe package('cfn-flow') do
-  let(:path) { '~/.rvm/gems/ruby-2.4.1/wrappers:$PATH' }
   it { should be_installed.by(:gem) }
 end
 
 describe command('cfn-flow --version') do
-  let(:path) { '~/.rvm/gems/ruby-2.4.1/wrappers:$PATH' }
   its(:exit_status) { should eq 0 }
 end
 

@@ -53,3 +53,4 @@ pip_install_packages:
   - docker-compose
   - molecule
   - python-vagrant
+  - netaddr

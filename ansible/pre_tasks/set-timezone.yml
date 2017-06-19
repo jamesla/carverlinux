@@ -14,4 +14,6 @@
       - language-pack-en
 
 - name: set locale
-  command: update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+  shell: update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 && touch /tmp/local_updated
+  args:
+    creates: /tmp/local_updated

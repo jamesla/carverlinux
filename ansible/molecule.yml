@@ -20,8 +20,6 @@ vagrant:
         memory: 2500
         cpus: 4
   instances:
-    - name: ansible
-      ansible_groups:
-        - group1
+    - name: carveros
 verifier:
   name: serverspec

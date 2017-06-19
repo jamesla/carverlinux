@@ -30,7 +30,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     prl.customize ["set", :id, "--nested-virt", "on"]
     prl.customize ["set", :id, "--videosize", "64"]
     prl.customize ["set", :id, "--device-set=hdd0", "--size=150G", "--no-fs-resize" ]
-      
   end
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
