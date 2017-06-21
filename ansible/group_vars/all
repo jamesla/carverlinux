@@ -21,6 +21,7 @@ apt_install_packages:
   - cpu-checker
   - unzip
   - aria2
+  - speedtest-cli
 
 docker_group_members: [ vagrant ]
 

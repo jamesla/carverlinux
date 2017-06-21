@@ -1,5 +1,13 @@
 require 'spec_helper'
 
+describe command('speedtest --version') do
+  its(:exit_status) { should eq 0 }
+end
+
+describe package('speedtest-cli') do
+  it { should be_installed }
+end
+
 describe command('docker-compose --version') do
   its(:exit_status) { should eq 0 }
 end
