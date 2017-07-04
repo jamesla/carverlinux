@@ -3,3 +3,5 @@
 
 - name: update mount points
   shell: mount -a
+  tags:
+    - skip_ansible_lint

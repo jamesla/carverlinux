@@ -1,12 +1,5 @@
 # file: roles/xmonad/tasks/main.yml
 ---
-- name: configure display manager theme
-  become: false
-  file:
-    src: ~/dotfiles/.Xresources
-    dest: ~/.Xresources
-    state: link
-    force: true
 
 - name: install xmonad
   apt:

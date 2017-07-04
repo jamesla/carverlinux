@@ -13,19 +13,20 @@
   pre_tasks:
     - include: pre_tasks/set-timezone.yml
   roles:
-    - { role: home_drive }
-    - { role: ansible-role-apt }
-    - { role: ansible-curl }
-    - { role: ansible-role-git }
-    - { role: ansible-role-nodejs }
-    - { role: ansible-role-pip }
+    # - { role: home_drive }
+    # - { role: ansible-role-apt }
+    # - { role: ansible-curl }
+    # - { role: ansible-role-git }
+    # - { role: ansible-role-nodejs }
+    # - { role: ansible-role-pip }
+    # - { role: ansible-go }
 
-    - { role: fish }
-    - { role: ansible-rbenv-role }
-    - { role: dotfiles }
-    - { role: spacemacs }
-    - { role: vim }
-    - { role: tmux }
+    # - { role: fish }
+    # - { role: ansible-rbenv-role }
+    # - { role: dotfiles }
+    # - { role: spacemacs }
+    # - { role: vim }
+    # - { role: tmux }
     - { role: xmonad }
     - { role: parallel_tools_fixes }
 

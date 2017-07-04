@@ -6,6 +6,7 @@ nodejs_npm_global_packages:
   - generator-ansible-2
   - ionic
   - cordova
+  - grunt-cli
   - grunt
   - gulp
 
@@ -22,6 +23,7 @@ apt_install_packages:
   - unzip
   - aria2
   - speedtest-cli
+  - telnet
 
 docker_group_members: [ vagrant ]
 
@@ -29,9 +31,9 @@ docker_group_members: [ vagrant ]
 rbenv:
   env: user
   version: v1.0.0
-  default_ruby: 2.4.1
+  default_ruby: 2.3.4
   rubies:
-    - version: 2.4.1
+    - version: 2.3.4
 
 rbenv_plugins:
   - { name: "rbenv-vars",         repo: "https://github.com/rbenv/rbenv-vars.git",         version: "v1.2.0" }

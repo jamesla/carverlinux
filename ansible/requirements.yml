@@ -18,7 +18,7 @@
   version: master
   name: ansible-role-nodejs
 
-- src: https://github.com/cmprescott/ansible-role-chrome.git
+- src: https://github.com/wtanaka/ansible-role-chrome.git
   version: master
   name: ansible-role-chrome
 
@@ -31,7 +31,7 @@
   name: ansible-vagrant
 
 - src: https://github.com/andrewrothstein/ansible-packer.git
-  version: v2.0.8 
+  version: v2.0.8
   name: ansible-packer
 
 - src: https://github.com/andrewrothstein/ansible-consul.git
@@ -53,3 +53,7 @@
 - src: https://github.com/sunscrapers/ansible-role-apt.git
   version: 0.0.2
   name: ansible-role-apt
+
+- src: https://github.com/andrewrothstein/ansible-go.git
+  version: master
+  name: ansible-go

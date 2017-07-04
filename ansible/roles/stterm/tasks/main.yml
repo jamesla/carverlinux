@@ -8,19 +8,13 @@
     remote_src: True
 
 - name: get solarize theme patch prereq
-  get_url:
-    url: http://st.suckless.org/patches/st-no_bold_colors-20160727-308bfbf.diff
-    dest: /tmp/st-0.7/st-no_bold_colors-20160727-308bfbf.diff
-
-- name: get select clipboard patch
-  get_url:
-    url: http://st.suckless.org/patches/st-clipboard-20160727-308bfbf.diff
-    dest: /tmp/st-0.7/st-clipboard-20160727-308bfbf.diff
-
-- name: get solarize theme patches
-  get_url:
-    url: http://st.suckless.org/patches/st-solarized-dark-20160727-308bfbf.diff
-    dest: /tmp/st-0.7/st-solarized-dark-20160727-308bfbf.diff
+  copy:
+    src: "{{ item }}"
+    dest: /tmp/st-0.7
+  with_items:
+    - "{{ role_path }}/files/st-clipboard-20160727-308bfbf.diff"
+    - "{{ role_path }}/files/st-no_bold_colors-20160727-308bfbf.diff"
+    - "{{ role_path }}/files/st-solarized-dark-20160727-308bfbf.diff"
 
 - name: apply patches
   shell: cd /tmp/st-0.7 && git apply st-no_bold_colors-20160727-308bfbf.diff && git apply st-solarized-dark-20160727-308bfbf.diff && git apply st-clipboard-20160727-308bfbf.diff && touch /tmp/patches_applied
