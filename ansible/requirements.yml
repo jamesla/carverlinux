@@ -51,7 +51,7 @@
   name: ansible-rbenv-role
 
 - src: https://github.com/sunscrapers/ansible-role-apt.git
-  version: 0.0.2
+  version: master
   name: ansible-role-apt
 
 - src: https://github.com/andrewrothstein/ansible-go.git

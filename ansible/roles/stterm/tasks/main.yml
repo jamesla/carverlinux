@@ -6,6 +6,8 @@
     src: http://dl.suckless.org/st/st-0.7.tar.gz
     dest: /tmp
     remote_src: True
+  args:
+    creates: /tmp/st-0.7
 
 - name: get solarize theme patch prereq
   copy:

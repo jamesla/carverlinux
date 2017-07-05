@@ -15,8 +15,6 @@
 
 - name: configure xmonad theme
   become: false
-  file:
-    src: ~/dotfiles/.xmonad/xmonad.hs
+  copy:
+    src: "{{ role_path }}/files/xmonad.hs"
     dest: ~/.xmonad/xmonad.hs
-    state: link
-    force: yes

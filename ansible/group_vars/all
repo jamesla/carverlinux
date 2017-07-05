@@ -1,9 +1,8 @@
 nodejs_version: 8.x
+nodejs_install_npm_user: vagrant
 nodejs_npm_global_packages:
   - bower
   - yo
-  - generator-ansible
-  - generator-ansible-2
   - ionic
   - cordova
   - grunt-cli
@@ -53,7 +52,6 @@ rbenv_users:
 
 
 pip_install_packages:
-  - docker-compose
   - molecule
   - python-vagrant
   - netaddr

@@ -7,6 +7,8 @@ options = Net::SSH::Config.for(host, ssh_config_files)
 options[:user] ||= 'vagrant'
 options[:keys].push("#{Dir.home}/.vagrant.d/insecure_private_key")
 
+set :disable_sudo, true
+
 set :backend, :ssh
 set :host, host
 set :ssh_options, options

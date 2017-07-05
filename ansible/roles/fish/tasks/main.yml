@@ -55,8 +55,8 @@
     name: vagrant
     shell: /usr/bin/fish
 
-# - name: set gem paths
+# - name: set npm path
 #   become: false
-#   shell: fish -c 'set -U fish_user_paths ~/.rbenv/versions/2.4.1/bin $fish_user_paths' && touch /tmp/ruby_paths_set
+#   shell: 'fish -c "set -U fish_user_paths /usr/local/lib/npm/bin $fish_user_paths; touch /tmp/npm_paths_set"'
 #   args:
-#     creates: /tmp/ruby_paths_set
+#     creates: /tmp/npm_paths_set
