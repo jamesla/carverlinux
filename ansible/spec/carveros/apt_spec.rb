@@ -8,7 +8,6 @@ packages = %w[
   awscli
   tree
   aria2
-  virtualbox
   unzip
 ]
 
@@ -25,8 +24,7 @@ commands = [
   'aws --version',
   'tree --version',
   'aria2c --version',
-  'unzip --help',
-  'virtualbox --help'
+  'unzip --help'
 ]
 
 commands.each do |c|

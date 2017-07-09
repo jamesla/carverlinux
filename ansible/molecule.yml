@@ -27,7 +27,8 @@ vagrant:
       options:
         memory: 2500
         cpus: 4
+  append_platform_to_hostname: false
   instances:
     - name: carveros
 verifier:
-  name: serverspec
+  name: testinfra

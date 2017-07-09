@@ -54,9 +54,3 @@
   user:
     name: vagrant
     shell: /usr/bin/fish
-
-# - name: set npm path
-#   become: false
-#   shell: 'fish -c "set -U fish_user_paths /usr/local/lib/npm/bin $fish_user_paths; touch /tmp/npm_paths_set"'
-#   args:
-#     creates: /tmp/npm_paths_set

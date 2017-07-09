@@ -1,6 +1,8 @@
 nodejs_version: 8.x
-nodejs_install_npm_user: vagrant
+npm_config_prefix: "/usr"
+nodejs_install_npm_user: root #leave this
 nodejs_npm_global_packages:
+  - figlet-cli
   - bower
   - yo
   - ionic
@@ -17,7 +19,6 @@ apt_install_packages:
   - nmap
   - awscli
   - tree
-  - virtualbox
   - cpu-checker
   - unzip
   - aria2
