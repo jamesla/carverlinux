@@ -1,8 +1,9 @@
+dotfiles_loc: /vagrant/dotfiles
+
 nodejs_version: 8.x
 npm_config_prefix: "/usr"
 nodejs_install_npm_user: root #leave this
 nodejs_npm_global_packages:
-  - figlet-cli
   - bower
   - yo
   - ionic

@@ -1,6 +1,16 @@
 # file: roles/dotfiles/tasks/main.yml
 ---
 
+- name: copy configs from host box
+  become: false
+  copy:
+    src: '{{item}}'
+    dest: '{{item}}'
+  with_items:
+    - ~/.ssh/id_rsa
+    - ~/.ssh/config
+    - ~/.gitconfig
+
 - name: clone dotfiles
   become: false
   git:
@@ -11,13 +21,3 @@
     update: yes
   tags:
     - skip_ansible_lint
-
-# - name: symlink dotfiles
-#   become: false
-#   file:
-#     src: '{{item.src}}'
-#     dest: '{{item.dest}}'
-#     state: link
-#     force: yes
-#   with_items:
-    # - { src: '~/dotfiles/.ssh/config', dest: '~/.ssh/config' }

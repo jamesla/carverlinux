@@ -31,4 +31,4 @@ vagrant:
   instances:
     - name: carveros
 verifier:
-  name: testinfra
+  name: serverspec

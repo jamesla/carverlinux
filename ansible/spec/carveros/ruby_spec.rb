@@ -1,9 +1,10 @@
 require 'spec_helper'
 packages = %w[
   cfn-flow
-  sparkleformation
+  sfn
   rspec
   serverspec
+  rubocop
 ]
 
 packages.each do |p|
@@ -16,7 +17,8 @@ commands = [
   'gem -v',
   'cfn-flow --version',
   'sfn --version',
-  'rspec --version'
+  'rspec --version',
+  'rubocop --version'
 ]
 
 commands.each do |c|

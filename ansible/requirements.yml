@@ -6,10 +6,6 @@
   version: master
   name: docker-ubuntu
 
-- src: https://github.com/rvm/rvm1-ansible.git
-  version: master
-  name: rvm_io.ruby
-
 - src: https://github.com/andrewrothstein/ansible-curl.git
   version: master
   name: ansible-curl
@@ -58,6 +54,6 @@
   version: master
   name: ansible-go
 
-- src: https://github.com/escalate/ansible-virtualbox.git 
+- src: https://github.com/escalate/ansible-virtualbox.git
   version: master
   name: ansible-virtualbox
