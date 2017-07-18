@@ -6,7 +6,6 @@
 
 - name: install fish shell
   apt:
-    # update_cache: yes
     name:
       - fish
 
@@ -39,10 +38,10 @@
     force: yes
 
 - name: set pam to allow shell change (possible bug in ubuntu 16)
-  replace:
-    dest: /etc/pam.d/chsh
+  lineinfile:
+    path: /etc/pam.d/chsh
     regexp: 'auth       required   pam_shells.so'
-    replace: '#auth       required   pam_shells.so'
+    line: '#auth       required   pam_shells.so'
 
 - name: set as default shell
   become: true

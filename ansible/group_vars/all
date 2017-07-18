@@ -57,3 +57,10 @@ pip_install_packages:
   - molecule
   - python-vagrant
   - netaddr
+  # - docker-compose #uncommenting this will break idempotence
+
+#tell docker role not to install pip as it is already installed. This makes docker-ubuntu idempotent
+pip_install_pip: false
+pip_install_setuptools: false
+pip_install_docker_compose: false
+pip_install_docker: true

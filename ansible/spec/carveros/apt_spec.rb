@@ -9,6 +9,7 @@ packages = %w[
   tree
   aria2
   unzip
+  virtualbox
 ]
 
 packages.each do |p|

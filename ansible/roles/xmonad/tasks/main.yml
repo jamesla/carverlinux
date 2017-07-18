@@ -1,20 +1,6 @@
 # file: roles/xmonad/tasks/main.yml
 ---
 
-- name: install xmonad
-  apt:
-    name:
-      - xmonad
-      - dmenu
-
-- name: create .xmonad directory (is there a better way to do this?)
-  become: false
-  file:
-    path: ~/.xmonad
-    state: directory
-
-- name: configure xmonad theme
-  become: false
-  copy:
-    src: "{{ role_path }}/files/xmonad.hs"
-    dest: ~/.xmonad/xmonad.hs
+# - include: nodm.yml
+- include: xmonad.yml
+- include: clipboard.yml

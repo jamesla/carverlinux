@@ -27,10 +27,11 @@
     - { role: spacemacs }
     - { role: vim }
     - { role: tmux }
+    - { role: nodm }
+    - { role: stterm }
     - { role: xmonad }
     - { role: parallel_tools_fixes }
 
-    - { role: ansible-virtualbox }
     - { role: docker-ubuntu }
     - { role: ansible-packer }
     - { role: ansible-vagrant }

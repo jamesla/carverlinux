@@ -54,6 +54,6 @@
   version: master
   name: ansible-go
 
-- src: https://github.com/escalate/ansible-virtualbox.git
-  version: master
-  name: ansible-virtualbox
+# - src: https://github.com/escalate/ansible-virtualbox.git
+#   version: master
+#   name: ansible-virtualbox
