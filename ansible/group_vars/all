@@ -17,6 +17,7 @@ apt_cache_valid_time: 3600
 apt_setup_unattended_upgrades: no
 apt_install_packages:
   - wget
+  - curl
   - nmap
   - awscli
   - tree

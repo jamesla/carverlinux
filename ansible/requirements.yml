@@ -6,10 +6,6 @@
   version: master
   name: docker-ubuntu
 
-- src: https://github.com/andrewrothstein/ansible-curl.git
-  version: master
-  name: ansible-curl
-
 - src: https://github.com/geerlingguy/ansible-role-nodejs.git
   version: master
   name: ansible-role-nodejs
