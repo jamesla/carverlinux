@@ -13,6 +13,7 @@ main = xmonad $ defaultConfig
     , focusedBorderColor = "#000000"
     , startupHook = do
         spawn "st -e tmux new-session -A"
+        spawn "greenclip daemon &"
     }
     `additionalKeys`
     [ ((mod1Mask, xK_p        ), spawn "rofi -modi \"clipboard:greenclip print\" -show clipboard")]

@@ -10,10 +10,3 @@
     url: 'https://github.com/erebe/greenclip/releases/download/1.3/greenclip'
     dest: /usr/bin/greenclip
     mode: 755
-
-- name: start greenclip
-  become: false
-  lineinfile:
-    dest: '~/.xsession'
-    line: 'greenclip daemon &'
-    insertafter: '#!/bin/sh'

@@ -1,5 +1,0 @@
-# file: roles/parallel_tools_fixes/handlers/main.yml
----
-# For example,
-# - name: restart ntpd
-#   service: name=ntpd state=restarted

@@ -1,6 +1,7 @@
 # file: roles/xmonad/tasks/main.yml
 ---
 
-# - include: nodm.yml
+- include: nodm.yml
 - include: xmonad.yml
 - include: clipboard.yml
+- include: prl_tools_fix.yml

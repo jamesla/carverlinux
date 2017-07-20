@@ -23,9 +23,3 @@
   systemd:
     name: nodm
     enabled: true
-
-- name: copy xsession file
-  become: false
-  copy:
-    src: '{{ role_path }}/files/.xsession'
-    dest: '~/.xsession'

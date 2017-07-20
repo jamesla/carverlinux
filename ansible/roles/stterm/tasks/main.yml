@@ -1,5 +1,10 @@
 # file: roles/stterm/tasks/main.yml
 ---
+- name: install stterm dependencies
+  apt:
+    name:
+      - build-essential
+      - libxft-dev
 
 - name: download and extract stterm
   unarchive:

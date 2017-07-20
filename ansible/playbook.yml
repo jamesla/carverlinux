@@ -17,25 +17,23 @@
     - { role: ansible-role-apt }
     - { role: ansible-curl }
     - { role: ansible-role-git }
-    - { role: ansible-role-nodejs }
-    - { role: ansible-role-pip }
-    - { role: ansible-go }
+    # - { role: ansible-role-nodejs }
+    # - { role: ansible-role-pip }
+    # - { role: ansible-go }
 
-    - { role: ansible-rbenv-role }
+    # - { role: ansible-rbenv-role }
     - { role: dotfiles }
-    - { role: fish }
-    - { role: spacemacs }
-    - { role: vim }
+    # - { role: fish }
+    # - { role: spacemacs }
+    # - { role: vim }
     - { role: tmux }
-    - { role: nodm }
     - { role: stterm }
-    - { role: xmonad }
-    - { role: parallel_tools_fixes }
+    - { role: desktop }
 
-    - { role: docker-ubuntu }
-    - { role: ansible-packer }
-    - { role: ansible-vagrant }
-    - { role: ansible-role-chrome }
-    - { role: ansible-consul }
-    - { role: ansible-consul-template }
-    - { role: ansible-terraform }
+    # - { role: docker-ubuntu }
+    # - { role: ansible-packer }
+    # - { role: ansible-vagrant }
+    # - { role: ansible-role-chrome }
+    # - { role: ansible-consul }
+    # - { role: ansible-consul-template }
+    # - { role: ansible-terraform }
