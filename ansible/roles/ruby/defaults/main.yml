@@ -1,0 +1,4 @@
+# file: roles/home_drive/defaults/main.yml
+---
+#
+# foo: default

@@ -19,7 +19,6 @@ RSpec.configure do |config|
   config.formatter = :documentation
 end
 
-puts '============='
-puts ENV.inspect
-puts '============='
-raise
+# puts '============='
+# puts ENV.inspect
+# puts '============='

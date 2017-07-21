@@ -9,7 +9,9 @@ packages = %w[
   tree
   aria2
   unzip
+  curl
   virtualbox
+  git
 ]
 
 packages.each do |p|
@@ -25,7 +27,9 @@ commands = [
   'aws --version',
   'tree --version',
   'aria2c --version',
-  'unzip --help'
+  'unzip --help',
+  'curl --help',
+  'git --help'
 ]
 
 commands.each do |c|

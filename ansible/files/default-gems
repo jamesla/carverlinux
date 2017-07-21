@@ -1,4 +1,6 @@
 bundler
+rubocop
 cfn-flow
 sfn
-rubocop
+rake
+rspec

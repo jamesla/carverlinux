@@ -1,0 +1,25 @@
+# file: roles/home_drive/tasks/main.yml
+---
+# For example,
+
+- name: Install dependencies
+  apt:
+    name:
+      - build-essential
+
+- name: Add custom ruby repo
+  apt_repository:
+    repo: ppa:brightbox/ruby-ng
+
+- name: install ruby
+  apt:
+    name:
+      - ruby2.4
+      - ruby2.4-dev
+
+- name: install gems
+  become: true
+  gem:
+    name: "{{ item }}"
+    user_install: false
+  with_items: "{{ gems }}"
