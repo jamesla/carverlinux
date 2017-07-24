@@ -19,6 +19,7 @@ RSpec.configure do |config|
   config.formatter = :documentation
 end
 
+ENV['SKIP_VAGRANT_TESTS'] = 'TRUE'
 # puts '============='
 # puts ENV.inspect
 # puts '============='

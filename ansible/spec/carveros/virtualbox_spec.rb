@@ -12,6 +12,8 @@ describe package('cpu-checker') do
   it { should be_installed }
 end
 
-describe command('kvm-ok') do
-  its(:stdout) { should contain('KVM acceleration can be used') }
+unless ENV['SKIP_VAGRANT_TESTS']
+  describe command('kvm-ok') do
+    its(:stdout) { should contain('KVM acceleration can be used') }
+  end
 end

@@ -12,8 +12,8 @@
     device: "/dev/sda"
     number: "1"
   register: partinfo
-- debug:
-    var: partinfo
+# - debug:
+#     var: partinfo
 - set_fact:
     gap_kb: "{{partinfo.disk.size - partinfo.partitions[0].end}}"
   tags:
