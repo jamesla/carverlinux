@@ -5,6 +5,7 @@
   apt:
     name:
       - xmonad
+      - suckless-tools
 
 - name: create .xmonad directory (is there a better way to do this?)
   become: false

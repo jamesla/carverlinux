@@ -9,11 +9,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vbguest.auto_update = true
   config.vm.hostname = "carveros"
 
-  # config.vm.provision "shell", privileged: false, inline: <<-SHELL
-  #   rm ~/.ssh/id_rsa || true
-  # SHELL
+  files = [
+    "~/.ssh/id_rsa",
+    "~/.ssh/config",
+    "~/.gitconfig"
+  ]
 
-  # config.vm.provision "file", source: "~/.ssh/id_rsa", destination: "~/.ssh/id_rsa"
+  files.each do |f|
+    config.vm.provision "shell", privileged: false, inline: <<-SHELL
+      rm #{f} || true
+    SHELL
+    config.vm.provision "file", source: f, destination: f
+  end
 
   config.ssh.forward_agent = true
 
