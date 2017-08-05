@@ -8,6 +8,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "wholebits/ubuntu17.04-64"
   config.vbguest.auto_update = true
   config.vm.hostname = "carveros"
+  memory = 8096
+  cpus = 4
 
   files = [
     "~/.ssh/id_rsa",
@@ -26,8 +28,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provider "parallels" do |prl|
     prl.name = "carveros"
-    prl.memory = 16000
-    prl.cpus = 4
+    prl.memory = memory
+    prl.cpus = cpus
     prl.update_guest_tools = true
 
     prl.customize ["set", :id, "--startup-view=fullscreen"]
@@ -35,6 +37,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     prl.customize ["set", :id, "--nested-virt", "on"]
     prl.customize ["set", :id, "--videosize", "64"]
     prl.customize ["set", :id, "--device-set=hdd0", "--size=150G", "--no-fs-resize" ]
+  end
+
+  config.vm.provider "vmware_workstation" do |vmware|
+    vmware.gui = true
+    vmware.vmx["memsize"] = memory
+    vmware.vmx["numvcpus"] = cpus
+    vmware.vmx['vhv.enable'] = 'TRUE'
+    vmware.vmx['vhv.allow'] = 'TRUE'
   end
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL

@@ -12,24 +12,24 @@
   gather_facts: true
   pre_tasks:
     - include: pre_tasks/set-timezone.yml
-  # roles:
-  #   - { role: home_drive }
-  #   - { role: ansible-role-apt }
-  #   - { role: ansible-role-nodejs }
-  #   - { role: ansible-role-pip }
-  #   - { role: ansible-go }
+  roles:
+    - { role: home_drive }
+    - { role: ansible-role-apt }
+    - { role: ansible-role-nodejs }
+    - { role: ansible-role-pip }
+    - { role: ansible-go }
 
-  #   - { role: ruby }
-  #   - { role: dotfiles }
-  #   - { role: spacemacs }
-  #   - { role: vim }
-  #   - { role: desktop }
-  #   - { role: terminal }
+    - { role: ruby }
+    - { role: dotfiles }
+    - { role: spacemacs }
+    - { role: vim }
+    - { role: desktop }
+    - { role: terminal }
 
-  #   - { role: docker-ubuntu }
-  #   - { role: ansible-packer }
-  #   - { role: ansible-vagrant }
-  #   - { role: ansible-role-chrome }
-  #   - { role: ansible-consul }
-  #   - { role: ansible-consul-template }
-  #   - { role: ansible-terraform }
+    - { role: docker-ubuntu }
+    - { role: ansible-packer }
+    - { role: ansible-vagrant }
+    - { role: ansible-role-chrome }
+    - { role: ansible-consul }
+    - { role: ansible-consul-template }
+    - { role: ansible-terraform }
