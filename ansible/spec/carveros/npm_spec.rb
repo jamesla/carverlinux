@@ -1,29 +1,25 @@
 require 'spec_helper'
 
-# packages = %w[
-#   ionic
-#   yo
-#   cordova
-#   grunt-cli
-#   grunt
-#   bower
-#   gulp
-# ]
+packages = %w[
+  ionic
+  yo
+  cordova
+  grunt-cli
+  grunt
+  bower
+  gulp
+]
 
-# packages.each do |p|
-#   describe package(p) do
-#     # it { should be_installed.by(:npm) }
-#     let(:path) { '/usr/local/lib/npm' }
-#     it { should be_installed }
-#   end
-# end
+packages.each do |p|
+  describe package(p) do
+    it { should be_installed.by(:npm) }
+  end
+end
 
 commands = [
-  'ionic -v',
   'yo --version',
   'cordova -v',
   'grunt --version',
-  'ionic -v',
   'bower -v',
   'gulp --version'
 ]

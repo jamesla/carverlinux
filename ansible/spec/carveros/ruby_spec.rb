@@ -5,6 +5,7 @@ packages = %w[
   rspec
   serverspec
   rubocop
+  stack_master
 ]
 
 packages.each do |p|

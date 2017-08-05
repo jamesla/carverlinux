@@ -8,9 +8,9 @@ import XMonad.Util.EZConfig
 main :: IO ()
 main = xmonad $ defaultConfig
     { borderWidth        = 0
-    , terminal         = "st -e tmux new-session -A"
+    , terminal         = "st -e tmux new-session -A -s carver"
     , normalBorderColor  = "#000000"
     , focusedBorderColor = "#000000"
     , startupHook = do
-        spawn "st -e tmux new-session -A"
+        spawn "st -e tmux new-session -A -s carver"
     }

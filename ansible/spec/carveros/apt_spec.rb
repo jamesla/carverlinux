@@ -5,13 +5,13 @@ packages = %w[
   speedtest-cli
   wget
   nmap
-  awscli
   tree
   aria2
   unzip
   curl
   virtualbox
   git
+  jq
 ]
 
 packages.each do |p|
@@ -24,12 +24,12 @@ commands = [
   'speedtest --version',
   'wget --help',
   'nmap --version',
-  'aws --version',
   'tree --version',
   'aria2c --version',
   'unzip --help',
   'curl --help',
-  'git --help'
+  'git --help',
+  'jq --help'
 ]
 
 commands.each do |c|

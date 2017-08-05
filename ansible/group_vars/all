@@ -19,7 +19,6 @@ apt_install_packages:
   - wget
   - curl
   - nmap
-  - awscli
   - tree
   - cpu-checker
   - unzip
@@ -28,6 +27,7 @@ apt_install_packages:
   - telnet
   - virtualbox
   - git
+  - jq
 
 docker_group_members: [ vagrant ]
 
@@ -37,9 +37,11 @@ gems:
   - sfn
   - rspec
   - serverspec
+  - stack_master
 
 pip_install_packages:
   - molecule
+  - awscli
   - python-vagrant
   - netaddr
   # - docker-compose #uncommenting this will break idempotence
