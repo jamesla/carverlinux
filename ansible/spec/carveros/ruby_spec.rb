@@ -6,6 +6,8 @@ packages = %w[
   serverspec
   rubocop
   stack_master
+  rails
+  sqlite3
 ]
 
 packages.each do |p|
