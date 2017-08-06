@@ -23,19 +23,10 @@
     - "{{ role_path }}/files/st-no_bold_colors-20160727-308bfbf.diff"
     - "{{ role_path }}/files/st-solarized-dark-20160727-308bfbf.diff"
 
-#- name: apply patches
-#  shell: cd /tmp/st-0.7 && git apply st-no_bold_colors-20160727-308bfbf.diff && git apply st-solarized-dark-20160727-308bfbf.diff && git apply st-clipboard-20160727-308bfbf.diff && touch /tmp/patches_applied
-#  args:
-#    creates: /tmp/patches_applied
-
-#- name: apply bold patch
-#shell: cd /tmp/st-0.7 && git apply st-no_bold_colors-20160727-308bfbf.diff 
-
-#- name: apply solarized patch
-#shell: cd /tmp/st-0.7 git apply st-solarized-dark-20160727-308bfbf.diff 
-
-- name: apply clipboard patch
-  shell: cd /tmp/st-0.7 git apply st-clipboard-20160727-308bfbf.diff 
+- name: apply patches
+  shell: cd /tmp/st-0.7 && git apply st-no_bold_colors-20160727-308bfbf.diff && git apply st-solarized-dark-20160727-308bfbf.diff && git apply st-clipboard-20160727-308bfbf.diff && touch /tmp/st-0.7/patches_applied
+  args:
+    creates: /tmp/st-0.7/patches_applied
 
 - name: compile
   shell: cd /tmp/st-0.7 && make clean install

@@ -23,3 +23,5 @@
     name: "{{ item }}"
     user_install: false
   with_items: "{{ gems }}"
+
+- include: rails.yml

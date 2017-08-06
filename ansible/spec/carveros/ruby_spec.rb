@@ -19,7 +19,8 @@ commands = [
   'cfn-flow --version',
   'sfn --version',
   'rspec --version',
-  'rubocop --version'
+  'rubocop --version',
+  'rails -v'
 ]
 
 commands.each do |c|

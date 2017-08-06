@@ -11,6 +11,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   memory = 8096
   cpus = 4
 
+  if Vagrant.has_plugin?('vagrant-cachier')
+    config.cache.scope = 'machine'
+  end
+
   files = [
     "~/.ssh/id_rsa",
     "~/.ssh/config",
