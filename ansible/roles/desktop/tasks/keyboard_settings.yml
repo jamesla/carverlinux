@@ -1,0 +1,7 @@
+---
+
+- name: key repeat speed
+  lineinfile:
+    dest: /etc/X11/Xsession
+    line: 'xset r rate 150 50'
+    insertafter: '#!/bin/sh'
