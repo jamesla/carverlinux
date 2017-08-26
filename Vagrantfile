@@ -7,7 +7,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.box = "wholebits/ubuntu17.04-64"
   config.vbguest.auto_update = true
-  config.vm.hostname = "carveros"
+  config.vm.hostname = "carveros2"
   memory = 8096
   cpus = 4
 
@@ -31,7 +31,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.ssh.forward_agent = true
 
   config.vm.provider "parallels" do |prl|
-    prl.name = "carveros"
+    prl.name = config.vm.hostname 
     prl.memory = memory
     prl.cpus = cpus
     prl.update_guest_tools = true

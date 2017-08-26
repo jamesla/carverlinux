@@ -28,8 +28,9 @@ apt_install_packages:
   - virtualbox
   - git
   - jq
+  - docker.io
 
-docker_group_members: [ vagrant ]
+# docker_group_members: [ vagrant ]
 
 gems:
   - rubocop
@@ -44,10 +45,10 @@ pip_install_packages:
   - awscli
   - python-vagrant
   - netaddr
-  # - docker-compose #uncommenting this will break idempotence
+  - docker-compose #uncommenting this will break idempotence
 
 #tell docker role not to install pip as it is already installed. This makes docker-ubuntu idempotent
-pip_install_pip: false
-pip_install_setuptools: false
-pip_install_docker_compose: false
-pip_install_docker: true
+#pip_install_pip: false
+#pip_install_setuptools: false
+#pip_install_docker_compose: false
+#pip_install_docker: true

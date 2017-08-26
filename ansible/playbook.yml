@@ -26,7 +26,6 @@
     - { role: desktop }
     - { role: terminal }
 
-    - { role: docker-ubuntu }
     - { role: ansible-packer }
     - { role: ansible-vagrant }
     - { role: ansible-role-chrome }

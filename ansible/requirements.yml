@@ -1,7 +1,3 @@
-- src: https://github.com/angstwad/docker.ubuntu.git
-  version: master
-  name: docker-ubuntu
-
 - src: https://github.com/geerlingguy/ansible-role-nodejs.git
   version: master
   name: ansible-role-nodejs

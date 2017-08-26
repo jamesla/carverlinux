@@ -12,6 +12,7 @@ packages = %w[
   virtualbox
   git
   jq
+  docker.io
 ]
 
 packages.each do |p|
@@ -29,7 +30,8 @@ commands = [
   'unzip --help',
   'curl --help',
   'git --help',
-  'jq --help'
+  'jq --help',
+  'docker -v'
 ]
 
 commands.each do |c|
