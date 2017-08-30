@@ -12,7 +12,6 @@ nodejs_npm_global_packages:
   - grunt
   - gulp
 
-
 apt_cache_valid_time: 3600
 apt_setup_unattended_upgrades: no
 apt_install_packages:
@@ -28,9 +27,10 @@ apt_install_packages:
   - virtualbox
   - git
   - jq
-  - docker.io
-
-# docker_group_members: [ vagrant ]
+  # - docker.io
+  - whois
+  - dnsutils
+  - net-tools
 
 gems:
   - rubocop
@@ -45,10 +45,4 @@ pip_install_packages:
   - awscli
   - python-vagrant
   - netaddr
-  - docker-compose #uncommenting this will break idempotence
-
-#tell docker role not to install pip as it is already installed. This makes docker-ubuntu idempotent
-#pip_install_pip: false
-#pip_install_setuptools: false
-#pip_install_docker_compose: false
-#pip_install_docker: true
+  # - docker-compose

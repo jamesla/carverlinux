@@ -1,15 +1,18 @@
 require 'spec_helper'
 
-describe package('emacs') do
-  it { should be_installed }
-end
+packages = %w[
+  emacs
+  ispell
+  xclip
+  tern
+  js-yaml
+  silversearcher-ag
+]
 
-describe package('ispell') do
-  it { should be_installed }
-end
-
-describe package('xclip') do
-  it { should be_installed }
+packages.each do |p|
+  describe package(p) do
+    it { should be_installed or raise }
+  end
 end
 
 describe command('which tern') do
@@ -26,10 +29,6 @@ end
 
 describe file('/home/vagrant/.spacemacs') do
   it { should be_symlink }
-end
-
-describe package('silversearcher-ag') do
-  it { should be_installed }
 end
 
 describe command('ag --version') do

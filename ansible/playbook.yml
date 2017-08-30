@@ -32,3 +32,4 @@
     - { role: ansible-consul }
     - { role: ansible-consul-template }
     - { role: ansible-terraform }
+    - { role: ansible-role-docker }

@@ -13,6 +13,9 @@ packages = %w[
   git
   jq
   docker.io
+  whois
+  dnsutils
+  net-tools
 ]
 
 packages.each do |p|
@@ -31,7 +34,10 @@ commands = [
   'curl --help',
   'git --help',
   'jq --help',
-  'docker -v'
+  'docker -v',
+  'whois --version',
+  'dig -v',
+  'netstat --help'
 ]
 
 commands.each do |c|
