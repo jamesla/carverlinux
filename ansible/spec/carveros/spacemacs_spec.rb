@@ -11,7 +11,7 @@ packages = %w[
 
 packages.each do |p|
   describe package(p) do
-    it { should be_installed or raise }
+    it { should be_installed.by(:apt) || should be_installed.by(:pip) }
   end
 end
 

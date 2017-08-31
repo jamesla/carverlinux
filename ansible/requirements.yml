@@ -45,3 +45,7 @@
 - src: https://github.com/geerlingguy/ansible-role-docker.git
   version: master
   name: ansible-role-docker
+
+- src: https://github.com/ngetchell/ansible-powershell.git
+  version: master
+  name: ansible-powershell

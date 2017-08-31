@@ -20,7 +20,7 @@ vagrant:
     - "ssh.forward_agent = true"
   platforms:
     - name: ubuntu
-      box: wholebits/ubuntu17.04-64
+      box: wholebits/ubuntu16.04-64
   providers:
     - name: virtualbox
       type: virtualbox
