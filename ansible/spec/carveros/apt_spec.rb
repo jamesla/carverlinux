@@ -12,7 +12,6 @@ packages = %w[
   virtualbox
   git
   jq
-  docker.io
   whois
   dnsutils
   net-tools
@@ -25,7 +24,7 @@ packages.each do |p|
 end
 
 commands = [
-  'speedtest --version',
+  'speedtest -h',
   'wget --help',
   'nmap --version',
   'tree --version',
@@ -34,10 +33,9 @@ commands = [
   'curl --help',
   'git --help',
   'jq --help',
-  'docker -v',
   'whois --version',
-  'dig -v',
-  'netstat --help'
+  'dig -v'
+  # 'netstat --help' both help and version return errors
 ]
 
 commands.each do |c|

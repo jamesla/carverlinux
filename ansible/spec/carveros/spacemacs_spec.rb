@@ -1,26 +1,27 @@
 require 'spec_helper'
 
-packages = %w[
+apt_packages = %w[
   emacs
   ispell
   xclip
-  tern
-  js-yaml
   silversearcher-ag
 ]
 
-packages.each do |p|
+apt_packages.each do |p|
   describe package(p) do
-    it { should be_installed.by(:apt) || should be_installed.by(:pip) }
+    it { should be_installed.by(:apt) }
   end
 end
 
-describe command('which tern') do
-  its(:exit_status) { should eq 0 }
-end
+npm_packages = %w[
+  tern
+  js-yaml
+]
 
-describe command('which emacs') do
-  its(:exit_status) { should eq 0 }
+npm_packages.each do |p|
+  describe package(p) do
+    it { should be_installed.by(:npm) }
+  end
 end
 
 describe file('/home/vagrant/.emacs.d') do
@@ -31,6 +32,14 @@ describe file('/home/vagrant/.spacemacs') do
   it { should be_symlink }
 end
 
-describe command('ag --version') do
-  its(:exit_status) { should eq 0 }
+commands = [
+  'ag --version',
+  'which tern',
+  'emacs --version'
+]
+
+commands.each do |c|
+  describe command(c) do
+    its(:exit_status) { should eq 0 }
+  end
 end
