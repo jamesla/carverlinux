@@ -46,3 +46,6 @@ pip_install_packages:
   - awscli
   - python-vagrant
   - netaddr
+
+docker_users:
+  - vagrant
