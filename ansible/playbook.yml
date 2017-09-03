@@ -34,3 +34,4 @@
     - { role: ansible-terraform }
     - { role: ansible-role-docker }
     - { role: ansible-powershell }
+    - { role: ansible-virtualbox }

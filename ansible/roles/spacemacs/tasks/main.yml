@@ -9,11 +9,11 @@
       - xclip
       - silversearcher-ag
 
-- name: install electron in a special way or vmd breaks
-  become: true
-  shell: npm -g install electron --unsafe-perm=true --allow-root && touch /tmp/electron_installed
-  args:
-    creates: /tmp/electron_installed
+# - name: install electron in a special way or vmd breaks
+#   become: true
+#   shell: npm -g install electron --unsafe-perm=true --allow-root && touch /tmp/electron_installed
+#   args:
+#     creates: /tmp/electron_installed
 
 - name: install ternjs #npm module currently in preview
   npm:
@@ -22,7 +22,7 @@
   with_items:
     - tern
     - js-yaml
-    # - vmd https://github.com/electron/electron/issues/9815
+    - vmd
 
 - name: clone spacemacs
   become: false

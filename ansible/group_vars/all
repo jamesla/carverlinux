@@ -1,6 +1,6 @@
 dotfiles_loc: /vagrant/dotfiles
 
-nodejs_version: 8.x
+nodejs_version: 6.x
 npm_config_prefix: "/usr"
 nodejs_install_npm_user: root #leave this
 nodejs_npm_global_packages:
@@ -24,13 +24,13 @@ apt_install_packages:
   - aria2
   - speedtest-cli
   - telnet
-  - virtualbox
   - git
   - jq
-  # - docker.io
   - whois
   - dnsutils
   - net-tools
+  - build-essential
+  - automake
 
 gems:
   - rubocop
@@ -41,8 +41,8 @@ gems:
   - stack_master
 
 pip_install_packages:
-  - molecule
+  - name: molecule
+    version: 1.25
   - awscli
   - python-vagrant
   - netaddr
-  # - docker-compose

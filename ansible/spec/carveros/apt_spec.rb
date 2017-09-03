@@ -9,7 +9,6 @@ packages = %w[
   aria2
   unzip
   curl
-  virtualbox
   git
   jq
   whois
