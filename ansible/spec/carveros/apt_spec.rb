@@ -33,7 +33,8 @@ commands = [
   'git --help',
   'jq --help',
   'whois --version',
-  'dig -v'
+  'dig -v',
+  'sqlite3 --version'
   # 'netstat --help' both help and version return errors
 ]
 
