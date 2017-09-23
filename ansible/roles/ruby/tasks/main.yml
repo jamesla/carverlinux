@@ -17,6 +17,12 @@
       - ruby2.4
       - ruby2.4-dev
 
+- name: ensure rake not installed from apt
+  become: true
+  apt:
+    name: rake
+    state: absent
+
 - name: install gems
   become: true
   gem:

@@ -53,3 +53,7 @@
 - src: https://github.com/FGtatsuro/ansible-virtualbox.git
   version: master
   name: ansible-virtualbox
+
+- src: https://github.com/jamesla/ansible-role-tmux.git
+  version: master
+  name: ansible-role-tmux

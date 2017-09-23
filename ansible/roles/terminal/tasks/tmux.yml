@@ -1,11 +1,6 @@
 # file: roles/tmux/tasks/main.yml
 ---
 
-- name: install tmux
-  apt:
-    name:
-      - tmux
-
 - name: symlink tmux config
   become: false
   file:

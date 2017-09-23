@@ -26,6 +26,7 @@
     - { role: desktop }
     - { role: terminal }
 
+    - { role: ansible-role-tmux }
     - { role: ansible-packer }
     - { role: ansible-vagrant }
     - { role: ansible-role-chrome }
