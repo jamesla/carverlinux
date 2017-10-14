@@ -26,9 +26,11 @@
 - name: apply patches
   shell: cd /tmp/st-0.7 && git apply st-no_bold_colors-20160727-308bfbf.diff && git apply st-solarized-dark-20160727-308bfbf.diff && git apply st-clipboard-20160727-308bfbf.diff && touch /tmp/st-0.7/patches_applied
   args:
+    executable: /bin/bash
     creates: /tmp/st-0.7/patches_applied
 
 - name: compile
   shell: cd /tmp/st-0.7 && make clean install
   args:
+    executable: /bin/bash
     creates: /usr/local/bin/st

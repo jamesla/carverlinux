@@ -26,6 +26,7 @@
 # https://bugs.launchpad.net/ubuntu/+source/parted/+bug/1270203
 # https://unix.stackexchange.com/a/365657
   command: 'parted ---pretend-input-tty /dev/sda resizepart 1 Yes 100%'
+
   when: 1024 < gap_kb|int
 - name: grow filesystem until maximum block size
   filesystem:

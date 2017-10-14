@@ -5,7 +5,7 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.box = "wholebits/ubuntu16.04-64"
+  config.vm.box = "jamesla/ubuntu-1604-min-daily"
   config.vbguest.auto_update = true
   config.vm.hostname = "carveros"
   memory = 8096

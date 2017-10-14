@@ -46,4 +46,5 @@
   become: false
   shell: emacs --batch --load=~/.emacs.d/init.el && touch /tmp/spacemacs_updated
   args:
+    executable: /bin/bash
     creates: /tmp/spacemacs_updated

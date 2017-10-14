@@ -22,4 +22,5 @@
   become: false
   shell: ~/.tmux/plugins/tpm/bin/install_plugins && touch ~/.tmux/tpm_output
   args:
+    executable: /bin/bash
     creates: ~/.tmux/tpm_output
