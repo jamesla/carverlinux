@@ -14,6 +14,12 @@ packages = %w[
   whois
   dnsutils
   net-tools
+  qemu-kvm
+  libvirt-bin
+  virtinst
+  bridge-utils
+  python-openstackclient
+  p7zip-full
 ]
 
 packages.each do |p|

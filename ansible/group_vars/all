@@ -32,6 +32,12 @@ apt_install_packages:
   - build-essential
   - automake
   - ruby-sqlite3
+  - qemu-kvm
+  - libvirt-bin
+  - virtinst
+  - bridge-utils
+  - python-openstackclient
+  - p7zip-full
 
 gems:
   - rake
@@ -48,6 +54,7 @@ pip_install_packages:
   - awscli
   - python-vagrant
   - netaddr
+  - pyopenssl
 
 docker_users:
   - vagrant

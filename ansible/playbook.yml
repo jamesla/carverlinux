@@ -13,8 +13,9 @@
   pre_tasks:
     - include: pre_tasks/set-timezone.yml
   roles:
-    - { role: home_drive }
+    # - { role: home_drive }
     - { role: ansible-role-apt }
+    - { role: desktop }
     - { role: ansible-role-nodejs }
     - { role: ansible-role-pip }
     - { role: ansible-go }
