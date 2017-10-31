@@ -49,8 +49,8 @@ gems:
   - stack_master
 
 pip_install_packages:
-  - name: molecule
-    version: 1.25
+  - molecule
+  - docker-py
   - awscli
   - python-vagrant
   - netaddr

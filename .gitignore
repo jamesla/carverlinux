@@ -3,3 +3,5 @@
 ansible/.molecule
 *.lock
 ansible/.vagrant
+*.un~
+*~

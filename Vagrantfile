@@ -5,7 +5,7 @@ VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.box = "boxcutter"
+  config.vm.box = "jamesla/ubuntu-1604-min-daily"
   config.vm.hostname = "carveros"
   memory = 8096
   cpus = 4
@@ -45,11 +45,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider "vmware_workstation" do |vmware|
     vmware.gui = true
     vmware.vmx["memsize"] = memory
+    vmware.linked_clone = false
     vmware.vmx["numvcpus"] = cpus
     vmware.vmx['vhv.enable'] = 'TRUE'
     vmware.vmx['vhv.allow'] = 'TRUE'
-    #vmware.vmx["ethernet0.pcislotnumber"] = "33"
-    #vmware.vmx['ethernet0.virtualDev'] = "e1000"
+    vmware.vmx["ethernet0.pcislotnumber"] = "33"
+    vmware.vmx['ethernet0.virtualDev'] = "e1000"
   end
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
