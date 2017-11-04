@@ -49,7 +49,8 @@ gems:
   - stack_master
 
 pip_install_packages:
-  - molecule
+  - name: molecule
+    version: 1.25.1
   - docker-py
   - awscli
   - python-vagrant
