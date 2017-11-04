@@ -50,7 +50,8 @@ gems:
 
 pip_install_packages:
   - name: molecule
-    version: 1.25
+    version: 1.25.1
+  - docker-py
   - awscli
   - python-vagrant
   - netaddr
