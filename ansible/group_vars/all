@@ -57,6 +57,7 @@ pip_install_packages:
   - netaddr
   - name: pyopenssl
   - pywinrm
+  - urllib3
 
 docker_users:
   - vagrant

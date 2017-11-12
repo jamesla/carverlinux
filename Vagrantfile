@@ -15,18 +15,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   files = [
-    "#{Dir.home}/.ssh/id_rsa",
-    "#{Dir.home}/.ssh/config",
-    "#{Dir.home}/.gitconfig"
+    ".ssh/id_rsa",
+    ".ssh/config",
+    ".gitconfig"
   ]
 
   files.each do |f|
     if File.file?(f) then
-      puts 'copying file'
       config.vm.provision "shell", privileged: false, inline: <<-SHELL
         rm #{f} || true
       SHELL
-      config.vm.provision "file", source: f, destination: f
+      config.vm.provision "file", source: "#{Dir.home}/#{f}", destination: "~/#{f}"
     end
   end
 
@@ -70,6 +69,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.galaxy_role_file = "requirements.yml"
     ansible.galaxy_roles_path = "/etc/ansible/roles"
     ansible.sudo = true
+    ansible.version = "2.4.0.0"
   end
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL

@@ -1,14 +1,12 @@
 # file: roles/tmux/tasks/main.yml
 ---
 
-- name: symlink tmux config
+- name: copy tmux config
   become: false
-  file:
-    src: ~/dotfiles/.tmux.conf
+  copy:
+    src: "{{ role_path }}/files/.tmux.conf"
     dest: ~/.tmux.conf
-    state: link
-    force: yes
-
+  
 - name: install tmux plugins
   become: false
   git:

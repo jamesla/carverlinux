@@ -1,4 +1,12 @@
 ---
+# install python2.7 (ansible dependendy)
+# this can be removed once python3 support is official
+- hosts: all
+  become: true
+  gather_facts: false
+  pre_tasks:
+    - include: pre_tasks/install-python-2.7.yml
+
 - hosts: all
   become: true
   gather_facts: true
