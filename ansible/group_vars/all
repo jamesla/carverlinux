@@ -55,7 +55,7 @@ pip_install_packages:
   - awscli
   - python-vagrant
   - netaddr
-  - pyopenssl
+  - name: pyopenssl
   - pywinrm
 
 docker_users:

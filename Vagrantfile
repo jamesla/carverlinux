@@ -15,16 +15,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   files = [
-    "~/.ssh/id_rsa",
-    "~/.ssh/config",
-    "~/.gitconfig"
+    "#{Dir.home}/.ssh/id_rsa",
+    "#{Dir.home}/.ssh/config",
+    "#{Dir.home}/.gitconfig"
   ]
 
   files.each do |f|
-    config.vm.provision "shell", privileged: false, inline: <<-SHELL
-      rm #{f} || true
-    SHELL
-    config.vm.provision "file", source: f, destination: f
+    if File.file?(f) then
+      puts 'copying file'
+      config.vm.provision "shell", privileged: false, inline: <<-SHELL
+        rm #{f} || true
+      SHELL
+      config.vm.provision "file", source: f, destination: f
+    end
   end
 
   config.ssh.forward_agent = true

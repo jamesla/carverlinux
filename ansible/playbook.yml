@@ -1,12 +1,4 @@
 ---
-# install python2.7 (ansible dependendy)
-# this can be removed once python3 support is official
-- hosts: all
-  become: true
-  gather_facts: false
-  pre_tasks:
-    - include: pre_tasks/install-python-2.7.yml
-
 - hosts: all
   become: true
   gather_facts: true
@@ -14,13 +6,12 @@
     - include: pre_tasks/set-timezone.yml
   roles:
     - { role: home_drive }
+    - { role: ansible-role-pip }
     - { role: ansible-role-apt }
     - { role: ansible-role-nodejs }
-    - { role: ansible-role-pip }
     - { role: ansible-go }
 
     - { role: ruby }
-    - { role: dotfiles }
     - { role: spacemacs }
     - { role: vim }
     - { role: desktop }
