@@ -1,11 +1,4 @@
 ---
-# install python2.7 (ansible dependendy)
-# this can be removed once python3 support is official
-- hosts: all
-  become: true
-  gather_facts: false
-  pre_tasks:
-    - include: pre_tasks/install-python-2.7.yml
 
 - hosts: all
   become: true
@@ -28,10 +21,10 @@
 
     - { role: ansible-packer }
     - { role: ansible-vagrant }
-    - { role: ansible-role-chrome }
     - { role: ansible-consul }
-    - { role: ansible-consul-template }
     - { role: ansible-terraform }
+    - { role: ansible-role-chrome }
+    - { role: ansible-consul-template }
     - { role: ansible-role-docker }
     - { role: ansible-powershell }
     - { role: ansible-virtualbox }

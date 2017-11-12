@@ -69,7 +69,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.galaxy_role_file = "requirements.yml"
     ansible.galaxy_roles_path = "/etc/ansible/roles"
     ansible.sudo = true
-    ansible.version = "2.4.0.0"
   end
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL

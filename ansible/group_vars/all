@@ -55,9 +55,10 @@ pip_install_packages:
   - awscli
   - python-vagrant
   - netaddr
-  - name: pyopenssl
+  - pyopenssl
   - pywinrm
-  - urllib3
+  - name: urllib3
+    version: 1.13.1 #https://github.com/ansible/ansible/issues/25402
 
 docker_users:
   - vagrant
