@@ -5,7 +5,7 @@ describe file('/usr/bin/tmux') do
 end
 
 describe file('/home/vagrant/.tmux.conf') do
-  it { should be_symlink }
+  it { should exist }
 end
 
 describe command('tmux -V') do

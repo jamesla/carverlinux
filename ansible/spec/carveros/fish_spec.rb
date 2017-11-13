@@ -13,5 +13,5 @@ describe user('vagrant') do
 end
 
 describe file('/home/vagrant/.config/fish/config.fish') do
-  it { should be_symlink }
+  it { should exist }
 end

@@ -30,7 +30,7 @@ describe file('/home/vagrant/.emacs.d') do
 end
 
 describe file('/home/vagrant/.spacemacs') do
-  it { should be_symlink }
+  it { should be_exist }
 end
 
 commands = [

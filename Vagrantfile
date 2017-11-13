@@ -21,9 +21,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   ]
 
   files.each do |f|
-    if File.file?(f) then
+    if File.file?("#{Dir.home}/#{f}") then
       config.vm.provision "shell", privileged: false, inline: <<-SHELL
-        rm #{f} || true
+        rm "/home/vagrant/#{f}" || true
       SHELL
       config.vm.provision "file", source: "#{Dir.home}/#{f}", destination: "~/#{f}"
     end
@@ -32,7 +32,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.ssh.forward_agent = true
 
   config.vm.provider "parallels" do |prl|
-    prl.name = config.vm.hostname 
+    prl.name = config.vm.hostname
     prl.memory = memory
     prl.cpus = cpus
     prl.update_guest_tools = true
