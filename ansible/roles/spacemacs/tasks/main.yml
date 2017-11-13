@@ -9,12 +9,6 @@
       - xclip
       - silversearcher-ag
 
-# - name: install electron in a special way or vmd breaks
-#   become: true
-#   shell: npm -g install electron --unsafe-perm=true --allow-root && touch /tmp/electron_installed
-#   args:
-#     creates: /tmp/electron_installed
-
 - name: install ternjs #npm module currently in preview
   npm:
     global: yes
@@ -34,13 +28,11 @@
   tags:
     - skip_ansible_lint
 
-- name: symlink spacemacs config
+- name: copy spacemacs config
   become: false
-  file:
-    src: ~/dotfiles/.spacemacs
+  copy:
+    src: "{{ role_path }}/files/.spacemacs"
     dest: ~/.spacemacs
-    state: link
-    force: yes
 
 - name: update spacemacs packages
   become: false

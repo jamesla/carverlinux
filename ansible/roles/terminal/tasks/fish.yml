@@ -9,25 +9,11 @@
     name:
       - fish
 
-- name: fish config directories (is there a better way to do this?)
+- name: copy spacemacs config
   become: false
-  file:
-    path: ~/.config/fish
-    state: directory
-
-- name: fish function directory
-  become: false
-  file:
-    path: ~/.config/fish/functions
-    state: directory
-
-- name: link fish config
-  become: false
-  file:
-    src: ~/dotfiles/.config/fish/config.fish
-    dest: ~/.config/fish/config.fish
-    state: link
-    force: yes
+  copy:
+    src: "{{ role_path }}/files/.config/"
+    dest: ~/
 
 - name: link fish functions
   become: false
