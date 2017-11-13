@@ -9,19 +9,12 @@
     name:
       - fish
 
-- name: copy spacemacs config
+- name: copy fish config
   become: false
-  copy:
-    src: "{{ role_path }}/files/.config/"
+  synchronize:
+    src: "{{ role_path }}/files/.config"
     dest: ~/
-
-- name: link fish functions
-  become: false
-  file:
-    src: ~/dotfiles/.config/fish/functions/fish_prompt.fish
-    dest: ~/.config/fish/functions/fish_prompt.fish
-    state: link
-    force: yes
+    mode: pull
 
 - name: set pam to allow shell change (possible bug in ubuntu 16)
   lineinfile:
