@@ -47,6 +47,7 @@ gems:
   - rspec
   - serverspec
   - stack_master
+  - winrm
 
 pip_install_packages:
   - name: molecule

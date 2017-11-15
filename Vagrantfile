@@ -7,7 +7,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.box = "jamesla/ubuntu-1604-min-daily"
   config.vm.hostname = "carveros"
-  memory = 8096
+  memory = 14000
   cpus = 4
 
   if Vagrant.has_plugin?('vagrant-cachier')
