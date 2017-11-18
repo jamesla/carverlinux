@@ -4,7 +4,7 @@
 - name: install emacs and dependencies
   apt:
     name:
-      - emacs
+            #- emacs
       - ispell
       - xclip
       - silversearcher-ag

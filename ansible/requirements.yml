@@ -1,3 +1,7 @@
+- src: https://github.com/andrewrothstein/ansible-emacs-build.git
+  version: master
+  name: ansible-emacs-build
+
 - src: https://github.com/geerlingguy/ansible-role-nodejs.git
   version: master
   name: ansible-role-nodejs

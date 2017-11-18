@@ -13,6 +13,7 @@
     - { role: ansible-go }
 
     - { role: ruby }
+    - { role: ansible-emacs-build }
     - { role: spacemacs }
     - { role: vim }
     - { role: desktop }
