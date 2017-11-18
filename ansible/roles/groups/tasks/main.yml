@@ -1,0 +1,7 @@
+---
+- name: Add users to groups
+  user:
+    name: vagrant
+    group: "{{ item }}"
+    append: yes
+  with_items: "{{ add_groups }}"

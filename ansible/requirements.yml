@@ -42,7 +42,7 @@
   version: master
   name: ansible-go
 
-- src: https://github.com/jamesla/ansible-role-docker.git
+- src: https://github.com/geerlingguy/ansible-role-docker.git
   version: master
   name: ansible-role-docker
 

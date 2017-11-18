@@ -62,5 +62,6 @@ pip_install_packages:
   # - name: urllib3
   #   version: 1.13.1 #https://github.com/ansible/ansible/issues/25402
 
-docker_users:
-  - vagrant
+add_groups:
+  - kvm
+  - docker

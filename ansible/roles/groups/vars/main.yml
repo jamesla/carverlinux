@@ -1,0 +1,4 @@
+# file: roles/vim/vars/main.yml
+---
+#
+# foo: bar
