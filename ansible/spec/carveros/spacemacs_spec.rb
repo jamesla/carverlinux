@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 apt_packages = %w[
-  emacs
   ispell
   xclip
   silversearcher-ag

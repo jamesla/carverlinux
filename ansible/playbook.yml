@@ -20,12 +20,11 @@
     - { role: ansible-role-tmux }
     - { role: terminal }
 
-    - { role: ansible-packer }
-    - { role: ansible-vagrant }
-    - { role: ansible-consul }
-    - { role: ansible-terraform }
+    # - { role: ansible-packer }
+    # - { role: ansible-vagrant }
+    # - { role: ansible-consul }
+    # - { role: ansible-terraform }
     - { role: ansible-role-chrome }
-    - { role: ansible-consul-template }
     - { role: ansible-role-docker }
     - { role: ansible-powershell }
     - { role: ansible-virtualbox }
