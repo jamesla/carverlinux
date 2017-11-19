@@ -34,6 +34,7 @@ apt_install_packages:
   - ruby-sqlite3
   - qemu-kvm
   - virt-manager
+  - libvirt-dev
   - libvirt-bin
   - virtinst
   - bridge-utils

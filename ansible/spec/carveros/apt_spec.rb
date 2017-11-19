@@ -15,6 +15,7 @@ packages = %w[
   dnsutils
   net-tools
   qemu-kvm
+  libvirt-dev
   libvirt-bin
   virtinst
   bridge-utils
