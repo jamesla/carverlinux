@@ -20,6 +20,7 @@ packages = %w[
   bridge-utils
   python-openstackclient
   p7zip-full
+  virt-manager
 ]
 
 packages.each do |p|
@@ -41,7 +42,7 @@ commands = [
   'whois --version',
   'dig -v',
   'sqlite3 --version'
-  # 'netstat --help' both help and version return errors
+  'virt-manager --version'
 ]
 
 commands.each do |c|

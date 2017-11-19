@@ -33,6 +33,7 @@ apt_install_packages:
   - automake
   - ruby-sqlite3
   - qemu-kvm
+  - virt-manager
   - libvirt-bin
   - virtinst
   - bridge-utils
