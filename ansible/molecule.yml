@@ -16,7 +16,7 @@ driver:
 vagrant:
   platforms:
     - name: ubuntu
-      box: wholebits/ubuntu16.04-64
+      box: jamesla/ubuntu-1604-min-daily
   providers:
     - name: virtualbox
       type: virtualbox
