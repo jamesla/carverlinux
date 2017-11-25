@@ -9,12 +9,31 @@
       name:
         - fish
 
+  # - name: copy fish config
+  #   become: false
+  #   synchronize:
+  #     src: "{{ role_path }}/files/.config"
+  #     dest: ~/
+  #     mode: pull
+
+  # there is an issue with ansible copy and sync modules lets build up directory structure manually and copy files in for now
+  - name: Create function directory
+    become: false
+    file:
+      path: ~/.config/fish/functions
+      state: directory
+
   - name: copy fish config
     become: false
-    synchronize:
-      src: "{{ role_path }}/files/.config"
-      dest: ~/
-      mode: pull
+    copy:
+      src: "{{ role_path }}/files/.config/fish/config.fish"
+      dest: ~/.config/fish/config.fish
+
+  - name: copy fish functions
+    become: false
+    copy:
+      src: "{{ role_path }}/files/.config/fish/functions/fish_prompt.fish"
+      dest: ~/.config/fish/functions/fish_prompt.fish
 
   - name: set pam to allow shell change (possible bug in ubuntu 16)
     lineinfile:

@@ -3,6 +3,4 @@
 
 - include: nodm.yml
 - include: xmonad.yml
-# - include: clipboard.yml
-- include: prl_tools_fix.yml
 - include: keyboard_settings.yml

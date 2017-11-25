@@ -42,7 +42,7 @@ commands = [
   'jq --help',
   'whois --version',
   'dig -v',
-  'sqlite3 --version'
+  'sqlite3 --version',
   'virt-manager --version'
 ]
 

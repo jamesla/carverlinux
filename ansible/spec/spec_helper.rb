@@ -20,6 +20,3 @@ RSpec.configure do |config|
 end
 
 ENV['SKIP_VAGRANT_TESTS'] = 'TRUE'
-# puts '============='
-# puts ENV.inspect
-# puts '============='

@@ -61,8 +61,6 @@ pip_install_packages:
   - pyopenssl
   - pywinrm
   - urllib3
-  # - name: urllib3
-  #   version: 1.13.1 #https://github.com/ansible/ansible/issues/25402
 
 add_groups:
   - kvm

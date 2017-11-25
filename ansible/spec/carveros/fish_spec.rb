@@ -15,3 +15,7 @@ end
 describe file('/home/vagrant/.config/fish/config.fish') do
   it { should exist }
 end
+
+describe file('/home/vagrant/.config/fish/functions/fish_prompt.fish') do
+  it { should exist }
+end

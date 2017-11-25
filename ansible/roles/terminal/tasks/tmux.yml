@@ -6,7 +6,7 @@
   copy:
     src: "{{ role_path }}/files/.tmux.conf"
     dest: ~/.tmux.conf
-  
+
 - name: install tmux plugins
   become: false
   git:
