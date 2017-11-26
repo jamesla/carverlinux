@@ -22,10 +22,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   files.each do |f|
     if File.file?("#{Dir.home}/#{f}") then
+      # Remove old file
       config.vm.provision "shell", privileged: false, inline: <<-SHELL
         rm "/home/vagrant/#{f}" || true
       SHELL
+
+      # Copy new file
       config.vm.provision "file", source: "#{Dir.home}/#{f}", destination: "~/#{f}"
+
+      # Set id_rsa 600 perms
+      if f  == ".ssh/id_rsa"
+        config.vm.provision "shell", privileged: false, inline: "chmod 600 ~/.ssh/id_rsa"
+      end
     end
   end
 
