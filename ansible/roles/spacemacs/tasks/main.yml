@@ -1,42 +1,42 @@
 # file: roles/spacemacs/tasks/main.yml
 ---
 
-- name: install emacs and dependencies
-  apt:
-    name:
-            #- emacs
-      - ispell
-      - xclip
-      - silversearcher-ag
+  - name: install emacs and dependencies
+    apt:
+      name:
+              #- emacs
+        - ispell
+        - xclip
+        - silversearcher-ag
 
-- name: install ternjs #npm module currently in preview
-  npm:
-    global: yes
-    name: "{{ item }}"
-  with_items:
-    - tern
-    - js-yaml
-    - vmd
+  - name: install ternjs #npm module currently in preview
+    npm:
+      global: yes
+      name: "{{ item }}"
+    with_items:
+      - tern
+      - js-yaml
+      - vmd
 
-- name: clone spacemacs
-  become: false
-  git:
-    repo: https://github.com/syl20bnr/spacemacs
-    dest: ~/.emacs.d
-    clone: yes
-    update: no
-  tags:
-    - skip_ansible_lint
+  - name: clone spacemacs
+    become: false
+    git:
+      repo: https://github.com/syl20bnr/spacemacs
+      dest: ~/.emacs.d
+      clone: yes
+      update: no
+    tags:
+      - skip_ansible_lint
 
-- name: copy spacemacs config
-  become: false
-  copy:
-    src: "{{ role_path }}/files/.spacemacs"
-    dest: ~/.spacemacs
+  - name: copy spacemacs config
+    become: false
+    copy:
+      src: "{{ role_path }}/files/.spacemacs"
+      dest: ~/.spacemacs
 
-- name: update spacemacs packages
-  become: false
-  shell: emacs --batch --load=~/.emacs.d/init.el && touch /tmp/spacemacs_updated
-  args:
-    executable: /bin/bash
-    creates: /tmp/spacemacs_updated
+  - name: update spacemacs packages
+    become: false
+    shell: emacs --batch --load=~/.emacs.d/init.el && touch /tmp/spacemacs_updated
+    args:
+      executable: /bin/bash
+      creates: /tmp/spacemacs_updated
