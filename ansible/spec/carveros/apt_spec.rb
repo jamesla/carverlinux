@@ -19,7 +19,6 @@ packages = %w[
   libvirt-bin
   virtinst
   bridge-utils
-  python-openstackclient
   p7zip-full
   virt-manager
 ]

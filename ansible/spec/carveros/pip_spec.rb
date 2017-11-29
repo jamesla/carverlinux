@@ -4,6 +4,7 @@ packages = %w[
   python-vagrant
   netaddr
   molecule
+  python-openstackclient
 ]
 
 packages.each do |p|

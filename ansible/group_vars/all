@@ -38,7 +38,6 @@ apt_install_packages:
   - libvirt-bin
   - virtinst
   - bridge-utils
-  - python-openstackclient
   - p7zip-full
 
 gems:
@@ -61,6 +60,7 @@ pip_install_packages:
   - pyopenssl
   - pywinrm
   - urllib3
+  - python-openstackclient
 
 add_groups:
   - kvm
