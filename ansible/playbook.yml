@@ -5,6 +5,7 @@
   gather_facts: true
   pre_tasks:
     - include: pre_tasks/set-timezone.yml
+    - include: pre_tasks/updates.yml
   roles:
     # - { role: home_drive }
     # - { role: ansible-role-pip }
