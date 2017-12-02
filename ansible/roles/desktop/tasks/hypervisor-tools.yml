@@ -5,14 +5,21 @@
     shell: dmidecode -s system-product-name
     register: hypervisor
 
-  - name: Parallels dynamic resolution agent
+  - name: Start parallels dynamic resolution tool at startup
     lineinfile:
       dest: /etc/X11/Xsession
       line: prlcc &
-      insertafter: #!/bin/sh
-    when: hypervisor == 'Parallels Virtual Platform'
+      insertafter: '#!/bin/sh'
+    when: hypervisor.stdout == 'Parallels Virtual Platform'
 
   - name: Install Vmware desktop tools
     apt:
       name: open-vm-tools-desktop
-    when: hypervisor == 'VMware Virtual Platform'
+    when: hypervisor.stdout == 'VMware Virtual Platform'
+
+  - name: Start vmware dynamic resolution tool at startup
+    lineinfile:
+      dest: /etc/X11/Xsession
+      line: /usr/bin/vmware-user-suid-wrapper
+      insertafter: '#!/bin/sh'
+    when: hypervisor.stdout == 'VMware Virtual Platform'
