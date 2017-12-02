@@ -1,0 +1,18 @@
+---
+
+  - name: Detect Hypervisor
+    # become: false
+    shell: dmidecode -s system-product-name
+    register: hypervisor
+
+  - name: Parallels dynamic resolution agent
+    lineinfile:
+      dest: /etc/X11/Xsession
+      line: prlcc &
+      insertafter: #!/bin/sh
+    when: hypervisor == 'Parallels Virtual Platform'
+
+  - name: Install Vmware desktop tools
+    apt:
+      name: open-vm-tools-desktop
+    when: hypervisor == 'VMware Virtual Platform'
