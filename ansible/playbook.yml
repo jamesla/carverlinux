@@ -7,24 +7,24 @@
     - include: pre_tasks/set-timezone.yml
     - include: pre_tasks/updates.yml
   roles:
-    # - { role: home_drive }
-    # - { role: ansible-role-pip }
-    # - { role: ansible-role-apt }
-    # - { role: ansible-role-nodejs }
-    # - { role: ansible-go }
+    - { role: home_drive }
+    - { role: ansible-role-pip }
+    - { role: ansible-role-apt }
+    - { role: ansible-role-nodejs }
+    - { role: ansible-go }
 
-    # - { role: ruby }
-    # - { role: spacemacs }
+    - { role: ruby }
+    - { role: spacemacs }
     - { role: desktop }
-    # - { role: ansible-role-tmux }
-    # - { role: terminal }
+    - { role: ansible-role-tmux }
+    - { role: terminal }
 
-    # - { role: ansible-packer }
-    # - { role: ansible-vagrant }
-    # - { role: ansible-consul }
-    # - { role: ansible-terraform }
-    # - { role: ansible-role-chrome }
-    # - { role: ansible-role-docker }
-    # - { role: ansible-powershell }
-    # - { role: ansible-virtualbox }
-    # - { role: groups }
+    - { role: ansible-packer }
+    - { role: ansible-vagrant }
+    - { role: ansible-consul }
+    - { role: ansible-terraform }
+    - { role: ansible-role-chrome }
+    - { role: ansible-role-docker }
+    - { role: ansible-powershell }
+    - { role: ansible-virtualbox }
+    - { role: groups }
