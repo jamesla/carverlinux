@@ -46,6 +46,7 @@ gems:
   - cfn-flow
   - sfn
   - rspec
+  - minitest
   - serverspec
   - stack_master
   - winrm
