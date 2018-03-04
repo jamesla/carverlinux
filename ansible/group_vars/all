@@ -11,6 +11,7 @@ nodejs_npm_global_packages:
   - grunt-cli
   - grunt
   - gulp
+  - s3-website
 
 apt_cache_valid_time: 3600
 apt_setup_unattended_upgrades: no
@@ -39,6 +40,9 @@ apt_install_packages:
   - virtinst
   - bridge-utils
   - p7zip-full
+  - ovmf
+  - libguestfs-tools
+  - yarn
 
 gems:
   - rake
@@ -63,6 +67,7 @@ pip_install_packages:
   - urllib3
   - python-openstackclient
   - python-heatclient
+  - awsebcli
 
 add_groups:
   - kvm
