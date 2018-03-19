@@ -69,6 +69,5 @@ pip_install_packages:
   - python-heatclient
   - awsebcli
 
-add_groups:
-  - kvm
-  - docker
+group_helper:
+  - { user: vagrant, groups: ['kvm', 'docker'] }

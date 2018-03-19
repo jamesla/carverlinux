@@ -5,5 +5,5 @@ describe file('/etc/timezone') do
 end
 
 describe command('locale') do
-  its(:stdout) { should contain('LANG=en_US.UTF-8') }
+  its(:stdout) { should contain 'LC_ALL=en_US.UTF-8' }
 end
