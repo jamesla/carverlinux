@@ -26,10 +26,6 @@
   version: master
   name: ansible-consul
 
-- src: https://github.com/FGtatsuro/ansible-terraform.git
-  version: master
-  name: ansible-terraform
-
 - src: https://github.com/zzet/ansible-rbenv-role.git
   version: master
   name: ansible-rbenv-role
@@ -57,3 +53,7 @@
 - src: https://github.com/jamesla/ansible-role-tmux.git
   version: master
   name: ansible-role-tmux
+
+- src: https://github.com/jamesla/ansible-role-grouphelper.git
+  version: master
+  name: ansible-role-grouphelper

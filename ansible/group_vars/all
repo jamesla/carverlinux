@@ -12,6 +12,7 @@ nodejs_npm_global_packages:
   - grunt
   - gulp
   - s3-website
+  - yarn
 
 apt_cache_valid_time: 3600
 apt_setup_unattended_upgrades: no
@@ -42,7 +43,6 @@ apt_install_packages:
   - p7zip-full
   - ovmf
   - libguestfs-tools
-  - yarn
 
 gems:
   - rake

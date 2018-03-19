@@ -22,9 +22,8 @@
     - { role: ansible-packer }
     - { role: ansible-vagrant }
     - { role: ansible-consul }
-    - { role: ansible-terraform }
     - { role: ansible-role-chrome }
     - { role: ansible-role-docker }
     - { role: ansible-powershell }
     - { role: ansible-virtualbox }
-    - { role: groups }
+    - { role: ansible-role-grouphelper }
