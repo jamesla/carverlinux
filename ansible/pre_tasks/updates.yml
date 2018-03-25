@@ -1,5 +1,0 @@
----
-
-- name: Upgrade OS
-  apt:
-    upgrade: full

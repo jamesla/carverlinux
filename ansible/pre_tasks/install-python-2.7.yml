@@ -1,6 +1,0 @@
----
-
-- name: Install python for Ansible
-  raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal python-zipstream python-dev)
-  become: yes
-  changed_when: False

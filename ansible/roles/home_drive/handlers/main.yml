@@ -1,7 +1,0 @@
-# file: roles/home_drive/handlers/main.yml
----
-
-- name: update mount points
-  shell: mount -a
-  tags:
-    - skip_ansible_lint
