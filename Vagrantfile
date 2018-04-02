@@ -64,5 +64,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     libvirt.memory = memory
     libvirt.cpus = cpus
     libvirt.nested = 'TRUE'
+    libvirt.cpu_mode = 'host-passthrough'
+    libvirt.disk_bus = 'ide'
+    libvirt.disk_device = 'sda'
   end
 end

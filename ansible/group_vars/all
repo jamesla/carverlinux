@@ -70,4 +70,4 @@ pip_install_packages:
   - awsebcli
 
 group_helper:
-  - { user: vagrant, groups: ['kvm', 'docker'] }
+  - { user: vagrant, groups: ['kvm','libvirtd', 'docker'] }
