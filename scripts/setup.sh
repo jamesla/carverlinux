@@ -13,12 +13,6 @@ wget --no-check-certificate 'https://raw.github.com/mitchellh/vagrant/master/key
 chmod 600 ~/.ssh/authorized_keys
 chown -R vagrant ~/.ssh
 
-# Create swap file
-fallocate -l 1G /swapfile
-chmod 600 /swapfile
-mkswap /swapfile
-swapon /swapfile
-
 # Install ansible
 pip install ansible
 
