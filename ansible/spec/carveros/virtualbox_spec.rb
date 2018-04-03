@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe package('virtualbox-5.1') do
+describe package('virtualbox-5.2') do
   it { should be_installed.by(:apt) }
 end
 

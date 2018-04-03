@@ -1,3 +1,4 @@
+output-*
 .vagrant
 .DS_Store
 ansible/.molecule
