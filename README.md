@@ -21,7 +21,7 @@ vagrant up
 ```
 mkdir carverlinux && carverlinux
 vagrant init jamesla/carverlinux
-vagrant up --provider vmware_workstation
+vagrant up --provider vmware_desktop
 
 ```
 
