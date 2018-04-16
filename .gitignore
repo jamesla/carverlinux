@@ -8,3 +8,4 @@ ansible/.vagrant
 *~
 *.box
 *.iso
+*.temp
