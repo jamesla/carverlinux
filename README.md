@@ -6,6 +6,7 @@
 
 1. Install Parallels (http://www.parallels.com)
 2. Install Parallels Vagrant Plugin (https://github.com/Parallels/vagrant-parallels)
+3. Install Parallels Virtualization SDK (brew cask install parallels-virtualization-sdk)
 
 ```
 mkdir carverlinux && carverlinux
