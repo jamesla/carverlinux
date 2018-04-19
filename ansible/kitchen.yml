@@ -1,0 +1,67 @@
+# ---
+# driver:
+#   name: docker
+
+# provisioner:
+#   name: ansible_playbook
+#   playbook: playbook.yml
+#   hosts: default
+#   roles_path: roles
+#   require_chef_for_busser: false
+
+# platforms:
+#   - name: ubuntu-17.10
+
+# suites:
+#   - name: default
+#     run_list:
+#     attributes:
+
+---
+driver:
+  name: docker
+  provision_command: mkdir -p /run/sshd
+  disable_upstart: false
+
+provisioner:
+  name: ansible_playbook
+  additional_copy_path: pre_tasks
+  requirements_path: requirements.yml
+  playbook: playbook.yml
+  hosts: default
+  roles_path: roles
+  require_chef_for_busser: false
+
+platforms:
+  - name: ubuntu-17.10
+
+suites:
+  - name: default
+    run_list:
+    attributes:
+
+# ---
+
+# driver:
+#   name: docker
+
+# provisioner:
+#   name: chef_zero
+#   # name: ansible_playbook
+#   # additional_copy_path: pre_tasks
+#   # requirements_path: requirements.yml
+#   # playbook: playbook.yml
+#   # hosts: default
+#   # roles_path: roles
+#   # require_chef_for_busser: false
+
+# platforms:
+#   # - name: ubuntu-16.04
+#   # - name: ubuntu-16.10
+#   # - name: ubuntu-17.04
+#   # - name: ubuntu-17.10
+# - name: ubuntu-18.04
+#   suites:
+#     - name: default
+#       run_list:
+#       attributes:

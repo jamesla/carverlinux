@@ -9,3 +9,5 @@ ansible/.vagrant
 *.box
 *.iso
 *.temp
+.kitchen
+ansible/.kitchen
