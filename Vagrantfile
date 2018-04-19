@@ -64,7 +64,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     libvirt.memory = memory
     libvirt.cpus = cpus
     libvirt.nested = 'TRUE'
-    libvirt.cpu_mode = 'host-model'
+    # libvirt.cpu_mode = 'host-model'
     libvirt.disk_bus = 'sata'
     # libvirt.disk_device = 'sda'
     libvirt.nic_model_type = 'e1000'
