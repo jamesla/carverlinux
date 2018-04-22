@@ -3,9 +3,9 @@
     "vagrant_cloud_token": "{{env `VAGRANT_CLOUD_TOKEN`}}",
     "version": "{{env `VERSION`}}",
     "boot_wait": "10s",
+    "disk_size": "150000",
     "http_directory": "http",
     "iso_checksum_type": "sha256",
-    "disk_size": "81920",
     "iso_urls": "http://releases.ubuntu.com/17.10.1/ubuntu-17.10.1-server-amd64.iso",
     "iso_checksum": "8ff73f1b622276758475c3bd5190b382774626de5a82c50930519381f6c3a3f8",
     "ssh_username": "vagrant",
@@ -67,13 +67,13 @@
       "type": "parallels-iso",
       "parallels_tools_flavor": "lin",
       "guest_os_type": "ubuntu",
+      "disk_size": "{{ user `disk_size` }}",
       "prlctl": [
         [ "set", "{{.Name}}", "--nested-virt", "on" ],
         [ "set", "{{.Name}}", "--device-set", "cdrom0", "--iface", "sata" ],
         [ "set", "{{.Name}}", "--device-del", "sound0" ],
         [ "set", "{{.Name}}", "--device-del", "usb" ]
       ],
-      "disk_size": 81920,
       "boot_command": [
         "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
         "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
@@ -116,6 +116,7 @@
       "format": "qcow2",
       "accelerator": "kvm",
       "disk_interface": "ide",
+      "disk_size": "{{ user `disk_size` }}",
       "net_device": "e1000",
       "boot_command": [
         "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
@@ -144,7 +145,6 @@
         "<enter><wait>"
       ],
       "boot_wait": "{{ user `boot_wait` }}",
-      "disk_size": "{{ user `disk_size` }}",
       "http_directory": "{{ user `http_directory` }}",
       "iso_urls":  "{{ user `iso_urls` }}",
       "headless": "{{ user `headless` }}",
@@ -167,6 +167,7 @@
       "type": "ansible-local",
       "playbook_file": "ansible/playbook.yml",
       "playbook_dir": "ansible",
+      "extra_arguments": "-vvvv",
       "staging_directory": "/tmp/staging",
       "galaxy_file": "ansible/requirements.yml"
     },
