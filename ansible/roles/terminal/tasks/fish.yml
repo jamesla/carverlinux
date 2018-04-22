@@ -9,25 +9,20 @@
       name:
         - fish
 
-  # - name: copy fish config
-  #   become: false
-  #   synchronize:
-  #     src: "{{ role_path }}/files/.config"
-  #     dest: ~/
-  #     mode: pull
-
   # there is an issue with ansible copy and sync modules lets build up directory structure manually and copy files in for now
   - name: Create function directory
     become: false
     file:
       path: ~/.config/fish/functions
       state: directory
+      owner: vagrant
 
   - name: copy fish config
     become: false
     copy:
       src: "{{ role_path }}/files/.config/fish/config.fish"
       dest: ~/.config/fish/config.fish
+      owner: vagrant
 
   - name: copy fish functions
     become: false
@@ -44,10 +39,8 @@
   - name: set as default shell
     become: true
     user:
-      name: root
+      name: "{{ item }}"
       shell: /usr/bin/fish
-
-  - name: set as default shell
-    user:
-      name: vagrant
-      shell: /usr/bin/fish
+    with_items:
+      - root
+      - vagrant

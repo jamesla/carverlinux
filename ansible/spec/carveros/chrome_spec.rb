@@ -1,4 +1,4 @@
-require 'spec_helper'
+require_relative 'spec_helper'
 
 describe package('google-chrome-stable') do
   it { should be_installed }

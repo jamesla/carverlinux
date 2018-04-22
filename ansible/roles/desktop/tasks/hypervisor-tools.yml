@@ -1,9 +1,9 @@
 ---
 
   - name: Detect Hypervisor
-    # become: false
     shell: dmidecode -s system-product-name
     register: hypervisor
+    ignore_errors: yes
 
   - name: Start parallels dynamic resolution tool at startup
     lineinfile:

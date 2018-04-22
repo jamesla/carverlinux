@@ -1,4 +1,4 @@
-dotfiles_loc: /vagrant/dotfiles
+dotfiles_loc: /$USER/dotfiles
 
 virtualbox_apt_package: "virtualbox-5.2"
 

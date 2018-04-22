@@ -4,3 +4,7 @@ gem 'rake'
 gem 'rubocop'
 gem 'serverspec'
 gem "test-kitchen"
+gem "kitchen-docker"
+gem "kitchen-ansible"
+gem "kitchen-verifier-serverspec"
+gem "serverspec"

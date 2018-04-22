@@ -20,6 +20,6 @@
     replace: 'NODM_ENABLED=true'
 
 - name: set nodm service to automatically start
-  systemd:
+  service:
     name: nodm
     enabled: true

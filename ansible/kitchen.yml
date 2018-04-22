@@ -1,22 +1,3 @@
-# ---
-# driver:
-#   name: docker
-
-# provisioner:
-#   name: ansible_playbook
-#   playbook: playbook.yml
-#   hosts: default
-#   roles_path: roles
-#   require_chef_for_busser: false
-
-# platforms:
-#   - name: ubuntu-17.10
-
-# suites:
-#   - name: default
-#     run_list:
-#     attributes:
-
 ---
 driver:
   name: docker
@@ -34,34 +15,25 @@ provisioner:
 
 platforms:
   - name: ubuntu-17.10
+    driver:
+      username: vagrant
+      password: vagrant
+
+verifier:
+  name: serverspec
+  sudo: true
+  sudo_command: 'sudo -E -H -u vagrant'
+  custom_install_commmand: echo 123
+  # remote_exec: false
+  # sudo_path: true
+
+# suites:
+#   - name: default
+#     run_list:
+#     attributes:
 
 suites:
   - name: default
-    run_list:
-    attributes:
-
-# ---
-
-# driver:
-#   name: docker
-
-# provisioner:
-#   name: chef_zero
-#   # name: ansible_playbook
-#   # additional_copy_path: pre_tasks
-#   # requirements_path: requirements.yml
-#   # playbook: playbook.yml
-#   # hosts: default
-#   # roles_path: roles
-#   # require_chef_for_busser: false
-
-# platforms:
-#   # - name: ubuntu-16.04
-#   # - name: ubuntu-16.10
-#   # - name: ubuntu-17.04
-#   # - name: ubuntu-17.10
-# - name: ubuntu-18.04
-#   suites:
-#     - name: default
-#       run_list:
-#       attributes:
+    verifier:
+      patterns:
+        - spec/carveros/*_spec.rb

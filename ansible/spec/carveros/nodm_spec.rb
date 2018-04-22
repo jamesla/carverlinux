@@ -1,4 +1,4 @@
-require 'spec_helper'
+require_relative 'spec_helper'
 
 describe package('libxft-dev') do
   it { should be_installed }

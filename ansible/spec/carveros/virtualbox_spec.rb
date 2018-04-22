@@ -1,4 +1,4 @@
-require 'spec_helper'
+require_relative 'spec_helper'
 
 describe package('virtualbox-5.2') do
   it { should be_installed.by(:apt) }
