@@ -1,5 +1,17 @@
 require 'spec_helper'
-packages = %w[
+
+apts = %w[
+  ruby
+  ruby-dev
+]
+
+apts.each do |p|
+  describe package(p) do
+    it { should be_installed.by(:apt) }
+  end
+end
+
+gems = %w[
   cfn-flow
   sfn
   rspec
@@ -10,7 +22,7 @@ packages = %w[
   sqlite3
 ]
 
-packages.each do |p|
+gems.each do |p|
   describe package(p) do
     it { should be_installed.by(:gem) }
   end
