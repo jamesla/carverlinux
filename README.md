@@ -10,8 +10,7 @@
 3. Install Parallels Virtualization SDK (brew cask install parallels-virtualization-sdk)
 
 ```
-mkdir carverlinux && carverlinux
-vagrant init jamesla/carverlinux
+mkdir carverlinux && vagrant init jamesla/carverlinux
 vagrant up
 ```
 
@@ -22,8 +21,7 @@ vagrant up
 3. Install Vmware Workstation Vagrant Plugin (https://www.vagrantup.com/vmware/index.html) and install license
 
 ```
-mkdir carverlinux && carverlinux
-vagrant init jamesla/carverlinux
+mkdir carverlinux && vagrant init jamesla/carverlinux
 vagrant up --provider vmware_workstation
 
 ```
@@ -35,7 +33,6 @@ vagrant up --provider vmware_workstation
 3. Install Libvirt Vagrant Plugin (https://github.com/vagrant-libvirt/vagrant-libvirt)
 
 ```
-mkdir carverlinux && carverlinux
-vagrant init jamesla/carverlinux
+mkdir carverlinux && vagrant init jamesla/carverlinux
 vagrant up --provider libvirt
 ```
