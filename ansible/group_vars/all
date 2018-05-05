@@ -45,6 +45,7 @@ apt_install_packages:
   - p7zip-full
   - ovmf
   - libguestfs-tools
+  - ifupdown
 
 gems:
   - rake
