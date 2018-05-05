@@ -350,7 +350,6 @@ you should place you code here."
   (define-key global-map (kbd "C-k") #'evil-window-up)
   (define-key global-map (kbd "C-l") #'evil-window-right)
   (xclip-mode 1)
-  (turn-on-xclip)
   )
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
