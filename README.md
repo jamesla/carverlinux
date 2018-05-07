@@ -21,7 +21,9 @@ vagrant up
 3. Install Vmware Workstation Vagrant Plugin (https://www.vagrantup.com/vmware/index.html) and install license
 
 ```
-mkdir carverlinux && vagrant init jamesla/carverlinux
+vagrant plugin install vagrant-vmware-desktop
+vagrant plugin license vagrant-vmware-desktop ~/license.lic
+mkdir carverlinux && cd carverlinux && vagrant init jamesla/carverlinux
 vagrant up --provider vmware_workstation
 
 ```
