@@ -49,7 +49,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     prl.customize ["set", :id, "--videosize", "64"]
   end
 
-  config.vm.provider "vmware_workstation" do |vmware|
+  config.vm.provider "vmware_desktop" do |vmware|
     vmware.gui = true
     vmware.vmx["memsize"] = memory
     vmware.linked_clone = false
