@@ -27,7 +27,7 @@ vagrant plugin license vagrant-vmware-desktop ~/license.lic
 
 ```
 mkdir carverlinux && cd carverlinux && vagrant init jamesla/carverlinux
-vagrant up --provider vmware_workstation
+vagrant up --provider vmware_desktop
 
 ```
 
