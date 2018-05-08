@@ -4,13 +4,15 @@
 
 ### OSX (Parallels)
 
-1. Install Parallels (http://www.parallels.com)
-2. Install Vagrant (https://www.vagrantup.com)
-2. Install Parallels Vagrant Plugin (https://github.com/Parallels/vagrant-parallels)
-3. Install Parallels Virtualization SDK (brew cask install parallels-virtualization-sdk)
-
+Install dependencies
 ```
-mkdir carverlinux && vagrant init jamesla/carverlinux
+brew cask install parallels parallels-virtualization-sdk vagrant
+vagrant plugin install vagrant-parallels
+```
+
+Start box
+```
+mkdir carverlinux && cd carverlinux && vagrant init jamesla/carverlinux
 vagrant up
 ```
 
