@@ -50,6 +50,7 @@ Show workspaces ctrl-b + w
 New workspace ctrl-b + c
 Rename workspace ctrl-b + ,
 Application launcher alt+p
+Kill workspace ctrl-b+&
 
 Window left ctrl + h
 Window right ctrl + l
