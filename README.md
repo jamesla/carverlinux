@@ -44,13 +44,13 @@ vagrant up --provider libvirt
 
 ### Important hotkey bindings
 
-Horizontal split ctrl-b + “
-Vertical split ctrl-b + %
-Show workspaces ctrl-b + w
-New workspace ctrl-b + c
-Rename workspace ctrl-b + ,
+Horizontal split ctrl-b "
+Vertical split ctrl-b %
+Show workspaces ctrl-b w
+New workspace ctrl-b c
+Rename workspace ctrl-b ,
 Application launcher alt+p
-Kill workspace ctrl-b+&
+Kill workspace ctrl-b &
 
 Window left ctrl + h
 Window right ctrl + l
@@ -58,5 +58,5 @@ Window up ctrl + j
 Window down ctrl + k
 
 Emacs project browser space - p -t
-emacs open file as horizontal split highlight file and -
-emacs open file as veritical split highlight file and |
+Emacs open file as horizontal split highlight file and -
+Emacs open file as veritical split highlight file and |
