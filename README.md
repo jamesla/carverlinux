@@ -18,15 +18,14 @@ vagrant up
 
 ### Windows (Vmware Workstation)
 
-1. Install Vmware Workstation (https://www.vmware.com/go/downloadworkstation)
-2. Install Vagrant (https://www.vagrantup.com)
-3. Install Vmware Desktop Vagrant Plugin
+Install dependencies
 ```
+choco install -y vmwareworkstation vagrant vagrant-vmware-utility
 vagrant plugin install vagrant-vmware-desktop
-choco install -y vagrant-vmware-utility
-vagrant plugin license vagrant-vmware-desktop ~/license.lic
+vagrant plugin license vagrant-vmware-desktop %path_to_your_license_file%
 ```
 
+Start box
 ```
 mkdir carverlinux && cd carverlinux && vagrant init jamesla/carverlinux
 vagrant up --provider vmware_desktop
