@@ -18,7 +18,7 @@ vagrant up
 
 1. Install Vmware Workstation (https://www.vmware.com/go/downloadworkstation)
 2. Install Vagrant (https://www.vagrantup.com)
-3. Install Vmware Desktop Vagrant Plugin 
+3. Install Vmware Desktop Vagrant Plugin
 ```
 vagrant plugin install vagrant-vmware-desktop
 choco install -y vagrant-vmware-utility
@@ -41,3 +41,25 @@ vagrant up --provider vmware_desktop
 mkdir carverlinux && vagrant init jamesla/carverlinux
 vagrant up --provider libvirt
 ```
+
+### Important hotkey bindings
+
+* Terminal Horizontal split ctrl-b "
+* Terminal Vertical split ctrl-b %
+* Show terminal windows ctrl-b w
+* New terminal window ctrl-b c
+* Rename terminal window ctrl-b
+* Kill termainl window ctrl-b &
+
+* Window left ctrl + h
+* Window right ctrl + l
+* Window up ctrl + j
+* Window down ctrl + k
+
+* Emacs project browser space - p -t
+* Emacs open file as horizontal split highlight file and -
+* Emacs open file as veritical split highlight file and |
+
+* Application launcher alt+p
+* Change workspace alt + 1,2,3,4 etc
+* Move application to new workspace: alt + shift + number of workspace you want to move it to
