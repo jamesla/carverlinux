@@ -1,8 +1,16 @@
 ---
 driver:
-  name: docker
-  provision_command: mkdir -p /run/sshd
-  disable_upstart: false
+  name: vagrant
+  ssh:
+    shell: /bin/sh
+
+# driver:
+#   name: docker
+#   use_sudo: false
+#   provision_command: mkdir -p /run/sshd
+#   disable_upstart: false
+#   ssh:
+#     shell: '"/bin/sh"'
 
 provisioner:
   name: ansible_playbook
@@ -10,8 +18,10 @@ provisioner:
   requirements_path: requirements.yml
   playbook: playbook.yml
   hosts: default
+  # ansible_verbose: true
   roles_path: roles
   require_chef_for_busser: false
+  ansible_sudo: false
 
 platforms:
   - name: ubuntu-17.10
@@ -19,11 +29,11 @@ platforms:
       username: vagrant
       password: vagrant
 
-verifier:
-  name: serverspec
-  sudo: true
-  sudo_command: 'sudo -E -H -u vagrant'
-  custom_install_commmand: echo 123
+# verifier:
+#   name: serverspec
+#   sudo: true
+#   sudo_command: 'sudo -E -H -u vagrant'
+#   custom_install_commmand: echo 123
   # remote_exec: false
   # sudo_path: true
 
