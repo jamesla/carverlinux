@@ -21,6 +21,7 @@
     - { role: ansible-vagrant }
     - { role: ansible-consul }
     - { role: ansible-role-chrome }
-    - { role: ansible-role-docker }
+    - { role: docker }
+    - { role: ansible-powershell }
     - { role: ansible-virtualbox }
     - { role: ansible-role-grouphelper }

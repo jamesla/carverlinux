@@ -4,27 +4,31 @@
 
 ### OSX (Parallels)
 
-1. Install Parallels (http://www.parallels.com)
-2. Install Vagrant (https://www.vagrantup.com)
-2. Install Parallels Vagrant Plugin (https://github.com/Parallels/vagrant-parallels)
-3. Install Parallels Virtualization SDK (brew cask install parallels-virtualization-sdk)
-
+Install dependencies
 ```
-mkdir carverlinux && carverlinux
-vagrant init jamesla/carverlinux
+brew cask install parallels parallels-virtualization-sdk vagrant
+vagrant plugin install vagrant-parallels
+```
+
+Start box
+```
+mkdir carverlinux && cd carverlinux && vagrant init jamesla/carverlinux
 vagrant up
 ```
 
 ### Windows (Vmware Workstation)
 
-1. Install Vmware Workstation (https://www.vmware.com/go/downloadworkstation)
-2. Install Vagrant (https://www.vagrantup.com)
-3. Install Vmware Workstation Vagrant Plugin (https://www.vagrantup.com/vmware/index.html) and install license
-
+Install dependencies
 ```
-mkdir carverlinux && carverlinux
-vagrant init jamesla/carverlinux
-vagrant up --provider vmware_workstation
+choco install -y vmwareworkstation vagrant vagrant-vmware-utility
+vagrant plugin install vagrant-vmware-desktop
+vagrant plugin license vagrant-vmware-desktop %path_to_your_license_file%
+```
+
+Start box
+```
+mkdir carverlinux && cd carverlinux && vagrant init jamesla/carverlinux
+vagrant up --provider vmware_desktop
 
 ```
 
@@ -35,7 +39,28 @@ vagrant up --provider vmware_workstation
 3. Install Libvirt Vagrant Plugin (https://github.com/vagrant-libvirt/vagrant-libvirt)
 
 ```
-mkdir carverlinux && carverlinux
-vagrant init jamesla/carverlinux
+mkdir carverlinux && vagrant init jamesla/carverlinux
 vagrant up --provider libvirt
 ```
+
+### Important hotkey bindings
+
+* Terminal Horizontal split ctrl-b "
+* Terminal Vertical split ctrl-b %
+* Show terminal windows ctrl-b w
+* New terminal window ctrl-b c
+* Rename terminal window ctrl-b
+* Kill termainl window ctrl-b &
+
+* Window left ctrl + h
+* Window right ctrl + l
+* Window up ctrl + j
+* Window down ctrl + k
+
+* Emacs project browser space - p -t
+* Emacs open file as horizontal split highlight file and -
+* Emacs open file as veritical split highlight file and |
+
+* Application launcher alt+p
+* Change workspace alt + 1,2,3,4 etc
+* Move application to new workspace: alt + shift + number of workspace you want to move it to

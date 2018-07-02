@@ -1,0 +1,15 @@
+---
+
+- name: Install Docker
+  include_role:
+    name: ansible-role-docker
+
+- name: Copy daemon.json file
+  copy:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+
+- name: Restart docker
+  service:
+    name: docker
+    state: restarted

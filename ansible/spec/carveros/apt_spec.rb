@@ -21,6 +21,7 @@ packages = %w[
   bridge-utils
   p7zip-full
   virt-manager
+  ifupdown
 ]
 
 packages.each do |p|
