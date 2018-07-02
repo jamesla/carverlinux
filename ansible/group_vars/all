@@ -74,3 +74,7 @@ pip_install_packages:
 
 group_helper:
   - { user: vagrant, groups: ['kvm', 'docker'] }
+
+### DOCKER HACK - REMOVE THIS ONCE OFFICIAL BIONIC REPO IS RELEASED BY DOCKER.COM
+docker_apt_repository: "deb https://download.docker.com/linux/ubuntu artful stable"
+###

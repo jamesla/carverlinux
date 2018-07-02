@@ -14,14 +14,14 @@
 - name: install ruby
   apt:
     name:
-      - ruby2.4
-      - ruby2.4-dev
+      - ruby
+      - ruby-dev
 
-- name: ensure rake not installed from apt
-  become: true
-  apt:
-    name: rake
-    state: absent
+# - name: ensure rake not installed from apt
+#   become: true
+#   apt:
+#     name: rake
+#     state: absent
 
 - name: install gems
   become: true
