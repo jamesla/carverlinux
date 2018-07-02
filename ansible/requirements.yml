@@ -49,10 +49,6 @@
   version: master
   name: ansible-role-docker
 
-- src: https://github.com/ngetchell/ansible-powershell.git
-  version: master
-  name: ansible-powershell
-
 - src: https://github.com/FGtatsuro/ansible-virtualbox.git
   version: master
   name: ansible-virtualbox
