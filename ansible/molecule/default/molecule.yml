@@ -1,0 +1,27 @@
+---
+dependency:
+  name: galaxy
+  requirements_file: requirements.yml
+driver:
+  driver:
+  name: docker
+lint:
+  name: yamllint
+platforms:
+  - name: ubuntu
+    image: ubuntu:18.04
+provisioner:
+  name: ansible
+  config_options:
+    ssh_connection:
+      pipelining: true
+  lint:
+    name: ansible-lint
+  # env:
+    # ANSIBLE_ROLES_PATH: /tmp/molecule/ansible/default:../../roles
+scenario:
+  name: default
+verifier:
+  name: inspec
+  lint:
+    name: rubocop

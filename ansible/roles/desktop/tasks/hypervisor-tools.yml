@@ -1,8 +1,8 @@
 ---
 
   - name: Detect Hypervisor
-    # become: false
-    shell: dmidecode -s system-product-name
+    command: dmidecode -s system-product-name
+    changed_when: false
     register: hypervisor
 
   - name: Start parallels dynamic resolution tool at startup
