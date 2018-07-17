@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 packages = %w[
   telnet
   speedtest-cli
@@ -26,7 +24,7 @@ packages = %w[
 
 packages.each do |p|
   describe package(p) do
-    it { should be_installed.by(:apt) }
+    it { should be_installed }
   end
 end
 

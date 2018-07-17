@@ -1,7 +1,5 @@
-require 'spec_helper'
-
 describe package('virtualbox-5.2') do
-  it { should be_installed.by(:apt) }
+  it { should be_installed }
 end
 
 describe command('vboxmanage -v') do
@@ -14,6 +12,6 @@ end
 
 unless ENV['SKIP_VAGRANT_TESTS']
   describe command('kvm-ok') do
-    its(:stdout) { should contain('KVM acceleration can be used') }
+    its(:stdout) { should include('KVM acceleration can be used') }
   end
 end

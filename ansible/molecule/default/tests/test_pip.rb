@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 packages = %w[
   python-vagrant
   netaddr
@@ -9,7 +7,7 @@ packages = %w[
 
 packages.each do |p|
   describe package(p) do
-    it { should be_installed.by(:pip) }
+    it { should be_installed }
   end
 end
 

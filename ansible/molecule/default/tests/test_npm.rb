@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 packages = %w[
   ionic
   yo
@@ -12,7 +10,7 @@ packages = %w[
 
 packages.each do |p|
   describe package(p) do
-    it { should be_installed.by(:npm) }
+    it { should be_installed }
   end
 end
 

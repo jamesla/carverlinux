@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe file('/usr/bin/tmux') do
   it { should exist }
 end

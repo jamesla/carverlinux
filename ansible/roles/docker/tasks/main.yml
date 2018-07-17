@@ -8,8 +8,10 @@
   copy:
     src: daemon.json
     dest: /etc/docker/daemon.json
+  register: copy_daemon_json
 
 - name: Restart docker
   service:
     name: docker
     state: restarted
+  when: "{{ copy_daemon_json.changed }}"

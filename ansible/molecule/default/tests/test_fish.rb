@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe package('fish') do
   it { should be_installed }
 end
@@ -9,7 +7,7 @@ describe package('fish') do
 end
 
 describe user('vagrant') do
-  it { should have_login_shell '/usr/bin/fish' }
+  its('shell') { should eq '/usr/bin/fish' }
 end
 
 describe file('/home/vagrant/.config/fish/config.fish') do

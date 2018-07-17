@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe package('xmonad') do
   it { should be_installed }
 end

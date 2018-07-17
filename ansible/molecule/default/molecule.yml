@@ -1,7 +1,8 @@
 ---
 dependency:
   name: galaxy
-  requirements_file: requirements.yml
+  options:
+    role-file: requirements.yml
 driver:
   driver:
   name: docker
@@ -9,7 +10,18 @@ lint:
   name: yamllint
 platforms:
   - name: ubuntu
-    image: ubuntu:18.04
+    image: solita/ubuntu-systemd:bionic
+    command: /sbin/init
+    privileged: true
+    capabilities:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    tmpfs:
+      - /run
+      - /run/lock
+    security_opts:
+      - seccomp=unconfined
 provisioner:
   name: ansible
   config_options:
@@ -17,11 +29,14 @@ provisioner:
       pipelining: true
   lint:
     name: ansible-lint
-  # env:
-    # ANSIBLE_ROLES_PATH: /tmp/molecule/ansible/default:../../roles
+  playbooks:
+    converge: ../../playbook.yml
+  env:
+    ANSIBLE_ROLES_PATH: /tmp/molecule/ansible/default:../../roles
 scenario:
   name: default
 verifier:
   name: inspec
+  directory: tests
   lint:
     name: rubocop

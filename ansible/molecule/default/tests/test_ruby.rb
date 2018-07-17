@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 apts = %w[
   ruby
   ruby-dev
@@ -7,7 +5,7 @@ apts = %w[
 
 apts.each do |p|
   describe package(p) do
-    it { should be_installed.by(:apt) }
+    it { should be_installed }
   end
 end
 
@@ -24,7 +22,7 @@ gems = %w[
 
 gems.each do |p|
   describe package(p) do
-    it { should be_installed.by(:gem) }
+    it { should be_installed }
   end
 end
 
@@ -46,5 +44,5 @@ end
 # Don't use system ruby
 describe command('ruby -v') do
   its(:exit_status) { should eq 0 }
-  its(:stdout) { should_not contain('system') }
+  its(:stdout) { should_not include('system') }
 end

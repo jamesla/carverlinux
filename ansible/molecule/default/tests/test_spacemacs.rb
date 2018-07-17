@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 apt_packages = %w[
   ispell
   xclip
@@ -8,7 +6,7 @@ apt_packages = %w[
 
 apt_packages.each do |p|
   describe package(p) do
-    it { should be_installed.by(:apt) }
+    it { should be_installed }
   end
 end
 
@@ -20,7 +18,7 @@ npm_packages = %w[
 
 npm_packages.each do |p|
   describe package(p) do
-    it { should be_installed.by(:npm) }
+    it { should be_installed }
   end
 end
 

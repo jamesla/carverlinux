@@ -3,8 +3,7 @@
 - hosts: all
   become: true
   gather_facts: true
-  # pre_tasks:
-  # - include: pre_tasks/set-timezone.yml
+  pre_tasks:
   roles:
     - {role: ansible-role-pip}
     - {role: ansible-role-apt}
