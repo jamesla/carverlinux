@@ -2,7 +2,7 @@
 dependency:
   name: galaxy
   options:
-    role-file: requirements.yml
+    role-file: ansible/requirements.yml
 driver:
   driver:
   name: docker
@@ -30,9 +30,9 @@ provisioner:
   lint:
     name: ansible-lint
   playbooks:
-    converge: ../../playbook.yml
+    converge: ../../ansible/playbook.yml
   env:
-    ANSIBLE_ROLES_PATH: /tmp/molecule/ansible/default:../../roles
+    ANSIBLE_ROLES_PATH: /tmp/molecule/ansible/default:../roles
 scenario:
   name: default
 verifier:
