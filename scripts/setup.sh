@@ -21,17 +21,34 @@ HOME_DIR="${HOME_DIR:-/home/vagrant}";
 
 # Install qemu-tools
 case "$PACKER_BUILDER_TYPE" in
-   	qemu)
-       	apt-get install -y qemu-guest-agent;
+    qemu)
+        apt-get install -y qemu-guest-agent;
+
+        # This will ensure the network device is named eth0.
+        # https://github.com/vagrant-libvirt/vagrant-libvirt/issues/899
+        sed -i -e 's/^GRUB_CMDLINE_LINUX_DEFAULT="\(.*\)"$/GRUB_CMDLINE_LINUX_DEFAULT="\1 net.ifnames=0"/g' /etc/default/grub
+        grub-mkconfig -o /boot/grub/grub.cfg
+
+        # NOTE: the EOF below indenting must be left aligned
+        cat <<-EOF > /etc/netplan/01-netcfg.yaml
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth0:
+      dhcp4: true
+      dhcp6: false
+EOF
         ;;
+
 esac
 
 # Install vmware-open-tools
 case "$PACKER_BUILDER_TYPE" in
-   	vmware-iso)
-       		apt-get install -y open-vm-tools;
-		mkdir /mnt/hgfs
-		;;
+    vmware-iso)
+        apt-get install -y open-vm-tools;
+        mkdir /mnt/hgfs
+        ;;
 esac
 
 # Install parallel tools
