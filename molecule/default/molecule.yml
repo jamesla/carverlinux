@@ -22,6 +22,8 @@ platforms:
       - /run/lock
     security_opts:
       - seccomp=unconfined
+    env:
+      IS_TRAVIS: $IS_TRAVIS
 provisioner:
   name: ansible
   config_options:
