@@ -1,5 +1,5 @@
 describe file('/etc/timezone') do
-  its(:stdout) { should include 'Australia/Sydney' }
+  its(:content) { should include 'Australia/Sydney' }
 end
 
 describe command('locale') do

@@ -2,10 +2,6 @@ describe package('fish') do
   it { should be_installed }
 end
 
-describe package('fish') do
-  it { should be_installed }
-end
-
 describe user('vagrant') do
   its('shell') { should eq '/usr/bin/fish' }
 end

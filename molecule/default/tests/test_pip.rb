@@ -6,7 +6,7 @@ packages = %w[
 ]
 
 packages.each do |p|
-  describe package(p) do
+  describe pip(p) do
     it { should be_installed }
   end
 end

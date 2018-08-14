@@ -71,6 +71,7 @@
       register: test_files
 
     - name: Execute Inspec tests
+      become_user: vagrant
       command: "{{ inspec_bin }} exec {{ item }}"
       register: test_results
       with_items: "{{ test_files.stdout_lines }}"

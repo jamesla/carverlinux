@@ -17,7 +17,7 @@ npm_packages = %w[
 ]
 
 npm_packages.each do |p|
-  describe package(p) do
+  describe npm(p) do
     it { should be_installed }
   end
 end

@@ -21,7 +21,7 @@ gems = %w[
 ]
 
 gems.each do |p|
-  describe package(p) do
+  describe gem(p) do
     it { should be_installed }
   end
 end
