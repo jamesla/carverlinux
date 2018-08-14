@@ -8,9 +8,9 @@ services:
 env:
   - IS_TRAVIS=1
 
-branches:
-  except:
-    - master
+# branches:
+#   except:
+#     - master
 
 script:
 - ./test.sh
