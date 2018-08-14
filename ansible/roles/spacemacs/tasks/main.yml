@@ -1,15 +1,14 @@
-# file: roles/spacemacs/tasks/main.yml
 ---
-- name: install emacs and dependencies
+- name: Install emacs and dependencies
   apt:
     name:
       - ispell
       - xclip
       - silversearcher-ag
 
-- name: install ternjs #npm module currently in preview
+- name: Install ternjs
   npm:
-    global: yes
+    global: true
     name: "{{ item }}"
   with_items:
     - tern
@@ -18,22 +17,25 @@
 
 - name: clone spacemacs
   become_user: vagrant
+  become: true
   git:
     repo: https://github.com/syl20bnr/spacemacs
     dest: ~/.emacs.d
-    clone: yes
-    update: no
+    clone: true
+    update: false
   tags:
     - skip_ansible_lint
 
 - name: copy spacemacs config
   become_user: vagrant
+  become: true
   copy:
     src: .spacemacs
     dest: ~/.spacemacs
 
 - name: update spacemacs packages
   become_user: vagrant
+  become: true
   shell: emacs --batch --load=~/.emacs.d/init.el && touch /tmp/spacemacs_updated
   args:
     executable: /bin/bash

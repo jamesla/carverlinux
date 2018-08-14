@@ -1,7 +1,5 @@
 # file: roles/home_drive/tasks/main.yml
 ---
-# For example,
-
 - name: rails dependencies
   apt:
     name:
@@ -14,5 +12,5 @@
     name: "{{ item }}"
     user_install: false
   with_items:
-      - rails
-      - sqlite3
+    - rails
+    - sqlite3

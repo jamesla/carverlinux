@@ -1,3 +1,2 @@
 ---
-
-  dependencies: [ansible-emacs-build]
+dependencies: [ansible-emacs-build]

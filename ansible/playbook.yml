@@ -2,24 +2,24 @@
 
 - hosts: all
   become: true
-  # pre_tasks:
-    # - include: pre_tasks/set-timezone.yml
+  pre_tasks:
+    - include: pre_tasks/set-timezone.yml
   roles:
-    # - {role: ansible-role-pip}
-    # - {role: ansible-role-apt}
-    # - {role: ansible-role-nodejs}
-    # - {role: ansible-go}
+    - {role: ansible-role-pip}
+    - {role: ansible-role-apt}
+    - {role: ansible-role-nodejs}
+    - {role: ansible-go}
 
-    # - {role: ruby}
+    - {role: ruby}
     - {role: spacemacs}
-    # - {role: desktop}
-    # - {role: ansible-role-tmux}
-    # - {role: terminal}
+    - {role: desktop}
+    - {role: ansible-role-tmux}
+    - {role: terminal}
 
-    # - {role: ansible-packer}
-    # - {role: ansible-vagrant}
-    # - {role: ansible-consul}
-    # - {role: ansible-role-chrome}
-    # - {role: docker}
-    # - {role: ansible-virtualbox}
-    # - {role: ansible-role-grouphelper}
+    - {role: ansible-packer}
+    - {role: ansible-vagrant}
+    - {role: ansible-consul}
+    - {role: ansible-role-chrome}
+    - {role: docker}
+    - {role: ansible-virtualbox}
+    - {role: ansible-role-grouphelper}
