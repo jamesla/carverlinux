@@ -7,5 +7,10 @@ services:
 
 env:
   - IS_TRAVIS=1
+
+branches:
+  except:
+    - master
+
 script:
-- $TRAVIS_BRANCH != "master" && ./test.sh
+- ./test.sh
