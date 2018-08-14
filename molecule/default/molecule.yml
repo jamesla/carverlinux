@@ -42,12 +42,14 @@ scenario:
     - destroy
     - create
     - prepare
+    - dependency
     - converge
     - check
     - destroy
   converge_sequence:
     - create
     - prepare
+    - dependency
     - converge
   destroy_sequence:
     - destroy
