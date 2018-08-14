@@ -29,15 +29,16 @@ case "$PACKER_BUILDER_TYPE" in
         sed -i -e 's/^GRUB_CMDLINE_LINUX_DEFAULT="\(.*\)"$/GRUB_CMDLINE_LINUX_DEFAULT="\1 net.ifnames=0"/g' /etc/default/grub
         grub-mkconfig -o /boot/grub/grub.cfg
 
+        # NOTE: the EOF below indenting must be left aligned
         cat <<-EOF > /etc/netplan/01-netcfg.yaml
-        network:
-          version: 2
-          renderer: networkd
-          ethernets:
-              eth0:
-              dhcp4: true
-              dhcp6: false
-        EOF
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth0:
+      dhcp4: true
+      dhcp6: false
+EOF
         ;;
 
 esac
