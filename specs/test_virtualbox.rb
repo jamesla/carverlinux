@@ -10,6 +10,10 @@ describe package('cpu-checker') do
   it { should be_installed }
 end
 
+puts '======================================='
+puts ENV
+puts '======================================='
+
 unless ENV['IS_TRAVIS']
   describe command('sudo kvm-ok') do
     its(:stdout) { should include('KVM acceleration can be used') }
