@@ -167,7 +167,7 @@
       "type": "ansible-local",
       "playbook_file": "ansible/playbook.yml",
       "playbook_dir": "ansible",
-      "extra_arguments": "-vvvv",
+      "extra_arguments": "-v",
       "staging_directory": "/tmp/staging",
       "galaxy_file": "ansible/requirements.yml"
     },
@@ -180,8 +180,8 @@
       "type": "shell",
       "inline": [
         "curl https://omnitruck.chef.io/install.sh | sudo -E bash -s -- -P inspec",
-        "sudo inspec exec $HOME/specs",
-        "sudo yum remove -y inspec"
+        "sudo spec exec $HOME/specs",
+        "sudo apt autoremove -y inspec"
       ]
     }
   ],
