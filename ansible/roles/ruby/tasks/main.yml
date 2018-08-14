@@ -1,7 +1,4 @@
-# file: roles/home_drive/tasks/main.yml
 ---
-# For example,
-
 - name: Install dependencies
   apt:
     name:
@@ -16,12 +13,6 @@
     name:
       - ruby
       - ruby-dev
-
-# - name: ensure rake not installed from apt
-#   become: true
-#   apt:
-#     name: rake
-#     state: absent
 
 - name: install gems
   become: true

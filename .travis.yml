@@ -6,11 +6,7 @@ services:
   - docker
 
 env:
-  - IS_TRAVIS=1
-
-# branches:
-#   except:
-#     - master
+  - IS_TRAVIS=true
 
 script:
 - ./test.sh
