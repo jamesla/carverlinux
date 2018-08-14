@@ -1,9 +1,11 @@
 sudo: required
 
-language: ruby
+language: bash
 
 services:
   - docker
 
+env:
+  - IS_TRAVIS=1
 script:
-- bash test.sh
+- $TRAVIS_BRANCH != "master" && ./test.sh
