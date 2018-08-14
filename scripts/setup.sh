@@ -32,12 +32,12 @@ case "$PACKER_BUILDER_TYPE" in
         # NOTE: the EOF below indenting must be left aligned
         cat <<-EOF > /etc/netplan/01-netcfg.yaml
 network:
-    version: 2
-    renderer: networkd
-    ethernets:
-        eth0:
-        dhcp4: true
-        dhcp6: false
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth0:
+      dhcp4: true
+      dhcp6: false
 EOF
         ;;
 
