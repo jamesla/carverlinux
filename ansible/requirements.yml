@@ -1,5 +1,4 @@
 ---
-
 # TODO: this was put here as a workaround on 2/7/18 can remove this once the ansible-go roles dependencies are fixed
 - src: https://github.com/andrewrothstein/ansible-alpine-glibc-shim.git
   version: master

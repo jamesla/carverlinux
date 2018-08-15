@@ -4,7 +4,7 @@
     "version": "{{env `VERSION`}}",
     "boot_wait": "10s",
     "disk_size": "150000",
-    "http_directory": "http",
+    "http_directory": "scripts",
     "iso_checksum_type": "sha256",
     "iso_urls": "http://cdimage.ubuntu.com/releases/18.04/release/ubuntu-18.04.1-server-amd64.iso",
     "iso_checksum": "a5b0ea5918f850124f3d72ef4b85bda82f0fcd02ec721be19c1a6952791c8ee8",
@@ -167,18 +167,21 @@
       "type": "ansible-local",
       "playbook_file": "ansible/playbook.yml",
       "playbook_dir": "ansible",
-      "extra_arguments": "-vvvv",
+      "extra_arguments": "-v",
       "staging_directory": "/tmp/staging",
       "galaxy_file": "ansible/requirements.yml"
     },
     {
+      "type": "file",
+      "source": "specs",
+      "destination": "$HOME/specs"
+    },
+    {
       "type": "shell",
-      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -u vagrant -S -E bash '{{.Path}}'",
       "inline": [
-        "cd /tmp/staging",
-        "bundle",
-        "rubocop spec/carveros",
-        "rake"
+        "curl https://omnitruck.chef.io/install.sh | sudo -E bash -s -- -P inspec",
+        "sudo inspec exec $HOME/specs",
+        "sudo apt autoremove -y inspec"
       ]
     }
   ],
@@ -186,7 +189,7 @@
     [
       {
         "type": "vagrant",
-        "output": "builds/packer_{{.BuildName}}_{{.Provider}}.box",
+        "output": "packer_{{.BuildName}}_{{.Provider}}.box",
         "vagrantfile_template": "Vagrantfile",
         "compression_level": "9"
       },

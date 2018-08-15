@@ -1,0 +1,72 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: ansible/requirements.yml
+driver:
+  driver:
+  name: docker
+lint:
+  name: yamllint
+platforms:
+  - name: ubuntu
+    image: solita/ubuntu-systemd:bionic
+    command: /sbin/init
+    privileged: true
+    capabilities:
+      - SYS_ADMIN
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    tmpfs:
+      - /run
+      - /run/lock
+    security_opts:
+      - seccomp=unconfined
+provisioner:
+  name: ansible
+  config_options:
+    ssh_connection:
+      pipelining: true
+  lint:
+    name: ansible-lint
+  playbooks:
+    converge: ../../ansible/playbook.yml
+  env:
+    ANSIBLE_ROLES_PATH: /tmp/molecule/ansible/default:../roles
+scenario:
+  name: default
+  create_sequence:
+    - create
+    - prepare
+  check_sequence:
+    - destroy
+    - create
+    - prepare
+    - dependency
+    - converge
+    - check
+    - destroy
+  converge_sequence:
+    - create
+    - prepare
+    - dependency
+    - converge
+  destroy_sequence:
+    - destroy
+  test_sequence:
+    - lint
+    - destroy
+    - dependency
+    - syntax
+    - create
+    - prepare
+    - converge
+    # - idempotence
+    - side_effect
+    - verify
+    - destroy
+verifier:
+  name: inspec
+  directory: ../../
+  lint:
+    name: rubocop

@@ -2,22 +2,25 @@
 ---
 
 - name: copy tmux config
-  become: false
+  become: true
+  become_user: vagrant
   copy:
     src: "{{ role_path }}/files/.tmux.conf"
     dest: ~/.tmux.conf
 
 - name: install tmux plugins
-  become: false
+  become: true
+  become_user: vagrant
   git:
     repo: https://github.com/tmux-plugins/tpm
     dest: ~/.tmux/plugins/tpm
-    clone: yes
-    update: no
+    clone: true
+    update: false
     version: v3.0.0
 
 - name: update tmux plugins
-  become: false
+  become: true
+  become_user: vagrant
   shell: ~/.tmux/plugins/tpm/bin/install_plugins && touch ~/.tmux/tpm_output
   args:
     executable: /bin/bash

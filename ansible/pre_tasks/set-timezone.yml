@@ -1,19 +1,21 @@
 ---
 
-- name: set timezone
+- name: Ensure timezone dependencies are installed
+  apt:
+    name:
+      - ntp
+      - locales
+      - language-pack-en
+
+- name: Set timezone
   timezone:
     name: Australia/Sydney
 
-- name: install locale
+- name: Set locale
   locale_gen:
     name: en_US.UTF-8
 
-- name: install language packs
-  apt:
-    name:
-      - language-pack-en
-
-- name: set locale
+- name: Set locale
   shell: update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 && touch /tmp/local_updated
   args:
     executable: /bin/bash

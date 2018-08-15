@@ -1,4 +1,3 @@
-# file: roles/xmonad/tasks/main.yml
 ---
 
 - include: nodm.yml

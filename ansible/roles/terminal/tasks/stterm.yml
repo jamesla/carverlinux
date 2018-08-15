@@ -1,4 +1,3 @@
-# file: roles/stterm/tasks/main.yml
 ---
 - name: install stterm dependencies
   apt:
@@ -10,7 +9,7 @@
   unarchive:
     src: http://dl.suckless.org/st/st-0.7.tar.gz
     dest: /tmp
-    remote_src: True
+    remote_src: true
   args:
     creates: /tmp/st-0.7
 

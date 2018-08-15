@@ -8,13 +8,15 @@
       - suckless-tools
 
 - name: create .xmonad directory (is there a better way to do this?)
-  become: false
+  become_user: vagrant
+  become: true
   file:
     path: ~/.xmonad
     state: directory
 
 - name: configure xmonad theme
-  become: false
+  become_user: vagrant
+  become: true
   copy:
     src: "{{ role_path }}/files/xmonad.hs"
     dest: ~/.xmonad/xmonad.hs
