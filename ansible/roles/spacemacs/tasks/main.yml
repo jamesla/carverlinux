@@ -2,6 +2,7 @@
 - name: Install emacs and dependencies
   apt:
     name:
+      - emacs25-nox
       - ispell
       - xclip
       - silversearcher-ag
