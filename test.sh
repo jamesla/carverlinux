@@ -2,7 +2,7 @@
 set -xe
 
 # Run Tests
-docker run --rm \
+docker run --rm -it \
        -v $PWD:/home/molecule/working:ro \
        -v /var/run/docker.sock:/var/run/docker.sock \
        -w /home/molecule/working \
