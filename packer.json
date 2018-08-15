@@ -180,7 +180,7 @@
       "type": "shell",
       "inline": [
         "curl https://omnitruck.chef.io/install.sh | sudo -E bash -s -- -P inspec",
-        "sudo spec exec $HOME/specs",
+        "sudo inspec exec $HOME/specs",
         "sudo apt autoremove -y inspec"
       ]
     }
