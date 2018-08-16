@@ -1,6 +1,6 @@
 dotfiles_loc: /vagrant/dotfiles
 
-virtualbox_apt_package: "virtualbox-5.1"
+virtualbox_apt_package: "virtualbox-5.2"
 
 nodejs_version: 6.x
 npm_config_prefix: "/usr"
