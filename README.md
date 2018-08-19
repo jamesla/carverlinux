@@ -12,7 +12,7 @@ vagrant plugin install vagrant-parallels
 
 Start box
 ```
-mkdir carverlinux && cd carverlinux && vagrant init jamesla/carverlinux
+vagrant init jamesla/carverlinux
 vagrant up
 ```
 
@@ -27,7 +27,7 @@ vagrant plugin license vagrant-vmware-desktop %path_to_your_license_file%
 
 Start box
 ```
-mkdir carverlinux && cd carverlinux && vagrant init jamesla/carverlinux
+vagrant init jamesla/carverlinux
 vagrant up --provider vmware_desktop
 
 ```
@@ -39,7 +39,7 @@ vagrant up --provider vmware_desktop
 3. Install Libvirt Vagrant Plugin (https://github.com/vagrant-libvirt/vagrant-libvirt)
 
 ```
-mkdir carverlinux && vagrant init jamesla/carverlinux
+vagrant init jamesla/carverlinux
 vagrant up --provider libvirt
 ```
 
