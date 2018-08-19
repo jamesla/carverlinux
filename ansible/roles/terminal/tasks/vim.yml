@@ -1,0 +1,28 @@
+---
+- name: install vim
+  apt:
+    name:
+      - vim
+      - git
+
+- name: install vundle
+  git:
+    repo: https://github.com/VundleVim/Vundle.vim.git
+    dest: ~/.vim/bundle/Vundle.vim
+    accept_hostkey: yes
+    clone: yes
+    update: no
+  tags:
+    - skip_ansible_lint
+
+- name: copy vim config
+  become: true
+  become_user: vagrant
+  template:
+    src: .vimrc.j2
+    dest: ~/.vimrc
+
+- name: update plugins
+  shell: vim +silent!PluginInstall +qall && touch /tmp/vim_plugins_updated
+  args:
+    creates: /tmp/vim_plugins_updated

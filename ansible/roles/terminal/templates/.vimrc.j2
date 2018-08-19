@@ -1,0 +1,25 @@
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" VUNDLE STUFF
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+Plugin 'tpope/vim-sensible'
+Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'scrooloose/nerdtree'
+
+call vundle#end()            " required
+
+
+" START NERDTREE AUTOMATICALLY UPON STARTUP
+autocmd vimenter * NERDTree
+
+" CLOSE VIM IF ONLY NERDTREE PANE REMAINS
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif

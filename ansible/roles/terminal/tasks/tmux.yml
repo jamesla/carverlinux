@@ -4,8 +4,8 @@
 - name: copy tmux config
   become: true
   become_user: vagrant
-  copy:
-    src: "{{ role_path }}/files/.tmux.conf"
+  template:
+    src: ".tmux.conf.j2"
     dest: ~/.tmux.conf
 
 - name: install tmux plugins
