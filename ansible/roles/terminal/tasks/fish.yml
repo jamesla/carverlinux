@@ -24,14 +24,14 @@
 - name: copy fish config
   become: true
   become_user: vagrant
-  copy:
+  template:
     src: config.fish.j2
     dest: ~/.config/fish/config.fish
 
 - name: copy fish functions
   become: true
   become_user: vagrant
-  copy:
+  template:
     src: fish_prompt.fish.j2
     dest: ~/.config/fish/functions/fish_prompt.fish
 
