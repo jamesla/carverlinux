@@ -18,6 +18,7 @@
 
     - {role: ansible-packer}
     - {role: ansible-vagrant}
+    - {role: ansible-role-terraform}
     - {role: ansible-consul}
     - {role: ansible-role-chrome}
     - {role: docker}

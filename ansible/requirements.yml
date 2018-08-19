@@ -50,3 +50,7 @@
 - src: https://github.com/jamesla/ansible-role-grouphelper.git
   version: master
   name: ansible-role-grouphelper
+
+- src: https://github.com/andrewrothstein/ansible-terraform.git
+  version: master
+  name: ansible-role-terraform
