@@ -24,15 +24,15 @@
 - name: copy fish config
   become: true
   become_user: vagrant
-  copy:
-    src: ".config/fish/config.fish"
+  template:
+    src: config.fish.j2
     dest: ~/.config/fish/config.fish
 
 - name: copy fish functions
   become: true
   become_user: vagrant
-  copy:
-    src: "{{ role_path }}/files/.config/fish/functions/fish_prompt.fish"
+  template:
+    src: fish_prompt.fish.j2
     dest: ~/.config/fish/functions/fish_prompt.fish
 
 - name: set pam to allow shell change (possible bug in ubuntu 16)
