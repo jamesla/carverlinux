@@ -56,9 +56,5 @@ bind '%' split-window -h -c '#{pane_current_path}'  # Split panes horizontal
 bind '"' split-window -v -c '#{pane_current_path}'  # Split panes vertically
 bind 'c' run-shell "tmux new-window -c '~'; tmux split-window -h -c '~'; tmux select-pane -R"
 
-#vim tmux navigator binds
-set -g @plugin 'christoomey/vim-tmux-navigator'
-run '~/.tmux/plugins/tpm/tpm'
-
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
 run '~/.tmux/plugins/tpm/tpm'
