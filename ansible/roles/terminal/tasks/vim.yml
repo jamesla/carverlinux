@@ -25,6 +25,7 @@
     dest: ~/.vimrc
 
 - name: update plugins
+  become: true
   become_user: vagrant
   shell: bash -c 'vim +silent!PluginInstall +qall && touch /tmp/vim_plugins_updated'
   args:
