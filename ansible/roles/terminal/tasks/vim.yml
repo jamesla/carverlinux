@@ -6,6 +6,8 @@
       - git
 
 - name: install vundle
+  become: true
+  become_user: vagrant
   git:
     repo: https://github.com/VundleVim/Vundle.vim.git
     dest: ~/.vim/bundle/Vundle.vim
@@ -23,6 +25,7 @@
     dest: ~/.vimrc
 
 - name: update plugins
-  shell: vim +silent!PluginInstall +qall && touch /tmp/vim_plugins_updated
+  become_user: vagrant
+  shell: bash -c 'vim +silent!PluginInstall +qall && touch /tmp/vim_plugins_updated'
   args:
     creates: /tmp/vim_plugins_updated

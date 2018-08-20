@@ -19,7 +19,7 @@ call vundle#end()            " required
 
 
 " START NERDTREE AUTOMATICALLY UPON STARTUP
-autocmd vimenter * NERDTree
+autocmd VimEnter * NERDTree | wincmd p
 
 " CLOSE VIM IF ONLY NERDTREE PANE REMAINS
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
