@@ -4,6 +4,7 @@
     name:
       - build-essential
       - libxft-dev
+      - git
 
 - name: download and extract stterm
   unarchive:
