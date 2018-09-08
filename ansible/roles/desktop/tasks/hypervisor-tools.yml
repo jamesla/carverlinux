@@ -13,7 +13,14 @@
 - name: Start parallels dynamic resolution tool at startup
   lineinfile:
     dest: /etc/X11/Xsession
-    line: prlcc &
+    line: /usr/lib/parallels-tools/tools/prltools.x64/xorg.7.1/usr/bin/prlcc &
+    insertafter: '#!/bin/sh'
+  when: hypervisor.stdout == 'Parallels Virtual Platform'
+
+- name: Start parallels copy paste tool at startup
+  lineinfile:
+    dest: /etc/X11/Xsession
+    line: /usr/lib/parallels-tools/tools/prltools.x64/xorg.7.1/usr/bin/prlcp &
     insertafter: '#!/bin/sh'
   when: hypervisor.stdout == 'Parallels Virtual Platform'
 
