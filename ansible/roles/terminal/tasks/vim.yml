@@ -11,9 +11,9 @@
   git:
     repo: https://github.com/VundleVim/Vundle.vim.git
     dest: ~/.vim/bundle/Vundle.vim
-    accept_hostkey: yes
-    clone: yes
-    update: no
+    accept_hostkey: true
+    clone: true
+    update: false
   tags:
     - skip_ansible_lint
 

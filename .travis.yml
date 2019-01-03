@@ -1,3 +1,5 @@
+---
+
 sudo: required
 
 language: bash
@@ -6,4 +8,4 @@ services:
   - docker
 
 script:
-- ./test.sh
+  - ./test.sh
