@@ -7,7 +7,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = 'jamesla/carverlinux'
   config.vm.hostname = 'carverlinux'
   memory = 14_000
-  cpus = 4
+  cpus = 8
 
   config.cache.scope = 'machine' if Vagrant.has_plugin?('vagrant-cachier')
 

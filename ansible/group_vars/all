@@ -57,8 +57,7 @@ gems:
   - winrm
 
 pip_install_packages:
-  - name: molecule
-    version: 1.25.1
+  - molecule
   - docker
   - awscli
   - python-vagrant
