@@ -1,4 +1,4 @@
-describe package('virtualbox-5.2') do
+describe package('virtualbox-6.0') do
   it { should be_installed }
 end
 

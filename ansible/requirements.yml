@@ -16,7 +16,7 @@
   name: ansible-vagrant
 
 - src: https://github.com/andrewrothstein/ansible-packer.git
-  version: v2.0.8
+  version: master
   name: ansible-packer
 
 - src: https://github.com/andrewrothstein/ansible-consul.git
