@@ -16,6 +16,8 @@
     - {role: ansible-role-tmux}
     - {role: terminal}
 
+    - {role: ansible-kubectl}
+    - {role: ansible-minikube}
     - {role: ansible-packer}
     - {role: ansible-vagrant}
     - {role: ansible-role-terraform}
@@ -24,3 +26,4 @@
     - {role: docker}
     - {role: ansible-virtualbox}
     - {role: ansible-role-grouphelper}
+    - {role: ansible-role-visual-studio-code}
