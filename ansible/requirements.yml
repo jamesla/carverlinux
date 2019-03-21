@@ -54,3 +54,15 @@
 - src: https://github.com/andrewrothstein/ansible-terraform.git
   version: master
   name: ansible-role-terraform
+
+- src: https://github.com/andrewrothstein/ansible-kubectl.git
+  version: master
+  name: ansible-kubectl
+
+- src: https://github.com/andrewrothstein/ansible-minikube
+  version: master
+  name: ansible-minikube
+
+- src: https://github.com/gantsign/ansible-role-visual-studio-code.git
+  version: master
+  name: ansible-role-visual-studio-code
