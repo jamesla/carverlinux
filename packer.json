@@ -192,12 +192,6 @@
         "output": "packer_{{.BuildName}}_{{.Provider}}.box",
         "vagrantfile_template": "Vagrantfile",
         "compression_level": "9"
-      },
-      {
-        "type": "vagrant-cloud",
-        "box_tag": "jamesla/carverlinux",
-        "access_token": "{{ user `vagrant_cloud_token` }}",
-        "version": "{{ user `version` }}"
       }
     ]
   ]
