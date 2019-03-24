@@ -40,11 +40,7 @@ values."
      shell-scripts
      haskell
      vimscript
-     ;; ----------------------------------------------------------------
-     ;; Example of useful layers you may want to use right away.
-     ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
-     ;; <M-m f e R> (Emacs style) to install them.
-     ;; ----------------------------------------------------------------
+     themes-megapacks
      ansible
      ruby
      ansible
@@ -56,12 +52,7 @@ values."
      (markdown :variables markdown-live-preview-engine 'vmd)
      osx
      docker
-     ;; org
-     ;; (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
      tmux
-     spell-checking
      html
      markdown
      javascript
@@ -139,7 +130,7 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(cyberpunk)
+   dotspacemacs-themes '(dracula)
    ;; dotspacemacs-themes '(spacemacs-dark)
    ;; dotspacemacs-themes '(spacemacs-dark)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
