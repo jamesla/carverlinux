@@ -16,4 +16,5 @@ main = xmonad $ defaultConfig
         layoutHook def
     , startupHook = do
       spawn "st -e tmux new-session -A -s carver"
+      spawn "feh --bg-scale /etc/wallpaper.png"
     }

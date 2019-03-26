@@ -1,7 +1,4 @@
-# file: roles/xmonad/tasks/main.yml
 ---
-
-
 - name: add cabal repository
   apt_repository:
     repo: ppa:hvr/ghc
@@ -13,24 +10,17 @@
       - libxrandr-dev
       - suckless-tools
       - cabal-install
+      - xmonad
+      - compton
+      - feh
 
 - name: update cabal
+  become: false
   command: cabal update
   changed_when: false
 
-- name: Install xmonad
-  command: cabal install xmonad
-  args:
-    creates: /root/.cabal/bin/xmonad
-
-- name: add xmonad to path
-  copy:
-    src: /root/.cabal/bin/xmonad
-    dest: /usr/bin/xmonad
-    remote_src: true
-    mode: +x
-
 - name: Install xmonad extension library
+  become: false
   command: cabal install xmonad-contrib
   args:
     creates: /home/vagrant/.cabal/packages/hackage.haskell.org/xmonad-contrib
@@ -48,3 +38,14 @@
   copy:
     src: xmonad.hs
     dest: ~/.xmonad/xmonad.hs
+
+- name: start compton with x
+  lineinfile:
+    dest: /etc/X11/Xsession
+    line: compton &
+    insertafter: '#!/bin/sh'
+
+- name: copy wallpaper
+  copy:
+    src: wallpaper.png
+    dest: /etc/wallpaper.png

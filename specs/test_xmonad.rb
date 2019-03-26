@@ -1,16 +1,22 @@
-describe package('cabal-install') do
-  it { should be_installed }
-end
-
-describe package('suckless-tools') do
-  it { should be_installed }
+%w[
+  cabal-install
+  suckless-tools
+  libxss-dev
+  libxrandr-dev
+  compton
+  feh
+  xmonad
+].each do |package|
+  describe package(package) do
+    it { should be_installed }
+  end
 end
 
 describe command('dmenu -v') do
   its(:exit_status) { should eq 0 }
 end
 
-describe file('/usr/bin/xmonad') do
+describe file('/etc/X11/Xsession') do
   it { should exist }
-  it { should_be executable }
+  its(:content) { should include 'compton &' }
 end
