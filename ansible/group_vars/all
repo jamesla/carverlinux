@@ -44,6 +44,7 @@ apt_install_packages:
   - ovmf
   - libguestfs-tools
   - ifupdown
+  - software-properties-common
 
 gems:
   - rake

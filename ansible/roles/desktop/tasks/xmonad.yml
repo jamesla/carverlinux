@@ -1,11 +1,29 @@
-# file: roles/xmonad/tasks/main.yml
 ---
+- name: add cabal repository
+  apt_repository:
+    repo: ppa:hvr/ghc
 
-- name: install xmonad
+- name: install xmonad prerequisites
   apt:
     name:
-      - xmonad
+      - libxss-dev
+      - libxrandr-dev
       - suckless-tools
+      - cabal-install
+      - xmonad
+      - compton
+      - feh
+
+- name: update cabal
+  become: false
+  command: cabal update
+  changed_when: false
+
+- name: Install xmonad extension library
+  become: false
+  command: cabal install xmonad-contrib
+  args:
+    creates: /home/vagrant/.cabal/packages/hackage.haskell.org/xmonad-contrib
 
 - name: create .xmonad directory (is there a better way to do this?)
   become_user: vagrant
@@ -18,5 +36,16 @@
   become_user: vagrant
   become: true
   copy:
-    src: "{{ role_path }}/files/xmonad.hs"
+    src: xmonad.hs
     dest: ~/.xmonad/xmonad.hs
+
+- name: start compton with x
+  lineinfile:
+    dest: /etc/X11/Xsession
+    line: compton &
+    insertafter: '#!/bin/sh'
+
+- name: copy wallpaper
+  copy:
+    src: wallpaper.png
+    dest: /etc/wallpaper.png

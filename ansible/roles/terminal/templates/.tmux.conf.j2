@@ -4,13 +4,6 @@ bind up resize-pane -U 40
 bind left resize-pane -U 10
 bind right resize-pane -D 10
 
-#unbind C-backspace from changing panes
-unbind "\C-H"
-set -g pane-border-fg colour250
-set -g pane-border-bg colour236
-set -g pane-active-border-fg colour250
-set -g pane-active-border-bg colour250
-
 # Smart pane switching with awareness of vim splits
 is_vim='echo "#{pane_current_command}" | grep -iqE "(^|\/)g?(view|n?vim?)(diff)?$"'
 bind -n C-h if-shell "$is_vim" "send-keys C-h" "select-pane -L"
