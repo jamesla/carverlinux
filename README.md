@@ -1,8 +1,25 @@
 # Carverlinux
 
+
+## Differences between versions
+
+Hypervisor | OS | Details
+--- | --- | ---
+Virtualbox | Cross-platform | Free, Cross-platform, lacks nested virtualisation support*
+Parallels | OSX | Requires a [parallels pro license](https://www.parallels.com/products/desktop/pro/#compare) for vagrant support
+Vmware Desktop | Windows | Requires a [vagrant vmware license](https://www.vagrantup.com/vmware/index.html)
+Libvirt | Linux | Free
+
+\* Nested Virtualisation Support is the processor extensions VT-X or AMD-V which a hypervisor needs to be able to pass to a vm in order to run virtual machines inside virtual machines. If your workflow requires this then you will need to use either the parallels, vmware desktop or libvirt options.
+
 ## Quick start
 
-### OSX (Parallels)
+### Virtualbox
+```
+vagrant up jamesla/carverlinux
+```
+
+### Parallels
 
 Install dependencies
 ```
@@ -13,10 +30,10 @@ vagrant plugin install vagrant-parallels
 Start box
 ```
 vagrant init jamesla/carverlinux
-vagrant up
+vagrant up --provider=parallels
 ```
 
-### Windows (Vmware Workstation)
+### Vmware Workstation
 
 Install dependencies
 ```
@@ -32,7 +49,7 @@ vagrant up --provider vmware_desktop
 
 ```
 
-### Linux (Libvirt)
+### Libvirt (KVM)
 
 1. Install KVM (https://www.linux-kvm.org/page/Main_Page)
 2. Install Vagrant (https://www.vagrantup.com)
@@ -41,7 +58,7 @@ vagrant up --provider vmware_desktop
 ```
 vagrant init jamesla/carverlinux
 vagrant up --provider libvirt
-```
+``
 
 ### Important hotkey bindings
 

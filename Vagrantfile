@@ -56,6 +56,21 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vmware.vmx['ethernet0.virtualDev'] = 'e1000'
   end
 
+  config.vm.provider 'virtualbox' do |vb|
+    vb.memory = memory
+    vb.cpus = cpus
+    vb.gui = true
+    vb.name = "carver"
+    vb.linked_clone = false
+    vb.customize ["modifyvm", :id, "--graphicscontroller", "vmsvga"]
+    vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
+    vb.customize ["modifyvm", :id, "--vram", "128"]
+    vb.customize ["modifyvm", :id, "--hwvirtex", "on"]
+    vb.customize ["modifyvm", :id, "--bioslogodisplaytime", "0"]
+    vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
+    vb.customize ["modifyvm", :id, "--vrde", "off"]
+  end
+
   config.vm.provider 'libvirt' do |libvirt|
     libvirt.memory = memory
     libvirt.cpus = cpus
