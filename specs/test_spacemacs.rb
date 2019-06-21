@@ -13,7 +13,7 @@ end
 npm_packages = %w[
   tern
   js-yaml
-  vmd
+  # vmd
 ]
 
 npm_packages.each do |p|
