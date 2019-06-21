@@ -1,6 +1,5 @@
 virtualbox_apt_package: "virtualbox-6.0"
 
-nodejs_version: 6.x
 npm_config_prefix: "/usr"
 nodejs_install_npm_user: root #leave this
 nodejs_npm_global_packages:
@@ -20,6 +19,7 @@ apt_install_packages:
   - wget
   - curl
   - nmap
+  - bison
   - tree
   - cpu-checker
   - unzip

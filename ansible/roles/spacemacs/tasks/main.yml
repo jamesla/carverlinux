@@ -14,7 +14,7 @@
   with_items:
     - tern
     - js-yaml
-    - vmd
+    # - vmd
 
 - name: clone spacemacs
   become_user: vagrant
