@@ -6,8 +6,8 @@ VAGRANTFILE_API_VERSION = '2'.freeze
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = 'jamesla/carverlinux'
   config.vm.hostname = 'carverlinux'
-  memory = 14_000
-  cpus = 8
+  memory = 4_000
+  cpus = 2
 
   config.cache.scope = 'machine' if Vagrant.has_plugin?('vagrant-cachier')
 
