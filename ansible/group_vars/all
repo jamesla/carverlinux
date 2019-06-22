@@ -1,7 +1,8 @@
 virtualbox_apt_package: "virtualbox-6.0"
 
 npm_config_prefix: "/usr"
-nodejs_install_npm_user: root #leave this
+#nodejs_install_npm_user: root #leave this
+npm_config_unsafe_perm: "true" #required for electron/vmd
 nodejs_npm_global_packages:
   - bower
   - yo
@@ -12,6 +13,7 @@ nodejs_npm_global_packages:
   - gulp
   - s3-website
   - yarn
+  - vmd
 
 apt_cache_valid_time: 3600
 apt_setup_unattended_upgrades: no

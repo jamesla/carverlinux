@@ -238,6 +238,7 @@
       "type": "shell",
       "inline": [
         "curl https://omnitruck.chef.io/install.sh | sudo -E bash -s -- -P inspec",
+        "sudo -u vagrant inspec --chef-license=accept",
         "sudo -u vagrant inspec exec /tmp/specs",
         "sudo apt autoremove -y inspec"
       ]
