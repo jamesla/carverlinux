@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 apts = %w[
   ruby
   ruby-dev

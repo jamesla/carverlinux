@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe package('virtualbox-6.0') do
   it { should be_installed }
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 packages = %w[
   telnet
   speedtest-cli
