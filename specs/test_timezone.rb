@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe file('/etc/timezone') do
   its(:content) { should include 'Australia/Sydney' }
 end

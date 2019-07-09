@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe file('/home/vagrant/.vimrc') do
   it { should exist }
 end

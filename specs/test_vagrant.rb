@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe package('vagrant') do
   it { should be_installed }
 end
