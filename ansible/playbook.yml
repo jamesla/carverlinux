@@ -19,6 +19,7 @@
     - {role: ansible-kubectl}
     - {role: ansible-minikube}
     - {role: ansible-packer}
+    - {role: ansible-role-postgresql}
     - {role: ansible-vagrant}
     - {role: ansible-role-terraform}
     - {role: ansible-consul}

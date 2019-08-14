@@ -8,6 +8,7 @@ packages = %w[
   tree
   aria2
   unzip
+  snapd
   curl
   git
   jq
@@ -31,6 +32,7 @@ packages.each do |p|
 end
 
 commands = [
+  'snap --help',
   'speedtest -h',
   'wget --help',
   'nmap --version',
