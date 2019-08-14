@@ -24,6 +24,7 @@
     dest: ~/.emacs.d
     clone: true
     update: false
+    version: develop
   tags:
     - skip_ansible_lint
 
