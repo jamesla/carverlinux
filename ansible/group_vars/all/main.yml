@@ -1,0 +1,84 @@
+---
+virtualbox_apt_package: virtualbox-6.0
+npm_config_prefix: /usr
+npm_config_unsafe_perm: true
+nodejs_npm_global_packages:
+  - bower
+  - yo
+  - ionic
+  - cordova
+  - grunt-cli
+  - grunt
+  - gulp
+  - s3-website
+  - yarn
+  - vmd
+
+apt_cache_valid_time: 3600
+apt_setup_unattended_upgrades: false
+apt_install_packages:
+  - wget
+  - curl
+  - nmap
+  - snapd
+  - bison
+  - libpq-dev
+  - tree
+  - cpu-checker
+  - unzip
+  - aria2
+  - speedtest-cli
+  - telnet
+  - git
+  - jq
+  - whois
+  - dnsutils
+  - net-tools
+  - build-essential
+  - automake
+  - ruby-sqlite3
+  - qemu-kvm
+  - virt-manager
+  - libvirt-dev
+  - libvirt-bin
+  - virtinst
+  - bridge-utils
+  - p7zip-full
+  - ovmf
+  - libguestfs-tools
+  - ifupdown
+  - software-properties-common
+
+gems:
+  - rake
+  - rubocop
+  - cfn-flow
+  - sfn
+  - rspec
+  - minitest
+  - serverspec
+  - stack_master
+  - winrm
+
+pip_install_packages:
+  - molecule
+  - docker
+  - awscli
+  - python-vagrant
+  - netaddr
+  - pyopenssl
+  - pywinrm
+  - urllib3
+  - python-openstackclient
+  - python-heatclient
+  - awsebcli
+
+group_helper:
+  - user: vagrant
+    groups:
+      - 'kvm'
+      - 'docker'
+
+postgresql_users:
+  - name: postgres
+    password: postgres
