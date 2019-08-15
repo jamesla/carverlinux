@@ -7,7 +7,6 @@
   apt:
     name:
       - emacs26
-      - ispell
       - xclip
       - silversearcher-ag
 
