@@ -1,0 +1,36 @@
+---
+
+- name: ensure snap service is running
+  service:
+    name: snapd
+    state: started
+    enabled: true
+
+- name: install helm
+  snap:
+    name: helm
+    classic: true
+
+- name: download oc client
+  unarchive:
+    src: https://github.com/openshift/origin/releases/download/v3.11.0/openshift-origin-server-v3.11.0-0cbc58b-linux-64bit.tar.gz
+    dest: /tmp/oc
+    remote_src: true
+
+- name: copy oc client binary to
+  copy:
+    src: /tmp/oc/bin/oc
+    dest: /usr/local/bin/oc
+
+- name: download istioctl installer
+  get_url:
+    src: https://git.io/getLatestIstio
+    dest: /tmp/getLatestIstio.sh
+    mode: +x
+
+- name: install istioctl
+  shell: /tmp/getLatestIstio.sh
+  args:
+    creates: /usr/local/bin/istioctl
+
+# - name: install minishift
