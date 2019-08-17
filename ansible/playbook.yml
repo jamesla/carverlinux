@@ -5,11 +5,11 @@
   pre_tasks:
     - include: pre_tasks/set-timezone.yml
   roles:
+    - {role: ansible-role-snap}
     - {role: ansible-role-pip}
     - {role: ansible-role-apt}
     - {role: ansible-role-nodejs}
     - {role: ansible-go}
-    - {role: ansible-role-snap}
 
     - {role: ruby}
     - {role: spacemacs}
