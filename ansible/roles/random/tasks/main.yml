@@ -14,12 +14,16 @@
     remote_src: true
 
 - name: extract istioctl
-  shell: curl -L https://git.io/getLatestIstio | sh
+  shell: |
+    set -o pipefail
+    curl -L https://git.io/getLatestIstio | sh
   args:
     chdir: /tmp
     creates: /tmp/istio-1.2.4
   environment:
     - ISTIO_VERSION: 1.2.4
+  tags:
+    - skip_ansible_lint
 
 - name: copy istio binary
   copy:
@@ -47,9 +51,13 @@
     remote_src: true
 
 - name: download glooctl
-  shell: curl -sL https://run.solo.io/gloo/install | sh
+  shell: |
+    set -o pipefail
+    curl -sL https://run.solo.io/gloo/install | sh
   args:
     creates: ~/.gloo
+  tags:
+    - skip_ansible_lint
 
 - name: copy glooctl to bin
   copy:

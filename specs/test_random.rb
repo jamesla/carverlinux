@@ -1,10 +1,12 @@
-files = %w(
+# frozen_string_literal: true
+
+files = %w[
   /usr/local/bin/oc
   /usr/local/bin/minishift
   /usr/local/bin/istioctl
   /usr/local/bin/glooctl
   /snap/bin/helm
-)
+]
 
 files.each do |f|
   describe file(f) do
@@ -20,7 +22,6 @@ commands = [
   'glooctl --help',
   'minishift version'
 ]
-
 
 commands.each do |c|
   describe command(c) do
