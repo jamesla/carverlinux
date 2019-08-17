@@ -1,9 +1,12 @@
 ---
+- name: Add emacs PPA
+  apt_repository:
+    repo: ppa:kelleyk/emacs
+
 - name: Install emacs and dependencies
   apt:
     name:
-      - emacs25-nox
-      - ispell
+      - emacs26
       - xclip
       - silversearcher-ag
 
@@ -24,6 +27,7 @@
     dest: ~/.emacs.d
     clone: true
     update: false
+    version: develop
   tags:
     - skip_ansible_lint
 
