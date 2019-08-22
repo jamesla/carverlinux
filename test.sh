@@ -7,4 +7,4 @@ docker run --rm -it \
        -v /var/run/docker.sock:/var/run/docker.sock \
        -w /home/molecule/working \
        jamesla/molecule \
-       sudo molecule test
+       molecule test

@@ -42,7 +42,7 @@
         sha256sum: "{{ inspec_download_sha256sum }}"
         mode: 0755
       register: result
-      retries: 3
+      retries: 15
       delay: 10
       until: result is not failed
 

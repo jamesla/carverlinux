@@ -2,6 +2,8 @@
 virtualbox_apt_package: virtualbox-6.0
 npm_config_prefix: /usr
 npm_config_unsafe_perm: true
+nodejs_install_npm_user: vagrant
+
 nodejs_npm_global_packages:
   - bower
   - yo
@@ -61,6 +63,7 @@ gems:
   - rspec
   - minitest
   - serverspec
+  - inspec-bin
   - stack_master
   - winrm
 
