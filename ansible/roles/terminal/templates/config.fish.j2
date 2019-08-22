@@ -1,3 +1,6 @@
 function sudo; command sudo -sE $argv; end
 alias emacs "emacs -nw"
 set fish_key_bindings fish_vi_key_bindings
+
+#remove this once apt snap packages paths properly
+set -U fish_user_paths /snap/bin
