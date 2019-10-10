@@ -27,6 +27,5 @@
     - {role: ansible-consul}
     - {role: ansible-role-chrome}
     - {role: docker}
-    - {role: ansible-virtualbox}
     - {role: ansible-role-grouphelper}
     - {role: ansible-role-visual-studio-code}
