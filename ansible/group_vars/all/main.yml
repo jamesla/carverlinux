@@ -2,6 +2,8 @@
 virtualbox_apt_package: virtualbox-5.2
 npm_config_prefix: /usr
 npm_config_unsafe_perm: true
+nodejs_install_npm_user: vagrant
+
 nodejs_npm_global_packages:
   - bower
   - yo
@@ -13,6 +15,10 @@ nodejs_npm_global_packages:
   - s3-website
   - yarn
   - vmd
+
+snap_packages:
+  - name: helm
+    use_classic: true
 
 apt_cache_valid_time: 3600
 apt_setup_unattended_upgrades: false
@@ -57,6 +63,7 @@ gems:
   - rspec
   - minitest
   - serverspec
+  - inspec-bin
   - stack_master
   - winrm
 

@@ -10,3 +10,4 @@ ansible/.vagrant
 *.iso
 *.temp
 .molecule
+packer_cache

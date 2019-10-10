@@ -43,6 +43,10 @@
   version: master
   name: ansible-virtualbox
 
+- src: https://github.com/jamesla/ansible-role-snap.git
+  version: master
+  name: ansible-role-snap
+
 - src: https://github.com/jamesla/ansible-role-tmux.git
   version: master
   name: ansible-role-tmux
