@@ -1,5 +1,5 @@
 ---
-virtualbox_apt_package: virtualbox-6.0
+virtualbox_apt_package: virtualbox-5.2
 npm_config_prefix: /usr
 npm_config_unsafe_perm: true
 nodejs_install_npm_user: vagrant
