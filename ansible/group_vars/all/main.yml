@@ -58,14 +58,12 @@ apt_install_packages:
 gems:
   - rake
   - rubocop
-  - cfn-flow
-  - sfn
   - rspec
   - minitest
   - serverspec
-  - inspec-bin
-  - stack_master
   - winrm
+  - inspec-bin
+  - inspec
 
 pip_install_packages:
   - molecule
