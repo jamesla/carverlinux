@@ -11,15 +11,15 @@ apts.each do |p|
   end
 end
 
-gems = %w[
-  rspec
-  serverspec
-  rubocop
-  rails
-  sqlite3
-  inspec
-  inspec-bin
-]
+# gems = %w[
+#   rspec
+#   serverspec
+#   rubocop
+#   rails
+#   sqlite3
+#   inspec
+#   inspec-bin
+# ]
 
 # something wrong with inspec gem resource reenable later
 # gems.each do |p|
