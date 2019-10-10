@@ -11,27 +11,25 @@ apts.each do |p|
   end
 end
 
-gems = %w[
-  cfn-flow
-  sfn
-  rspec
-  serverspec
-  rubocop
-  stack_master
-  rails
-  sqlite3
-]
+# gems = %w[
+#   rspec
+#   serverspec
+#   rubocop
+#   rails
+#   sqlite3
+#   inspec
+#   inspec-bin
+# ]
 
-gems.each do |p|
-  describe gem(p) do
-    it { should be_installed }
-  end
-end
+# something wrong with inspec gem resource reenable later
+# gems.each do |p|
+#   describe gem(p) do
+#     it { should be_installed }
+#   end
+# end
 
 commands = [
   'gem -v',
-  'cfn-flow --version',
-  'sfn --version',
   'rspec --version',
   'rubocop --version',
   'rails -v'

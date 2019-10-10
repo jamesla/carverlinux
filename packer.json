@@ -53,12 +53,12 @@
       "boot_wait": "{{ user `boot_wait` }}",
       "disk_size": "{{ user `disk_size` }}",
       "http_directory": "{{ user `http_directory` }}",
-      "iso_urls":  "{{ user `iso_urls` }}",
+      "iso_urls": "{{ user `iso_urls` }}",
       "headless": "{{ user `headless` }}",
       "iso_checksum_type": "{{ user `iso_checksum_type` }}",
       "iso_checksum": "{{ user `iso_checksum` }}",
       "ssh_username": "{{ user `ssh_username` }}",
-      "ssh_password":"{{ user `ssh_password` }}",
+      "ssh_password": "{{ user `ssh_password` }}",
       "ssh_port": "{{ user `ssh_port` }}",
       "ssh_wait_timeout": "{{ user `ssh_wait_timeout` }}",
       "shutdown_command": "{{ user `shutdown_command` }}"
@@ -127,10 +127,32 @@
       "guest_os_type": "ubuntu",
       "disk_size": "{{ user `disk_size` }}",
       "prlctl": [
-        [ "set", "{{.Name}}", "--nested-virt", "on" ],
-        [ "set", "{{.Name}}", "--device-set", "cdrom0", "--iface", "sata" ],
-        [ "set", "{{.Name}}", "--device-del", "sound0" ],
-        [ "set", "{{.Name}}", "--device-del", "usb" ]
+        [
+          "set",
+          "{{.Name}}",
+          "--nested-virt",
+          "on"
+        ],
+        [
+          "set",
+          "{{.Name}}",
+          "--device-set",
+          "cdrom0",
+          "--iface",
+          "sata"
+        ],
+        [
+          "set",
+          "{{.Name}}",
+          "--device-del",
+          "sound0"
+        ],
+        [
+          "set",
+          "{{.Name}}",
+          "--device-del",
+          "usb"
+        ]
       ],
       "boot_command": [
         "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
@@ -160,11 +182,11 @@
       ],
       "boot_wait": "{{ user `boot_wait` }}",
       "http_directory": "{{ user `http_directory` }}",
-      "iso_urls":  "{{ user `iso_urls` }}",
+      "iso_urls": "{{ user `iso_urls` }}",
       "iso_checksum_type": "{{ user `iso_checksum_type` }}",
       "iso_checksum": "{{ user `iso_checksum` }}",
       "ssh_username": "{{ user `ssh_username` }}",
-      "ssh_password":"{{ user `ssh_password` }}",
+      "ssh_password": "{{ user `ssh_password` }}",
       "ssh_port": "{{ user `ssh_port` }}",
       "ssh_wait_timeout": "{{ user `ssh_wait_timeout` }}",
       "shutdown_command": "{{ user `shutdown_command` }}"
@@ -204,12 +226,12 @@
       ],
       "boot_wait": "{{ user `boot_wait` }}",
       "http_directory": "{{ user `http_directory` }}",
-      "iso_urls":  "{{ user `iso_urls` }}",
+      "iso_urls": "{{ user `iso_urls` }}",
       "headless": "{{ user `headless` }}",
       "iso_checksum_type": "{{ user `iso_checksum_type` }}",
       "iso_checksum": "{{ user `iso_checksum` }}",
       "ssh_username": "{{ user `ssh_username` }}",
-      "ssh_password":"{{ user `ssh_password` }}",
+      "ssh_password": "{{ user `ssh_password` }}",
       "ssh_port": "{{ user `ssh_port` }}",
       "ssh_wait_timeout": "{{ user `ssh_wait_timeout` }}",
       "shutdown_command": "{{ user `shutdown_command` }}"
@@ -219,7 +241,7 @@
     {
       "type": "shell",
       "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "script": "scripts/setup.sh"
+      "script": "scripts/vagrant_setup.sh"
     },
     {
       "type": "ansible-local",
@@ -237,11 +259,14 @@
     {
       "type": "shell",
       "inline": [
-        "curl https://omnitruck.chef.io/install.sh | sudo -E bash -s -- -P inspec",
         "sudo -u vagrant inspec --chef-license=accept",
-        "sudo -u vagrant inspec exec /tmp/specs",
-        "sudo apt autoremove -y inspec"
+        "sudo -u vagrant inspec exec /tmp/specs"
       ]
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "script": "scripts/hypervisor_tools_setup.sh"
     }
   ],
   "post-processors": [
