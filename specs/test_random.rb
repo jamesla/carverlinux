@@ -28,3 +28,10 @@ commands.each do |c|
     its(:exit_status) { should eq 0 }
   end
 end
+
+# related to the bug in random ansible playbook
+describe file('/usr') do
+  it { should be_owned_by 'root' }
+  its('group') { should eq 'root' }
+  it { should be_directory }
+end

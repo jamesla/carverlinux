@@ -67,3 +67,13 @@
     dest: /usr/local/bin/glooctl
     mode: +x
     remote_src: true
+
+# maybe we can remove this with ubuntu 20.04
+# https://askubuntu.com/questions/947189/cannot-run-virtualbox-on-ubuntu-16-04
+- name: fix wierd virtualbox bug
+  file:
+    path: /usr
+    owner: root
+    group: root
+
+
