@@ -3,7 +3,7 @@
   version: master
   name: ansible-role-nodejs
 
-- src: https://github.com/wtanaka/ansible-role-chrome.git
+- src: https://github.com/cmprescott/ansible-role-chrome.git
   version: master
   name: ansible-role-chrome
 
