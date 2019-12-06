@@ -260,7 +260,7 @@
       "type": "shell",
       "inline": [
         "sudo -u vagrant inspec --chef-license=accept",
-        "sudo -u vagrant inspec exec /tmp/specs"
+        "sudo -u vagrant inspec exec /tmp/specs",
         "sudo -u vagrant rm -rf ~/snap"
       ]
     },
