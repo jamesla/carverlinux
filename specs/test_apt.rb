@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 packages = %w[
+  nuget
   telnet
   speedtest-cli
   wget
