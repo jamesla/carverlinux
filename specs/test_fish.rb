@@ -15,3 +15,7 @@ end
 describe file('/home/vagrant/.config/fish/functions/fish_prompt.fish') do
   it { should exist }
 end
+
+describe command('sudo su - vagrant fish -c \'fisher --version\'') do
+  its(:exit_status) { should eq 0 }
+end

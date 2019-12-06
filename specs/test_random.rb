@@ -5,7 +5,6 @@ files = %w[
   /usr/local/bin/minishift
   /usr/local/bin/istioctl
   /usr/local/bin/glooctl
-  /snap/bin/helm
 ]
 
 files.each do |f|
@@ -16,7 +15,6 @@ files.each do |f|
 end
 
 commands = [
-  'helm --help',
   'oc version',
   'istioctl --help',
   'glooctl --help',

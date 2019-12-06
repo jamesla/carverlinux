@@ -70,3 +70,11 @@
 - src: https://github.com/geerlingguy/ansible-role-postgresql.git
   version: master
   name: ansible-role-postgresql
+
+- src: https://github.com/ocha/ansible-role-dotnet-core.git
+  version: master
+  name: ansible-role-dotnet-core
+
+- src: https://github.com/ericsysmin/ansible-role-gcloud.git
+  version: master
+  name: ansible-role-gcloud

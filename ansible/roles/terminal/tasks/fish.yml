@@ -49,3 +49,9 @@
   with_items:
     - root
     - vagrant
+
+- name: Install fisher
+  become_user: vagrant
+  shell: curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
+  args:
+    creates: ~/.config/fish/functions/fisher.fish

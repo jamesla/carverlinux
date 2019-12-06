@@ -16,8 +16,8 @@ nodejs_npm_global_packages:
   - vmd
 
 snap_packages:
-  - name: helm
-    use_classic: true
+  # - name: helm
+  #   use_classic: true
 
 apt_cache_valid_time: 3600
 apt_setup_unattended_upgrades: false
