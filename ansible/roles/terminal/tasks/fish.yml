@@ -57,9 +57,10 @@
     url: https://git.io/fisher
     dest: ~/.config/fish/functions/fisher.fish
 
-- name: Install fisher
+- name: Install fisher plugins
   become: true
   become_user: vagrant
   shell: fisher add evanlucas/fish-kubectl-completions && touch /tmp/fisher_kubectl_completions
   args:
     creates: /tmp/fisher_kubectl_completions
+    executable: /usr/bin/fish
