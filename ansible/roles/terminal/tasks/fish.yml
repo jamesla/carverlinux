@@ -56,7 +56,10 @@
   get_url:
     url: https://git.io/fisher
     dest: ~/.config/fish/functions/fisher.fish
-    # mode: 0755
-  # shell: curl https://git.io/fisher --create-dirs -sLo ~/.config/fish/functions/fisher.fish
-  # args:
-    # creates: ~/.config/fish/functions/fisher.fish
+
+- name: Install fisher
+  become: true
+  become_user: vagrant
+  shell: fisher add evanlucas/fish-kubectl-completions && touch /tmp/fisher_kubectl_completions
+  args:
+    creates: /tmp/fisher_kubectl_completions
