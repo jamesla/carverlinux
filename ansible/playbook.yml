@@ -10,6 +10,7 @@
     - {role: ansible-role-snap}
     - {role: ansible-role-pip}
     - {role: ansible-go}
+    - {role: ansible-role-dotnet-core}
 
     - {role: ruby}
     - {role: spacemacs}
@@ -18,6 +19,7 @@
     - {role: terminal}
     - {role: random}
 
+    - {role: ansible-role-gcloud}
     - {role: ansible-kubectl}
     - {role: ansible-minikube}
     - {role: ansible-packer}

@@ -15,13 +15,14 @@ nodejs_npm_global_packages:
   - yarn
   - vmd
 
-snap_packages:
-  - name: helm
-    use_classic: true
+# snap_packages:
+# - name: helm
+#   use_classic: true
 
 apt_cache_valid_time: 3600
 apt_setup_unattended_upgrades: false
 apt_install_packages:
+  - nuget
   - wget
   - curl
   - nmap
