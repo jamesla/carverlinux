@@ -30,7 +30,7 @@ values."
    dotspacemacs-configuration-layer-path '()
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
+   '(typescript
      terraform
      nginx
      go
@@ -42,7 +42,6 @@ values."
      shell-scripts
      haskell
      vimscript
-     themes-megapacks
      ansible
      ruby
      ansible
@@ -306,7 +305,6 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-
   ;; (setq tramp-ssh-controlmaster-options" -o ControlMaster=auto -o ControlPath='tramp.%%C' -o ControlPersist=no")
   (setq-default js2-basic-offset 2)
   (setq-default js-indent-level 2)
@@ -315,7 +313,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (setq-default web-mode-css-indent-offset 2)
   (setq-default web-mode-code-indent-offset 2)
   (setq-default web-mode-attr-indent-offset 2)
-  (setq vc-follow-symlinks )
+  (setq-default typescript-indent-level 2)
   )
 
 (defun dotspacemacs/user-config ()
@@ -327,7 +325,6 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place you code here."
 
   (xterm-mouse-mode 0)
-
   (setq neo-dont-be-alone t)
   (setq create-lockfiles nil)
   (setq neo-autorefresh t)
@@ -353,3 +350,23 @@ you should place you code here."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+    (tide typescript-mode import-js grizzl add-node-modules-path nginx-mode projectile-rails inflections feature-mode go-guru go-eldoc company-go go-mode sql-indent phpunit phpcbf php-extras php-auto-yasnippets drupal-mode php-mode evil-unimpaired yaml-mode xclip ws-butler winum which-key web-mode web-beautify volatile-highlights vimrc-mode vi-tilde-fringe vagrant-tramp vagrant uuidgen use-package toc-org tagedit spaceline smeargle slim-mode scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs rbenv rake rainbow-delimiters pug-mode popwin persp-mode pbcopy paradox osx-trash osx-dictionary orgit org-bullets open-junk-file neotree move-text mmm-mode minitest markdown-toc magit-gitflow macrostep lua-mode lorem-ipsum livid-mode linum-relative link-hint less-css-mode launchctl js2-refactor js-doc jinja2-mode intero insert-shebang info+ indent-guide hungry-delete hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-hoogle helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag haskell-snippets google-translate golden-ratio gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fuzzy flyspell-correct-helm flycheck-pos-tip flycheck-haskell flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu emmet-mode elisp-slime-nav dumb-jump dockerfile-mode docker diff-hl dactyl-mode cyberpunk-theme company-web company-tern company-statistics company-shell company-ghci company-ghc company-cabal company-ansible column-enforce-mode coffee-mode cmm-mode clean-aindent-mode chruby bundler auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile ansible-doc ansible aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+)
