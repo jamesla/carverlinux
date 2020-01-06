@@ -19,8 +19,6 @@
     replace: 'NODM_ENABLED=true'
 
 - name: set nodm service to automatically start
-  become_user: root
-  become: true
   systemd:
     name: nodm
     enabled: true
