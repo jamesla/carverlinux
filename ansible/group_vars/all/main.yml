@@ -4,24 +4,23 @@ npm_config_unsafe_perm: true
 nodejs_install_npm_user: vagrant
 
 nodejs_npm_global_packages:
-  - bower
-  - yo
   - ionic
   - cordova
-  - grunt-cli
-  - grunt
-  - gulp
-  - s3-website
   - yarn
-  - vmd
 
-# snap_packages:
-# - name: helm
-#   use_classic: true
+brew_packages:
+  - kubectl
+  - helm
+  - istioctl
+  - packer
+  - terraform
+  - minikube
+  - openshift-cli
 
 apt_cache_valid_time: 3600
 apt_setup_unattended_upgrades: false
 apt_install_packages:
+  - linuxbrew-wrapper
   - nuget
   - wget
   - curl
@@ -82,9 +81,5 @@ pip_install_packages:
 group_helper:
   - user: vagrant
     groups:
-      - 'kvm'
-      - 'docker'
-
-postgresql_users:
-  - name: postgres
-    password: postgres
+      - kvm
+      - docker
