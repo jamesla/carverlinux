@@ -14,7 +14,7 @@ packages.each do |p|
 end
 
 commands = [
-  'cordova -v',
+  'cordova -v'
 ]
 
 commands.each do |c|
