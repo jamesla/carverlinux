@@ -2,12 +2,9 @@
 
 packages = %w[
   ionic
-  yo
   cordova
-  grunt-cli
-  grunt
-  bower
-  gulp
+  vmd
+  yarn
 ]
 
 packages.each do |p|
@@ -17,11 +14,7 @@ packages.each do |p|
 end
 
 commands = [
-  'yo --version',
-  'cordova -v',
-  'grunt --version',
-  'bower -v',
-  'gulp --version'
+  'cordova -v'
 ]
 
 commands.each do |c|

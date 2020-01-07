@@ -17,7 +17,6 @@
   with_items:
     - tern
     - js-yaml
-    # - vmd
 
 - name: clone spacemacs
   become_user: vagrant
@@ -38,10 +37,10 @@
     src: .spacemacs
     dest: ~/.spacemacs
 
-- name: update spacemacs packages
-  become_user: vagrant
-  become: true
-  shell: emacs --batch --load=~/.emacs.d/init.el && touch /tmp/spacemacs_updated
-  args:
-    executable: /bin/bash
-    creates: /tmp/spacemacs_updated
+# - name: update spacemacs packages
+#   become_user: vagrant
+#   become: true
+#   shell: emacs --batch --load=~/.emacs.d/init.el && touch /tmp/spacemacs_updated
+#   args:
+#     executable: /bin/bash
+#     creates: /tmp/spacemacs_updated

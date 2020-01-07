@@ -1,4 +1,5 @@
 ---
+
 - src: https://github.com/geerlingguy/ansible-role-nodejs.git
   version: master
   name: ansible-role-nodejs
@@ -14,14 +15,6 @@
 - src: https://github.com/andrewrothstein/ansible-vagrant.git
   version: master
   name: ansible-vagrant
-
-- src: https://github.com/andrewrothstein/ansible-packer.git
-  version: master
-  name: ansible-packer
-
-- src: https://github.com/andrewrothstein/ansible-consul.git
-  version: master
-  name: ansible-consul
 
 - src: https://github.com/zzet/ansible-rbenv-role.git
   version: master
@@ -39,10 +32,6 @@
   version: master
   name: ansible-role-docker
 
-- src: https://github.com/jamesla/ansible-role-snap.git
-  version: master
-  name: ansible-role-snap
-
 - src: https://github.com/jamesla/ansible-role-tmux.git
   version: master
   name: ansible-role-tmux
@@ -51,25 +40,9 @@
   version: master
   name: ansible-role-grouphelper
 
-- src: https://github.com/andrewrothstein/ansible-terraform.git
-  version: master
-  name: ansible-role-terraform
-
-- src: https://github.com/andrewrothstein/ansible-kubectl.git
-  version: master
-  name: ansible-kubectl
-
-- src: https://github.com/andrewrothstein/ansible-minikube
-  version: master
-  name: ansible-minikube
-
 - src: https://github.com/gantsign/ansible-role-visual-studio-code.git
   version: master
   name: ansible-role-visual-studio-code
-
-- src: https://github.com/geerlingguy/ansible-role-postgresql.git
-  version: master
-  name: ansible-role-postgresql
 
 - src: https://github.com/ocha/ansible-role-dotnet-core.git
   version: master

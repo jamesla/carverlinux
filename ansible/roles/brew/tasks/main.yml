@@ -1,0 +1,21 @@
+---
+
+- name: install brew
+  apt:
+    name:
+      - linuxbrew-wrapper
+    update_cache: true
+
+- name: install linuxbrew
+  become_user: vagrant
+  become: false
+  shell: 'sudo su - vagrant sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"'
+  args:
+    creates: /home/linuxbrew
+
+
+- name: Install brew packages
+  become: false
+  homebrew:
+    name: "{{ item }}"
+  with_items: "{{ brew_packages }}"

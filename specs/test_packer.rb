@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
-describe command('packer -v') do
+describe command('sudo su - vagrant fish -c \'packer version\'') do
   its(:exit_status) { should eq 0 }
 end
