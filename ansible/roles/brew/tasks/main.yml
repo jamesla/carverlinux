@@ -9,7 +9,7 @@
 - name: install linuxbrew
   become_user: vagrant
   become: false
-  shell: sudo su - vagrant sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+  shell: 'sudo su - vagrant sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"'
   args:
     creates: /home/linuxbrew
 

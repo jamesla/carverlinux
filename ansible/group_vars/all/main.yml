@@ -7,6 +7,7 @@ nodejs_npm_global_packages:
   - ionic
   - cordova
   - yarn
+  - vmd
 
 brew_packages:
   - kubectl
