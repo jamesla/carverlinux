@@ -13,6 +13,7 @@
     - {role: ansible-role-dotnet-core}
 
     - {role: ruby}
+    - {role: spacevim}
     - {role: spacemacs}
     - {role: desktop}
     - {role: ansible-role-tmux}

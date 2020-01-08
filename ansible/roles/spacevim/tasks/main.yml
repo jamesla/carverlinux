@@ -1,0 +1,37 @@
+---
+
+- name: Install vim and dependencies
+  apt:
+    name:
+      - vim
+      - git
+
+- name: Download spacevim installer
+  get_url:
+    url: https://spacevim.org/install.sh
+    dest: /tmp/install.sh
+    mode: +x
+
+- name: Install spacevim
+  become_user: vagrant
+  become: true
+  shell: ./install.sh && touch /tmp/spacevim_installed
+  args:
+    creates: ~/tmp/spacevim_installed
+    chdir: /tmp
+  tags:
+    - skip_ansible_lint
+
+- name: Ensure .spacemacs.d dir exists
+  become_user: vagrant
+  become: true
+  file:
+    dest: ~/.SpaceVim.d
+    state: directory
+
+- name: Copy spacevim config
+  become_user: vagrant
+  become: true
+  template:
+    src: init.toml.j2
+    dest: ~/.SpaceVim.d/init.toml
