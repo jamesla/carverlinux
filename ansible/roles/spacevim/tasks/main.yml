@@ -1,0 +1,33 @@
+---
+
+- name: Install vim and dependencies
+  apt:
+    name:
+      - vim
+
+- name: Download spacevim installer
+  get_url:
+    url: https://spacevim.org/install.sh
+    dest: /tmp/install.sh
+    mode: +x
+
+- name: Install spacevim
+  become_user: vagrant
+  become: true
+  shell: ./install.sh
+  args:
+    creates: ~/.SpaceVim
+    chdir: /tmp
+
+- name: Ensure .spacemacs.d dir exists
+  become_user: vagrant
+  file:
+    dest: ~/.SpaceVim.d
+    state: directory
+
+- name: Copy spacevim config
+  become_user: vagrant
+  become: true
+  template:
+    src: init.toml.j2
+    dest: ~/.SpaceVim.d/init.toml

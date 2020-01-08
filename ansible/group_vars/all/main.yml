@@ -17,6 +17,7 @@ brew_packages:
   - terraform
   - minikube
   - openshift-cli
+  - nvim
 
 apt_cache_valid_time: 3600
 apt_setup_unattended_upgrades: false
