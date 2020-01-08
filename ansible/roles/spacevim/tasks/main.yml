@@ -4,6 +4,7 @@
   apt:
     name:
       - vim
+      - git
 
 - name: Download spacevim installer
   get_url:
@@ -14,16 +15,16 @@
 - name: Install spacevim
   become_user: vagrant
   become: true
-  shell: ./install.sh
+  shell: ./install.sh && touch /tmp/spacevim_installed
   args:
-    creates: ~/.SpaceVim
+    creates: ~/tmp/spacevim_installed
     chdir: /tmp
   tags:
     - skip_ansible_lint
 
 - name: Ensure .spacemacs.d dir exists
   become_user: vagrant
-  become: false
+  become: true
   file:
     dest: ~/.SpaceVim.d
     state: directory
