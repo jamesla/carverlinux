@@ -5,7 +5,9 @@
 
 - name: install fish shell
   apt:
-    name: fish
+    name:
+      - fish
+      - git
 
 - name: Create fish directory
   become: true
@@ -64,3 +66,15 @@
   args:
     creates: /tmp/fisher_kubectl_completions
     executable: /usr/bin/fish
+
+- name: Install krew
+  shell: |
+    begin
+      set -x; set temp_dir (mktemp -d); cd "$temp_dir" &&
+      curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/download/v0.3.3/krew.{tar.gz,yaml}" &&
+      tar zxvf krew.tar.gz &&
+      set KREWNAME krew-(uname | tr '[:upper:]' '[:lower:]')_amd64 &&
+      ./$KREWNAME install \
+        --manifest=krew.yaml --archive=krew.tar.gz &&
+      set -e KREWNAME; set -e temp_dir
+    end

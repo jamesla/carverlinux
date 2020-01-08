@@ -1,3 +1,7 @@
+#add border 
+set-option -g pane-active-border-style "bg=colour208"
+set-option -ag pane-active-border-style "fg=black"
+
 #resize panes
 bind down resize-pane -D 40
 bind up resize-pane -U 40
@@ -31,9 +35,6 @@ set -g @plugin 'tmux-plugins/tmux-online-status'
 set -g @plugin 'tmux-plugins/tmux-yank'
 set -g @plugin 'tmux-plugins/tmux-open'
 set -g @plugin 'tmux-plugins/tmux-copycat'
-set -g @plugin 'tmux-plugins/tmux-sensible'
-set -g @plugin 'seebi/tmux-colors-solarized'
-set -g @plugin 'tmux-plugins/tmux-sensible'
 
 #ressurect vim
 set -g @resurrect-strategy-vim 'session'
