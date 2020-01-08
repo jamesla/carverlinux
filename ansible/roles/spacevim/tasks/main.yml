@@ -18,9 +18,12 @@
   args:
     creates: ~/.SpaceVim
     chdir: /tmp
+  tags:
+    - skip_ansible_lint
 
 - name: Ensure .spacemacs.d dir exists
   become_user: vagrant
+  become: false
   file:
     dest: ~/.SpaceVim.d
     state: directory
