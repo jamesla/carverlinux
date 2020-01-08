@@ -69,6 +69,7 @@
 
 - name: Install krew
   shell: |
+    set -o pipefail
     begin
       set -x; set temp_dir (mktemp -d); cd "$temp_dir" &&
       curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/download/v0.3.3/krew.{tar.gz,yaml}" &&
@@ -78,3 +79,6 @@
         --manifest=krew.yaml --archive=krew.tar.gz &&
       set -e KREWNAME; set -e temp_dir
     end
+  args:
+    creates: /tmp/krew_installed
+    executable: /usr/bin/fish
