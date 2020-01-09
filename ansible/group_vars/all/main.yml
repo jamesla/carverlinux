@@ -8,6 +8,7 @@ nodejs_npm_global_packages:
   - cordova
   - yarn
   - vmd
+  - git-cz
 
 brew_packages:
   - kubectl
@@ -56,6 +57,7 @@ apt_install_packages:
   - ifupdown
   - software-properties-common
   - virtualbox
+  - git-extras
 
 gems:
   - rake
