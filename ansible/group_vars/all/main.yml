@@ -9,6 +9,13 @@ nodejs_npm_global_packages:
   - yarn
   - vmd
   - git-cz
+  - gulp
+  - grunt
+  - typescript
+  - bash-language-server
+  - javascript-typescript-langserver
+  - vscode-css-languageserver-bin
+  - vscode-html-languageserver-bin
 
 brew_packages:
   - kubectl
@@ -23,6 +30,8 @@ brew_packages:
 apt_cache_valid_time: 3600
 apt_setup_unattended_upgrades: false
 apt_install_packages:
+  - default-jre
+  - libz-dev
   - linuxbrew-wrapper
   - nuget
   - wget
@@ -68,6 +77,7 @@ gems:
   - winrm
   - inspec-bin
   - inspec
+  - solargraph
 
 pip_install_packages:
   - molecule
@@ -81,6 +91,7 @@ pip_install_packages:
   - python-openstackclient
   - python-heatclient
   - awsebcli
+  - python-language-server
 
 group_helper:
   - user: vagrant

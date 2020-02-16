@@ -29,9 +29,23 @@
     dest: ~/.SpaceVim.d
     state: directory
 
+- name: Ensure autoload dir exists
+  become_user: vagrant
+  become: true
+  file:
+    dest: ~/.SpaceVim.d/autoload
+    state: directory
+
 - name: Copy spacevim config
   become_user: vagrant
   become: true
   template:
     src: init.toml.j2
     dest: ~/.SpaceVim.d/init.toml
+
+- name: Copy myspacevim bootstrap function definitions
+  become_user: vagrant
+  become: true
+  template:
+    src: myspacevim.vim.j2
+    dest: ~/.SpaceVim.d/autoload/myspacevim.vim

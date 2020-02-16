@@ -16,6 +16,7 @@
   enable_statusline_mode = true
   filemanager = "nerdtree"
   filetree_direction = "left"
+  bootstrap_after = "myspacevim#after"
 
 # Enable autocomplete layer
 [[layers]]
@@ -67,3 +68,19 @@ name = 'autocomplete'
 
 [[layers]]
   name = "lang#typescript"
+
+[[layers]]
+  name = "lang#extras"
+
+[[layers]]
+  name = "lsp"
+  filetypes = [
+    "typescript",
+    "javascript",
+    "python",
+    "css",
+    "ruby",
+    "html",
+    "go",
+    "sh"
+  ]
