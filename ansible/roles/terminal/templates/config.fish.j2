@@ -1,6 +1,6 @@
 function sudo; command sudo -sE $argv; end
-alias -a emacs "emacs -nw"
-alias -a vim "nvim"
+alias emacs "emacs -nw"
+alias vim "nvim"
 
 set fish_key_bindings fish_vi_key_bindings
 
@@ -14,9 +14,9 @@ set -g fish_user_paths "/home/linuxbrew/.linuxbrew/bin" $fish_user_paths
 set -gx PATH $PATH $HOME/.krew/bin
 
 #my kube aliases
-alias -a kw "watch -c kubectl get pods --all-namespaces"
-alias -a kubeevents "kubectl get event --sort-by .lastTimestamp -w --all-namespaces"
-alias -a kubeshell "kubectl run my-shell --rm -i --tty --image jamesla/nginx-debug -- bash"
+alias kw "watch -c kubectl get pods --all-namespaces"
+alias kubeevents "kubectl get event --sort-by .lastTimestamp -w --all-namespaces"
+alias kubeshell "kubectl run my-shell --rm -i --tty --image jamesla/nginx-debug -- bash"
 
 # kubectl aliases - hopefully remove this when somebody makes a fisher plugin
 abbr -a k "kubectl"
