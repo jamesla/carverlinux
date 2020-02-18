@@ -13,7 +13,7 @@
 - name: Install spacevim node deps
   npm:
     name: "{{ item }}"
-    global: yes
+    global: true
   with_items:
     - bash-language-server
     - javascript-typescript-langserver
@@ -70,3 +70,9 @@
   template:
     src: myspacevim.vim.j2
     dest: ~/.SpaceVim.d/autoload/myspacevim.vim
+
+- name: Update vim plugins
+  shell: vim "+call dein#install#_update([], 'update', 0)" '+qall'
+  args:
+    creates: ~/tmp/spacevim_updated
+    chdir: /tmp
