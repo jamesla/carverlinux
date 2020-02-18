@@ -1,10 +1,31 @@
 ---
 
+- name: Add up to date vim apt repository
+  apt_repository:
+    repo: ppa:jonathonf/vim
+
 - name: Install vim and dependencies
   apt:
     name:
       - vim
       - git
+
+- name: Install spacevim node deps
+  npm:
+    name: "{{ item }}"
+    global: yes
+  with_items:
+    - bash-language-server
+    - javascript-typescript-langserver
+    - typescript-language-server
+    - vscode-css-languageserver-bin
+    - vscode-html-languageserver-bin
+
+- name: install broken import-js module (move this above when they fix it)
+  shell: npm install -g import-js --allow-root --unsafe-perm=true
+  args:
+    creates: ~/tmp/spacevim_installed
+    chdir: /tmp
 
 - name: Download spacevim installer
   get_url:
@@ -22,7 +43,7 @@
   tags:
     - skip_ansible_lint
 
-- name: Ensure .spacemacs.d dir exists
+- name: Ensure .SpaceVim.d dir exists
   become_user: vagrant
   become: true
   file:

@@ -1,5 +1,4 @@
 ---
-npm_config_prefix: /usr
 npm_config_unsafe_perm: true
 nodejs_install_npm_user: vagrant
 
@@ -12,10 +11,6 @@ nodejs_npm_global_packages:
   - gulp
   - grunt
   - typescript
-  - bash-language-server
-  - javascript-typescript-langserver
-  - vscode-css-languageserver-bin
-  - vscode-html-languageserver-bin
 
 brew_packages:
   - kubectl
@@ -25,7 +20,6 @@ brew_packages:
   - terraform
   - minikube
   - openshift-cli
-  - nvim
 
 apt_cache_valid_time: 3600
 apt_setup_unattended_upgrades: false

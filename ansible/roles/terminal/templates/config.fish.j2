@@ -1,11 +1,10 @@
 function sudo; command sudo -sE $argv; end
 alias emacs "emacs -nw"
-alias vim "nvim"
 
 set fish_key_bindings fish_vi_key_bindings
 
 #env vars
-set -Ux EDITOR "nvim"
+set -Ux EDITOR "vim"
 
 #brew
 set -g fish_user_paths "/home/linuxbrew/.linuxbrew/bin" $fish_user_paths
