@@ -21,12 +21,6 @@
     - vscode-css-languageserver-bin
     - vscode-html-languageserver-bin
 
-- name: install broken import-js module (move this above when they fix it)
-  shell: npm install -g import-js --allow-root --unsafe-perm=true
-  args:
-    creates: ~/tmp/spacevim_installed
-    chdir: /tmp
-
 - name: Download spacevim installer
   get_url:
     url: https://spacevim.org/install.sh
@@ -38,7 +32,7 @@
   become: true
   shell: ./install.sh && touch /tmp/spacevim_installed
   args:
-    creates: ~/tmp/spacevim_installed
+    creates: /tmp/spacevim_installed
     chdir: /tmp
   tags:
     - skip_ansible_lint
@@ -72,7 +66,7 @@
     dest: ~/.SpaceVim.d/autoload/myspacevim.vim
 
 - name: Update vim plugins
-  shell: vim "+call dein#install#_update([], 'update', 0)" '+qall'
+  shell: vim "+call dein#install#_update([], 'update', 0)" '+qall' && touch /tmp/spacevim_updated
   args:
-    creates: ~/tmp/spacevim_updated
+    creates: /tmp/spacevim_updated
     chdir: /tmp
