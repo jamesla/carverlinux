@@ -69,4 +69,3 @@
   shell: vim "+call dein#install#_update([], 'update', 0)" '+qall' && touch /tmp/spacevim_updated
   args:
     creates: /tmp/spacevim_updated
-    chdir: /tmp
