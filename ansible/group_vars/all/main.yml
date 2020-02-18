@@ -21,6 +21,7 @@ brew_packages:
   - minikube
   - openshift-cli
 
+
 apt_cache_valid_time: 3600
 apt_setup_unattended_upgrades: false
 apt_install_packages:
