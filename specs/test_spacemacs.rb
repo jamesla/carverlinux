@@ -12,6 +12,7 @@ apt_packages.each do |p|
 end
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 # npm_packages = %w[
   # tern
@@ -26,6 +27,8 @@ end
 # end
 
 >>>>>>> fix: remove npm tests
+=======
+>>>>>>> fix: linting issue
 describe file('/home/vagrant/.emacs.d') do
   it { should be_directory }
 end
