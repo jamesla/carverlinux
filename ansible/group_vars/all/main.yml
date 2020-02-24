@@ -3,7 +3,6 @@ npm_config_unsafe_perm: true
 nodejs_install_npm_user: vagrant
 
 nodejs_npm_global_packages:
-  - ionic
   - cordova
   - yarn
   - vmd
