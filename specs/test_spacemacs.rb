@@ -11,18 +11,6 @@ apt_packages.each do |p|
   end
 end
 
-npm_packages = %w[
-  tern
-  js-yaml
-  vmd
-]
-
-npm_packages.each do |p|
-  describe npm(p) do
-    it { should be_installed }
-  end
-end
-
 describe file('/home/vagrant/.emacs.d') do
   it { should be_directory }
 end

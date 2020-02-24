@@ -2,4 +2,3 @@
 - include: stterm.yml
 - include: fish.yml
 - include: tmux.yml
-- include: vim.yml

@@ -1,10 +1,25 @@
 ---
 
+- name: Add up to date vim apt repository
+  apt_repository:
+    repo: ppa:jonathonf/vim
+
 - name: Install vim and dependencies
   apt:
     name:
       - vim
       - git
+
+- name: Install spacevim node deps
+  npm:
+    name: "{{ item }}"
+    global: true
+  with_items:
+    - bash-language-server
+    - javascript-typescript-langserver
+    - typescript-language-server
+    - vscode-css-languageserver-bin
+    - vscode-html-languageserver-bin
 
 - name: Download spacevim installer
   get_url:
@@ -17,16 +32,23 @@
   become: true
   shell: ./install.sh && touch /tmp/spacevim_installed
   args:
-    creates: ~/tmp/spacevim_installed
+    creates: /tmp/spacevim_installed
     chdir: /tmp
   tags:
     - skip_ansible_lint
 
-- name: Ensure .spacemacs.d dir exists
+- name: Ensure .SpaceVim.d dir exists
   become_user: vagrant
   become: true
   file:
     dest: ~/.SpaceVim.d
+    state: directory
+
+- name: Ensure autoload dir exists
+  become_user: vagrant
+  become: true
+  file:
+    dest: ~/.SpaceVim.d/autoload
     state: directory
 
 - name: Copy spacevim config
@@ -35,3 +57,16 @@
   template:
     src: init.toml.j2
     dest: ~/.SpaceVim.d/init.toml
+
+- name: Copy myspacevim bootstrap function definitions
+  become_user: vagrant
+  become: true
+  template:
+    src: myspacevim.vim.j2
+    dest: ~/.SpaceVim.d/autoload/myspacevim.vim
+
+- name: Update vim plugins
+  shell: vim "+call dein#install#_update([], 'update', 0)" '+qall' && touch /tmp/spacevim_updated
+  args:
+    creates: /tmp/spacevim_updated
+    chdir: /tmp
