@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/BlockLength
 control 'usertests' do
   [
     'cordova',
@@ -61,6 +62,7 @@ control 'usertests' do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength
 
 control 'docker' do
   describe user('vagrant') do
