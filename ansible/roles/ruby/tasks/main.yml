@@ -14,6 +14,13 @@
       - ruby
       - ruby-dev
 
+- name: hack to make inspec install.  # Maybe can remove this in ubuntu 20.04 and ruby 2.7+
+  become: true
+  shell: gem install rake
+  changed_when: false
+  tags:
+    - skip_ansible_lint
+
 - name: install gems
   become: true
   gem:
