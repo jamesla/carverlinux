@@ -1,13 +1,9 @@
 ---
 
-- name: Add up to date vim apt repository
-  apt_repository:
-    repo: ppa:jonathonf/vim
-
-- name: Install vim and dependencies
+- name: Install nvim and dependencies
   apt:
     name:
-      - vim
+      - neovim
       - git
 
 - name: Install spacevim node deps
