@@ -45,6 +45,7 @@ control 'usertests' do
     'pip -v',
     'dmenu -v',
     'vim --version',
+    'nvim --version',
     'tmux -V',
     'ag --version',
     'which tern',
