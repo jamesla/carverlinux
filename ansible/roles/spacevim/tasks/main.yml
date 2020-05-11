@@ -65,8 +65,3 @@
   template:
     src: myspacevim.vim.j2
     dest: ~/.SpaceVim.d/autoload/myspacevim.vim
-
-- name: Update vim plugins
-  shell: vim "+call dein#install#_update([], 'update', 0)" '+qall' && touch /tmp/spacevim_updated
-  args:
-    creates: /tmp/spacevim_updated
