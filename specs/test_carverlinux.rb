@@ -3,7 +3,6 @@
 # rubocop:disable Metrics/BlockLength
 control 'usertests' do
   [
-    'cordova',
     'kubectl --help',
     'java --version',
     'gulp --version',
