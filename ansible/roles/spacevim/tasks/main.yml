@@ -1,10 +1,15 @@
 ---
 
-- name: Install nvim and dependencies
+- name: Ensure dependencies are installed
   apt:
     name:
-      - neovim
       - git
+
+- name: Install neovim
+  get_url:
+    url: https://github.com/neovim/neovim/releases/download/stable/nvim.appimage
+    dest: /usr/bin/nvim
+    mode: +x
 
 - name: Install spacevim node deps
   npm:
@@ -60,8 +65,3 @@
   template:
     src: myspacevim.vim.j2
     dest: ~/.SpaceVim.d/autoload/myspacevim.vim
-
-- name: Update vim plugins
-  shell: vim "+call dein#install#_update([], 'update', 0)" '+qall' && touch /tmp/spacevim_updated
-  args:
-    creates: /tmp/spacevim_updated

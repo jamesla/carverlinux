@@ -3,7 +3,7 @@
 # rubocop:disable Metrics/BlockLength
 control 'usertests' do
   [
-    'cordova',
+    'cordova --version',
     'kubectl --help',
     'java --version',
     'gulp --version',
@@ -44,7 +44,7 @@ control 'usertests' do
     'brew -v',
     'pip -v',
     'dmenu -v',
-    'vim --version',
+    'nvim --version',
     'tmux -V',
     'ag --version',
     'which tern',
