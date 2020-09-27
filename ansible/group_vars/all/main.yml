@@ -85,6 +85,7 @@ pip_install_packages:
   - python-heatclient
   - awsebcli
   - python-language-server
+  - ansible-lint
 
 group_helper:
   - user: vagrant
