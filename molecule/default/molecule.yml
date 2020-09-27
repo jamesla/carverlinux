@@ -6,8 +6,6 @@ dependency:
 driver:
   driver:
   name: docker
-lint:
-  name: yamllint
 platforms:
   - name: ubuntu
     image: solita/ubuntu-systemd:bionic
@@ -27,8 +25,6 @@ provisioner:
   config_options:
     ssh_connection:
       pipelining: true
-  lint:
-    name: ansible-lint
   playbooks:
     converge: ../../ansible/playbook.yml
   env:
@@ -61,12 +57,12 @@ scenario:
     - create
     - prepare
     - converge
-    # - idempotence
     - side_effect
     - verify
     - destroy
+# lint: |
+  # set -e
+  # yamllint .
+  # ansible-lint
 verifier:
-  name: inspec
-  directory: ../../
-  lint:
-    name: rubocop
+  name: ansible

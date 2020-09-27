@@ -5,6 +5,7 @@
 
 - name: Verify
   hosts: all
+  become_user: vagrant
   become: true
   vars:
     inspec_bin: /usr/local/bin/inspec

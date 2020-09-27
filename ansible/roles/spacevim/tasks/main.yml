@@ -6,10 +6,11 @@
       - git
 
 - name: Install neovim
+  become: true
   get_url:
     url: https://github.com/neovim/neovim/releases/download/stable/nvim.appimage
     dest: /usr/bin/nvim
-    mode: +x
+    mode: 0777
 
 - name: Install spacevim node deps
   npm:
@@ -35,8 +36,6 @@
   args:
     creates: /tmp/spacevim_installed
     chdir: /tmp
-  tags:
-    - skip_ansible_lint
 
 - name: Ensure .SpaceVim.d dir exists
   become_user: vagrant
