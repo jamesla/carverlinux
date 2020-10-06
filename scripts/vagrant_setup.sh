@@ -14,7 +14,7 @@ chmod 600 ~/.ssh/authorized_keys
 chown -R vagrant ~/.ssh
 
 # Install ansible
-pip install ansible
+pip3 install ansible
 
 # Add `sync` so Packer doesn't quit too early
 sync
