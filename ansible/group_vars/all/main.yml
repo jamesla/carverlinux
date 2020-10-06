@@ -1,6 +1,8 @@
 ---
 npm_config_unsafe_perm: true
 nodejs_install_npm_user: vagrant
+dotnet_package: dotnet-sdk-3.1
+gcloud_install_type: archive
 
 nodejs_npm_global_packages:
   - cordova
@@ -25,7 +27,6 @@ apt_setup_unattended_upgrades: false
 apt_install_packages:
   - default-jre
   - libz-dev
-  - linuxbrew-wrapper
   - nuget
   - wget
   - curl
@@ -50,7 +51,6 @@ apt_install_packages:
   - qemu-kvm
   - virt-manager
   - libvirt-dev
-  - libvirt-bin
   - virtinst
   - bridge-utils
   - p7zip-full

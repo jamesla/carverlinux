@@ -1,3 +1,8 @@
+# Homebrew package manager
+if test -x /home/linuxbrew/.linuxbrew/bin/brew
+    eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+end
+
 function sudo; command sudo -sE $argv; end
 alias emacs "emacs -nw"
 

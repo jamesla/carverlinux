@@ -8,7 +8,7 @@ driver:
   name: docker
 platforms:
   - name: ubuntu
-    image: solita/ubuntu-systemd:bionic
+    image: jrei/systemd-ubuntu:20.04
     command: /sbin/init
     privileged: true
     capabilities:
