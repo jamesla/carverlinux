@@ -5,6 +5,10 @@ VERSION := $(shell date +%Y.%m.%d)
 virtualbox: ## build virtualbox
 	packer build -var provider=virtualbox -var version=$(VERSION) packer.json
 
+.PHONY: parallels
+parallels: ## build parallels
+	packer build -var provider=parallels -var version=$(VERSION) packer.json
+
 .PHONY: test
 test: ## run tests
 	docker run --rm -it \

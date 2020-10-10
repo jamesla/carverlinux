@@ -11,7 +11,8 @@
       "type": "vagrant",
       "communicator": "ssh",
       "source_path": "jamesla/debian-basebox",
-      "provider": "{{user `PROVIDER`}}",
+      "provider": "parallels",
+      "output_vagrantfile": "Vagrantfile",
       "add_force": true
     }
   ],
