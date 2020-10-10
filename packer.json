@@ -35,7 +35,6 @@
       "inline": [
         "sudo -u vagrant inspec --chef-license=accept",
         "sudo -u vagrant inspec exec /tmp/specs",
-        "sudo -u vagrant rm -rf ~/snap",
         "sudo chown root:root /usr",
         "sudo rm -rf /tmp/*"
       ]
