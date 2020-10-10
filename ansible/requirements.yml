@@ -44,10 +44,15 @@
   version: master
   name: ansible-role-visual-studio-code
 
-- src: https://github.com/ocha/ansible-role-dotnet-core.git
+- src: https://github.com/andrewrothstein/ansible-dotnet-sdk.git
   version: master
-  name: ansible-role-dotnet-core
+  name: ansible-dotnet-sdk
 
 - src: https://github.com/ericsysmin/ansible-role-gcloud.git
   version: master
   name: ansible-role-gcloud
+
+# REPLACE THIS WHEN UPSTREAM FIXES IT
+- src: https://github.com/jamesla/ansible-role-virtualbox.git
+  version: master
+  name: ansible-role-virtualbox

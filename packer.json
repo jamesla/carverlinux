@@ -2,247 +2,20 @@
   "variables": {
     "vagrant_cloud_token": "{{env `VAGRANT_CLOUD_TOKEN`}}",
     "version": "{{env `VERSION`}}",
-    "boot_wait": "10s",
-    "disk_size": "150000",
-    "http_directory": "scripts",
-    "iso_checksum_type": "sha256",
-    "iso_urls": "http://cdimage.ubuntu.com/ubuntu-legacy-server/releases/20.04/release/ubuntu-20.04.1-legacy-server-amd64.iso",
-    "iso_checksum": "f11bda2f2caed8f420802b59f382c25160b114ccc665dbac9c5046e7fceaced2",
-    "ssh_username": "vagrant",
-    "ssh_password": "vagrant",
-    "ssh_port": "22",
-    "ssh_wait_timeout": "10000s",
-    "shutdown_command": "echo 'vagrant'|sudo -S shutdown -P now",
     "headless": "true",
-    "vm_name": "carverlinux"
+    "vm_name": "carverlinux",
+    "provider": "{{env `PROVIDER`}}"
   },
   "builders": [
     {
-      "type": "vmware-iso",
-      "guest_os_type": "ubuntu",
-      "vm_name": "{{ user `vm_name` }}",
-      "vmx_data": {
-        "vhv.enable": "true"
-      },
-      "boot_command": [
-        "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-        "/install/vmlinuz<wait>",
-        " auto<wait>",
-        " console-setup/ask_detect=false<wait>",
-        " console-setup/layoutcode=us<wait>",
-        " console-setup/modelcode=pc105<wait>",
-        " debconf/frontend=noninteractive<wait>",
-        " debian-installer=en_US<wait>",
-        " fb=false<wait>",
-        " initrd=/install/initrd.gz<wait>",
-        " kbd-chooser/method=us<wait>",
-        " keyboard-configuration/layout=USA<wait>",
-        " keyboard-configuration/variant=USA<wait>",
-        " locale=en_US<wait>",
-        " netcfg/get_domain=vm<wait>",
-        " netcfg/get_hostname=vagrant<wait>",
-        " grub-installer/bootdev=/dev/sda<wait>",
-        " noapic<wait>",
-        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg",
-        " -- <wait>",
-        "<enter><wait>"
-      ],
-      "boot_wait": "{{ user `boot_wait` }}",
-      "disk_size": "{{ user `disk_size` }}",
-      "http_directory": "{{ user `http_directory` }}",
-      "iso_urls": "{{ user `iso_urls` }}",
-      "headless": "{{ user `headless` }}",
-      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
-      "iso_checksum": "{{ user `iso_checksum` }}",
-      "ssh_username": "{{ user `ssh_username` }}",
-      "ssh_password": "{{ user `ssh_password` }}",
-      "ssh_port": "{{ user `ssh_port` }}",
-      "ssh_wait_timeout": "{{ user `ssh_wait_timeout` }}",
-      "shutdown_command": "{{ user `shutdown_command` }}"
-    },
-    {
-      "type": "virtualbox-iso",
-      "boot_command": [
-        "<esc><wait>",
-        "<esc><wait>",
-        "<enter><wait>",
-        "/install/vmlinuz<wait>",
-        " auto<wait>",
-        " console-setup/ask_detect=false<wait>",
-        " console-setup/layoutcode=us<wait>",
-        " console-setup/modelcode=pc105<wait>",
-        " debconf/frontend=noninteractive<wait>",
-        " debian-installer=en_US<wait>",
-        " fb=false<wait>",
-        " initrd=/install/initrd.gz<wait>",
-        " kbd-chooser/method=us<wait>",
-        " keyboard-configuration/layout=USA<wait>",
-        " keyboard-configuration/variant=USA<wait>",
-        " locale=en_US<wait>",
-        " netcfg/get_domain=vm<wait>",
-        " netcfg/get_hostname=vagrant<wait>",
-        " grub-installer/bootdev=/dev/sda<wait>",
-        " noapic<wait>",
-        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<wait>",
-        " -- <wait>",
-        "<enter><wait>"
-      ],
-      "boot_wait": "{{ user `boot_wait` }}",
-      "disk_size": "{{ user `disk_size` }}",
-      "guest_os_type": "Ubuntu_64",
-      "headless": "{{ user `headless` }}",
-      "http_directory": "{{ user `http_directory` }}",
-      "iso_urls": "{{ user `iso_urls` }}",
-      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
-      "iso_checksum": "{{ user `iso_checksum` }}",
-      "ssh_username": "{{ user `ssh_username` }}",
-      "ssh_password": "{{ user `ssh_password` }}",
-      "ssh_port": "{{ user `ssh_port` }}",
-      "ssh_wait_timeout": "{{ user `ssh_wait_timeout` }}",
-      "shutdown_command": "{{ user `shutdown_command` }}",
-      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
-      "virtualbox_version_file": ".vbox_version",
-      "vm_name": "{{ user `vm_name` }}",
-      "vboxmanage": [
-        [
-          "modifyvm",
-          "{{.Name}}",
-          "--memory",
-          "8024"
-        ],
-        [
-          "modifyvm",
-          "{{.Name}}",
-          "--cpus",
-          "4"
-        ]
-      ]
-    },
-    {
-      "type": "parallels-iso",
-      "parallels_tools_flavor": "lin",
-      "guest_os_type": "ubuntu",
-      "disk_size": "{{ user `disk_size` }}",
-      "prlctl": [
-        [
-          "set",
-          "{{.Name}}",
-          "--nested-virt",
-          "on"
-        ],
-        [
-          "set",
-          "{{.Name}}",
-          "--device-set",
-          "cdrom0",
-          "--iface",
-          "sata"
-        ],
-        [
-          "set",
-          "{{.Name}}",
-          "--device-del",
-          "sound0"
-        ],
-        [
-          "set",
-          "{{.Name}}",
-          "--device-del",
-          "usb"
-        ]
-      ],
-      "boot_command": [
-        "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-        "/install/vmlinuz<wait>",
-        " auto<wait>",
-        " console-setup/ask_detect=false<wait>",
-        " console-setup/layoutcode=us<wait>",
-        " console-setup/modelcode=pc105<wait>",
-        " debconf/frontend=noninteractive<wait>",
-        " debian-installer=en_US<wait>",
-        " fb=false<wait>",
-        " initrd=/install/initrd.gz<wait>",
-        " kbd-chooser/method=us<wait>",
-        " keyboard-configuration/layout=USA<wait>",
-        " keyboard-configuration/variant=USA<wait>",
-        " locale=en_US<wait>",
-        " netcfg/get_domain=vm<wait>",
-        " netcfg/get_hostname=vagrant<wait>",
-        " grub-installer/bootdev=/dev/sda<wait>",
-        " noapic<wait>",
-        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg",
-        " -- <wait>",
-        "<enter><wait>"
-      ],
-      "boot_wait": "{{ user `boot_wait` }}",
-      "http_directory": "{{ user `http_directory` }}",
-      "iso_urls": "{{ user `iso_urls` }}",
-      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
-      "iso_checksum": "{{ user `iso_checksum` }}",
-      "ssh_username": "{{ user `ssh_username` }}",
-      "ssh_password": "{{ user `ssh_password` }}",
-      "ssh_port": "{{ user `ssh_port` }}",
-      "ssh_wait_timeout": "{{ user `ssh_wait_timeout` }}",
-      "shutdown_command": "{{ user `shutdown_command` }}"
-    },
-    {
-      "type": "qemu",
-      "format": "qcow2",
-      "accelerator": "kvm",
-      "disk_interface": "ide",
-      "disk_size": "{{ user `disk_size` }}",
-      "net_device": "e1000",
-      "boot_command": [
-        "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-        "/install/vmlinuz<wait>",
-        " auto<wait>",
-        " console-setup/ask_detect=false<wait>",
-        " console-setup/layoutcode=us<wait>",
-        " console-setup/modelcode=pc105<wait>",
-        " debconf/frontend=noninteractive<wait>",
-        " debian-installer=en_US<wait>",
-        " fb=false<wait>",
-        " initrd=/install/initrd.gz<wait>",
-        " kbd-chooser/method=us<wait>",
-        " keyboard-configuration/layout=USA<wait>",
-        " keyboard-configuration/variant=USA<wait>",
-        " locale=en_US<wait>",
-        " netcfg/get_domain=vm<wait>",
-        " netcfg/get_hostname=vagrant<wait>",
-        " grub-installer/bootdev=/dev/sda<wait>",
-        " noapic<wait>",
-        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg",
-        " -- <wait>",
-        "<enter><wait>"
-      ],
-      "boot_wait": "{{ user `boot_wait` }}",
-      "http_directory": "{{ user `http_directory` }}",
-      "iso_urls": "{{ user `iso_urls` }}",
-      "headless": "{{ user `headless` }}",
-      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
-      "iso_checksum": "{{ user `iso_checksum` }}",
-      "ssh_username": "{{ user `ssh_username` }}",
-      "ssh_password": "{{ user `ssh_password` }}",
-      "ssh_port": "{{ user `ssh_port` }}",
-      "ssh_wait_timeout": "{{ user `ssh_wait_timeout` }}",
-      "shutdown_command": "{{ user `shutdown_command` }}"
+      "type": "vagrant",
+      "communicator": "ssh",
+      "source_path": "jamesla/debian-basebox",
+      "provider": "{{user `PROVIDER`}}",
+      "add_force": true
     }
   ],
   "provisioners": [
-    {
-      "type": "shell",
-      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "script": "scripts/vagrant_setup.sh"
-    },
     {
       "type": "ansible-local",
       "playbook_file": "ansible/playbook.yml",
@@ -265,21 +38,10 @@
         "sudo chown root:root /usr",
         "sudo rm -rf /tmp/*"
       ]
-    },
-    {
-      "type": "shell",
-      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
-      "script": "scripts/hypervisor_tools_setup.sh"
     }
   ],
   "post-processors": [
     [
-      {
-        "type": "vagrant",
-        "output": "packer_{{.BuildName}}_{{.Provider}}.box",
-        "vagrantfile_template": "Vagrantfile",
-        "compression_level": "9"
-      },
       {
         "type": "vagrant-cloud",
         "box_tag": "jamesla/carverlinux",

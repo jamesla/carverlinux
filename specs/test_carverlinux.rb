@@ -3,7 +3,6 @@
 # rubocop:disable Metrics/BlockLength
 control 'usertests' do
   [
-    'cordova --version',
     'kubectl --help',
     'java --version',
     'gulp --version',
@@ -17,7 +16,6 @@ control 'usertests' do
     'minikube version',
     'helm version',
     'gcloud --version',
-    'snap --help',
     'speedtest -h',
     'wget --help',
     'nmap --version',
@@ -46,9 +44,6 @@ control 'usertests' do
     'dmenu -v',
     'nvim --version',
     'tmux -V',
-    'ag --version',
-    'which tern',
-    'emacs --version',
     'kvm --version',
     'virt-manager --version',
     'packer version',
@@ -103,16 +98,6 @@ control 'desktop' do
   describe file('/etc/X11/Xsession') do
     it { should exist }
     its(:content) { should include 'compton &' }
-  end
-end
-
-control 'spacemacs' do
-  describe file('/home/vagrant/.emacs.d') do
-    it { should be_directory }
-  end
-
-  describe file('/home/vagrant/.spacemacs') do
-    it { should be_exist }
   end
 end
 

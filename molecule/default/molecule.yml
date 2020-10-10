@@ -7,8 +7,8 @@ driver:
   driver:
   name: docker
 platforms:
-  - name: ubuntu
-    image: jrei/systemd-ubuntu:20.04
+  - name: debian
+    image: jrei/systemd-debian:10
     command: /sbin/init
     privileged: true
     capabilities:
