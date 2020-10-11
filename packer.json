@@ -12,7 +12,7 @@
       "communicator": "ssh",
       "source_path": "jamesla/debian-basebox",
       "provider": "parallels",
-      "output_vagrantfile": "Vagrantfile",
+      "output_vagrantfile": "../Vagrantfile",
       "add_force": true
     }
   ],
