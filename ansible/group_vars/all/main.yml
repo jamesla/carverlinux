@@ -1,7 +1,4 @@
 ---
-ansible_lsb:
-  codename: buster
-
 npm_config_unsafe_perm: true
 nodejs_install_npm_user: vagrant
 dotnet_package: dotnet-sdk-3.1
