@@ -3,19 +3,24 @@
 - name: install brew
   apt:
     name:
-      - linuxbrew-wrapper
+      - git
+      - gcc
+      - curl
+      - build-essential
     update_cache: true
 
 - name: install linuxbrew
+  environment:
+    CI: true
   become_user: vagrant
   become: false
-  shell: 'sudo su - vagrant sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"'
+  shell: sudo su - vagrant sh -c "$(curl -fsSL https://raw.githubusercontent.com/linuxbrew/install/master/install.sh)"
   args:
     creates: /home/linuxbrew
 
-
 - name: Install brew packages
+  become_user: vagrant
   become: false
   homebrew:
-    name: "{{ item }}"
-  with_items: "{{ brew_packages }}"
+    name: "{{ brew_packages }}"
+    path: /home/linuxbrew/.linuxbrew/bin

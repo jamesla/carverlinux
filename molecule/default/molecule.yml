@@ -7,8 +7,8 @@ driver:
   driver:
   name: docker
 platforms:
-  - name: ubuntu
-    image: solita/ubuntu-systemd:bionic
+  - name: debian
+    image: jrei/systemd-debian:10
     command: /sbin/init
     privileged: true
     capabilities:

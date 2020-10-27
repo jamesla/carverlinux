@@ -1,7 +1,4 @@
 ---
-- name: add cabal repository
-  apt_repository:
-    repo: ppa:hvr/ghc
 
 - name: install xmonad prerequisites
   apt:

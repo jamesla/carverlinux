@@ -3,7 +3,6 @@
 # rubocop:disable Metrics/BlockLength
 control 'usertests' do
   [
-    'cordova --version',
     'kubectl --help',
     'java --version',
     'gulp --version',
@@ -17,7 +16,6 @@ control 'usertests' do
     'minikube version',
     'helm version',
     'gcloud --version',
-    'snap --help',
     'speedtest -h',
     'wget --help',
     'nmap --version',
@@ -46,16 +44,13 @@ control 'usertests' do
     'dmenu -v',
     'nvim --version',
     'tmux -V',
-    'ag --version',
-    'which tern',
-    'emacs --version',
     'kvm --version',
     'virt-manager --version',
     'packer version',
     'terraform version',
     'vagrant -v',
     'inspec --version',
-    'aws help'
+    #'aws help'
   ].each do |c|
     describe command("sudo su - vagrant fish -c '#{c}'") do
       its(:exit_status) { should eq 0 }
@@ -106,23 +101,9 @@ control 'desktop' do
   end
 end
 
-control 'spacemacs' do
-  describe file('/home/vagrant/.emacs.d') do
-    it { should be_directory }
-  end
-
-  describe file('/home/vagrant/.spacemacs') do
-    it { should be_exist }
-  end
-end
-
 control 'timezone' do
   describe file('/etc/timezone') do
     its(:content) { should include 'Australia/Sydney' }
-  end
-
-  describe command('locale') do
-    its(:stdout) { should include 'LC_ALL=en_US.UTF-8' }
   end
 end
 

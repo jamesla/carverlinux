@@ -45,17 +45,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     prl.customize ['set', :id, '--videosize', '64']
   end
 
-  config.vm.provider 'vmware_desktop' do |vmware|
-    vmware.gui = true
-    vmware.vmx['memsize'] = memory
-    vmware.linked_clone = false
-    vmware.vmx['numvcpus'] = cpus
-    vmware.vmx['vhv.enable'] = 'TRUE'
-    vmware.vmx['vhv.allow'] = 'TRUE'
-    vmware.vmx['ethernet0.pcislotnumber'] = '33'
-    vmware.vmx['ethernet0.virtualDev'] = 'e1000'
-  end
-
   config.vm.provider 'virtualbox' do |vb|
     vb.memory = memory
     vb.cpus = cpus
@@ -69,13 +58,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--bioslogodisplaytime", "0"]
     vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
     vb.customize ["modifyvm", :id, "--vrde", "off"]
-  end
-
-  config.vm.provider 'libvirt' do |libvirt|
-    libvirt.memory = memory
-    libvirt.cpus = cpus
-    libvirt.nested = 'TRUE'
-    libvirt.disk_bus = 'sata'
-    libvirt.nic_model_type = 'e1000'
   end
 end

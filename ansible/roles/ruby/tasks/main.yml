@@ -4,10 +4,6 @@
     name:
       - build-essential
 
-- name: Add custom ruby repo
-  apt_repository:
-    repo: ppa:brightbox/ruby-ng
-
 - name: install ruby
   apt:
     name:

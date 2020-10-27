@@ -1,7 +1,4 @@
 ---
-- name: add fish repository
-  apt_repository:
-    repo: ppa:fish-shell/release-3
 
 - name: install fish shell
   apt:

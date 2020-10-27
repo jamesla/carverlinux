@@ -10,11 +10,10 @@
     - {role: ansible-role-apt}
     - {role: ansible-role-pip}
     - {role: ansible-go}
-    - {role: ansible-role-dotnet-core}
+    - {role: ansible-dotnet-sdk}
 
     - {role: ruby}
     - {role: spacevim}
-    - {role: spacemacs}
     - {role: desktop}
     - {role: ansible-role-tmux}
     - {role: terminal}
@@ -25,3 +24,4 @@
     - {role: docker}
     - {role: ansible-role-grouphelper}
     - {role: ansible-role-visual-studio-code}
+    - {role: ansible-role-virtualbox}
