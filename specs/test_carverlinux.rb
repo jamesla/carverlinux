@@ -50,7 +50,7 @@ control 'usertests' do
     'terraform version',
     'vagrant -v',
     'inspec --version',
-    'aws help'
+    #'aws help'
   ].each do |c|
     describe command("sudo su - vagrant fish -c '#{c}'") do
       its(:exit_status) { should eq 0 }

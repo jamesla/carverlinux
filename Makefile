@@ -3,11 +3,13 @@ VERSION := $(shell date +%Y.%m.%d)
 
 .PHONY: virtualbox
 virtualbox: ## build virtualbox
-	packer build -var provider=virtualbox -var version=$(VERSION) packer.json
+	rm -rf output-vagrant
+	packer build -var provider=virtualbox -var version=$(VERSION) -on-error=ask packer.json
 
 .PHONY: parallels
 parallels: ## build parallels
-	packer build -var provider=parallels -var version=$(VERSION) packer.json
+	rm -rf output-vagrant
+	packer build -var provider=parallels -var version=$(VERSION) -on-error=ask packer.json
 
 .PHONY: test
 test: ## run tests
