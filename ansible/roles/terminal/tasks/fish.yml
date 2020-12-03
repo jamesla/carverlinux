@@ -59,7 +59,7 @@
 - name: Install fisher plugins
   become: true
   become_user: vagrant
-  shell: fisher add evanlucas/fish-kubectl-completions && touch /tmp/fisher_kubectl_completions
+  shell: fisher install evanlucas/fish-kubectl-completions && touch /tmp/fisher_kubectl_completions
   args:
     creates: /tmp/fisher_kubectl_completions
     executable: /usr/bin/fish

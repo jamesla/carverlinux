@@ -20,11 +20,13 @@ brew_packages:
   - packer
   - terraform
   - minikube
-  - openshift-cli
+  # - openshift-cli
 
 apt_cache_valid_time: 3600
 apt_setup_unattended_upgrades: false
 apt_install_packages:
+  - libsqlite3-dev
+  - zlib1g-dev
   - default-jre
   - libz-dev
   - nuget
@@ -61,17 +63,6 @@ apt_install_packages:
   - git-extras
   - python-apt
 
-gems:
-  - rake
-  - rubocop
-  - rspec
-  - minitest
-  - serverspec
-  - winrm
-  - inspec-bin
-  - inspec
-  - solargraph
-
 pip_install_packages:
   - molecule
   - docker
@@ -92,3 +83,20 @@ group_helper:
     groups:
       - kvm
       - docker
+
+ruby_install_from_source: true
+ruby_version: 2.7.2
+ruby_download_url: http://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.2.tar.gz
+ruby_install_gems:
+  - rake
+  - rubocop
+  - rspec
+  - minitest
+  - serverspec
+  - winrm
+  - inspec-bin
+  - inspec
+  - solargraph
+  - rails
+  - sqlite3
+ruby_install_gems_user: vagrant

@@ -4,7 +4,6 @@ dependency:
   options:
     role-file: ansible/requirements.yml
 driver:
-  driver:
   name: docker
 platforms:
   - name: debian

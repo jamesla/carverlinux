@@ -29,12 +29,18 @@
 
     - name: Accept Inspec License
       become_user: vagrant
-      command: inspec --chef-license=accept-silent
+      become: true
+      shell: inspec --chef-license=accept-silent
+      args:
+        executable: /usr/bin/fish
       ignore_errors: true
 
     - name: Execute Inspec tests
       become_user: vagrant
-      command: "{{ inspec_bin }} exec {{ item }}"
+      become: true
+      shell: "inspec exec {{ item }}"
+      args:
+        executable: /usr/bin/fish
       register: test_results
       with_items: "{{ test_files.stdout_lines }}"
       ignore_errors: true

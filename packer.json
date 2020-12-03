@@ -33,9 +33,8 @@
     {
       "type": "shell",
       "inline": [
-        "sudo -u vagrant inspec --chef-license=accept",
-        "sudo -u vagrant inspec exec /tmp/specs",
-        "sudo chown root:root /usr",
+        "sudo su - vagrant fish -c 'inspec --chef-license=accept'",
+        "sudo su - vagrant fish -c 'inspec exec /tmp/specs'",
         "sudo rm -rf /tmp/*"
       ]
     }
