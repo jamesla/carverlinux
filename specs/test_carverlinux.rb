@@ -11,7 +11,7 @@ control 'usertests' do
     'gcc --version',
     'google-chrome --version',
     'docker version',
-    'oc version',
+    # 'oc version',
     'istioctl --help',
     'minikube version',
     'helm version',

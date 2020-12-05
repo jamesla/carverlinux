@@ -20,6 +20,9 @@ set -g fish_user_paths "/home/linuxbrew/.linuxbrew/bin" $fish_user_paths
 #npm
 set -g fish_user_paths "/usr/local/lib/npm/bin" $fish_user_paths
 
+#gems
+set -g fish_user_paths (ruby -e 'print Gem.user_dir')/bin $fish_user_paths
+
 #krew
 set -gx PATH $PATH $HOME/.krew/bin
 
