@@ -1,24 +1,7 @@
-PACKAGE ?= carverlinux
-
 .DEFAULT_GOAL := help
-
-.ONESHELL:
-
-build: build-base run-vagrant
-
-.PHONY: build-base
-build-base: ## build base box with packer
-	packer init nixos.pkr.hcl
-	packer build -on-error=ask nixos.pkr.hcl
-	vagrant box add --force nixos nixos.box
-
-.PHONY: run-vagrant
-run-vagrant: ## run vagrant
-	vagrant up --provider parallels
 
 .PHONY: parallels
 parallels: ## build parallels vm
-	cd nixos
 	sudo nixos-rebuild switch --flake ".#carverlinux-prl"
 
 .PHONY: pc
@@ -36,7 +19,6 @@ clean: ## clean nixos
 .PHONY: update
 update: ## update flake lock file
 	sudo nix flake update --extra-experimental-features nix-command --extra-experimental-features flakes
-
 
 .PHONY: help
 help:

@@ -1,6 +1,0 @@
----
-
-- include: nodm.yml
-- include: xmonad.yml
-- include: keyboard_settings.yml
-- include: hypervisor-tools.yml

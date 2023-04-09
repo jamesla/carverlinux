@@ -1,62 +1,50 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-VAGRANTFILE_API_VERSION = '2'.freeze
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+  # The most common configuration options are documented and commented below.
+  # For a complete reference, please see the online documentation at
+  # https://docs.vagrantup.com.
 
-Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = 'jamesla/carverlinux'
-  config.vm.hostname = 'carverlinux'
-  memory = 4_000
-  cpus = 2
+  # Every Vagrant development environment requires a box. You can search for
+  # boxes at https://vagrantcloud.com/search.
+  config.vm.box = "nixos"
+  config.vm.hostname = "carverlinuxnew"
 
-  config.cache.scope = 'machine' if Vagrant.has_plugin?('vagrant-cachier')
+  # disabling here because vagrants inbuilt way of doing this
+  # also tries to manage fstab which obviously won't work for nixos
+  config.vm.synced_folder ".", "/vagrant", disabled: true
 
-  files = [
-    '.ssh/id_rsa',
-    '.ssh/config',
-    '.gitconfig'
-  ]
+  # ssh key
+  config.vm.provision 'file', source: "#{Dir.home}/.gitconfig", destination: "~/.gitconfig"
+  config.vm.provision 'file', source: "#{Dir.home}/.ssh/id_rsa", destination: "~/.ssh/id_rsa"
+  config.vm.provision 'shell', privileged: false, inline: 'chmod 600 ~/.ssh/id_rsa'
 
-  files.each do |f|
-    next unless File.file?("#{Dir.home}/#{f}")
-    # Remove old file
-    config.vm.provision 'shell', privileged: false, inline: <<-SHELL
-        rm "/home/vagrant/#{f}" || true
-    SHELL
-
-    # Copy new file
-    config.vm.provision 'file', source: "#{Dir.home}/#{f}", destination: "~/#{f}"
-
-    # Set id_rsa 600 perms
-    if f == '.ssh/id_rsa'
-      config.vm.provision 'shell', privileged: false, inline: 'chmod 600 ~/.ssh/id_rsa'
-    end
-  end
+  #provision
+  config.vm.provision 'shell', privileged: false, inline: <<-SHELL
+    echo -e "vagrant\nvagrant" | sudo passwd vagrant
+    cd /vagrant
+    make parallels
+  SHELL
 
   config.vm.provider 'parallels' do |prl|
     prl.name = config.vm.hostname
-    prl.memory = memory
-    prl.cpus = cpus
-    prl.update_guest_tools = true
+    prl.memory = 12000
+    prl.cpus = 4
+    prl.update_guest_tools = false
+    prl.linked_clone = false
 
     prl.customize ['set', :id, '--startup-view=fullscreen']
     prl.customize ['set', :id, '--device-set=net0', '--adapter-type=e1000']
     prl.customize ['set', :id, '--nested-virt', 'on']
     prl.customize ['set', :id, '--videosize', '64']
+
+    prl.customize ['set', :id, '--shf-host', 'on']
+    prl.customize "post-import", ['set', :id, '--shf-host-add', 'vagrant', '--path', '.', '--mode', 'rw', '--enable']
   end
 
-  config.vm.provider 'virtualbox' do |vb|
-    vb.memory = memory
-    vb.cpus = cpus
-    vb.gui = true
-    vb.name = "carver"
-    vb.linked_clone = false
-    vb.customize ["modifyvm", :id, "--graphicscontroller", "vmsvga"]
-    vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
-    vb.customize ["modifyvm", :id, "--vram", "128"]
-    vb.customize ["modifyvm", :id, "--hwvirtex", "on"]
-    vb.customize ["modifyvm", :id, "--bioslogodisplaytime", "0"]
-    vb.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
-    vb.customize ["modifyvm", :id, "--vrde", "off"]
-  end
 end
