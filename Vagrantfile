@@ -13,14 +13,13 @@ Vagrant.configure("2") do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
   config.vm.box = "nixos"
-  config.vm.hostname = "carverlinuxnew"
+  config.vm.hostname = "carverlinux"
 
   # disabling here because vagrants inbuilt way of doing this
   # also tries to manage fstab which obviously won't work for nixos
   config.vm.synced_folder ".", "/vagrant", disabled: true
 
   # ssh key
-  config.vm.provision 'file', source: "#{Dir.home}/.gitconfig", destination: "~/.gitconfig"
   config.vm.provision 'file', source: "#{Dir.home}/.ssh/id_rsa", destination: "~/.ssh/id_rsa"
   config.vm.provision 'shell', privileged: false, inline: 'chmod 600 ~/.ssh/id_rsa'
 

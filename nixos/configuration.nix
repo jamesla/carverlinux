@@ -23,7 +23,8 @@
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
-    #pkgs.rubyPackages.rails
+    pkgs.rubyPackages.rails
+    pkgs.helix
     pkgs.jq
     pkgs.ffmpeg
     pkgs.certbot
@@ -39,7 +40,7 @@
     pkgs.minikube
     pkgs.kubectl
     pkgs.git
-    pkgs.nodejs-16_x
+    pkgs.nodejs
     pkgs.nodePackages.npm-check-updates
     pkgs.nodePackages.eslint
     pkgs.yarn
@@ -52,7 +53,7 @@
     pkgs.ncdu
     pkgs.inetutils
     pkgs.steamcmd
-    pkgs.terraform
+    unstable.terraform
     pkgs.envsubst
     pkgs.awscli2
     pkgs.tree
@@ -81,6 +82,6 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "22.11"; # Did you read the comment?
+  system.stateVersion = "23.05"; # Did you read the comment?
 }
 
