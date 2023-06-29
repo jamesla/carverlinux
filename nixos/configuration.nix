@@ -68,6 +68,7 @@
 
   #terminal
   environment.sessionVariables.TERMINAL= [ "st" ];
+  environment.variables.EDITOR = "nvim";
 
   # FISH
   programs.fish = import ./packages/fish;
