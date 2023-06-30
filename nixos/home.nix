@@ -24,6 +24,7 @@
     plugins = with pkgs; [
       tmuxPlugins.sensible
       tmuxPlugins.yank
+      tmuxPlugins.dracula
       tmuxPlugins.open
       {
         plugin = tmuxPlugins.resurrect;

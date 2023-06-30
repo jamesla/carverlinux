@@ -23,6 +23,7 @@
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
+    pkgs.alacritty
     pkgs.rubyPackages.rails
     pkgs.helix
     pkgs.jq
