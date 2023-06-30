@@ -79,6 +79,11 @@
       set shiftwidth=2
       set expandtab
       set smartindent
+      set cursorline
+      hi cursorline cterm=none term=none
+      autocmd WinEnter * setlocal cursorline
+      autocmd WinLeave * setlocal nocursorline
+      highlight CursorLine guibg=#303000 ctermbg=234
     '';
 
     plugins = [
