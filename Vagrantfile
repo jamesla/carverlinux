@@ -33,7 +33,7 @@ Vagrant.configure("2") do |config|
   config.vm.provider 'parallels' do |prl|
     prl.name = config.vm.hostname
     prl.memory = 12000
-    prl.cpus = 4
+    prl.cpus = 8
     prl.update_guest_tools = false
     prl.linked_clone = false
 

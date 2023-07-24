@@ -23,9 +23,7 @@
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
-    pkgs.alacritty
     pkgs.rubyPackages.rails
-    pkgs.helix
     pkgs.jq
     pkgs.ffmpeg
     pkgs.certbot
@@ -49,7 +47,6 @@
     pkgs.gnumake
     pkgs.discord
     pkgs.dmenu
-    pkgs.frp
     pkgs.python3
     pkgs.ncdu
     pkgs.inetutils
