@@ -68,6 +68,10 @@
     (pkgs.callPackage ./packages/st { })
   ];
 
+  fonts.fonts = with pkgs; [
+    nerdfonts
+  ];
+
   nixpkgs.config.allowInsecure = true;
 
   #terminal
