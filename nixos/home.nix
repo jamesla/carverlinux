@@ -63,6 +63,7 @@
       bind '%' split-window -h -c '#{pane_current_path}'  # Split panes horizontal
       bind '"' split-window -v -c '#{pane_current_path}'  # Split panes vertically
       bind 'c' run-shell "tmux new-window -c '~'; tmux split-window -h -c '~'; tmux select-pane -R"
+      run-shell ${pkgs.tmuxPlugins.yank}/yank.tmux
     '';
   };
 
@@ -73,6 +74,7 @@
     vimAlias = true;
 
     extraConfig = ''
+      set noswapfile
       set number relativenumber
       set clipboard+=unnamedplus
       set tabstop=2
