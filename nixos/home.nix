@@ -74,6 +74,7 @@
     vimAlias = true;
 
     extraConfig = ''
+      map <Space> <Leader>
       set noswapfile
       set number relativenumber
       set clipboard+=unnamedplus
@@ -157,10 +158,22 @@
       pkgs.vimPlugins.vim-sensible
       pkgs.vimPlugins.vim-tmux-navigator
       pkgs.vimPlugins.nvim-treesitter
+      pkgs.vimPlugins.telescope-nvim
+      {
+        plugin = pkgs.vimPlugins.telescope-nvim;
+        config = ''
+          nnoremap <leader>ff :Telescope find_files<CR>
+          nnoremap <leader>fg :Telescope live_grep<CR>
+          nnoremap <leader>fb :Telescope buffers<CR>
+          nnoremap <leader>fh :Telescope help_tags<CR>
+        '';
+      }
     ];
 
     extraPackages = [
       pkgs.terraform-lsp
+      pkgs.ripgrep
+      pkgs.fd
     ];
   };
 
