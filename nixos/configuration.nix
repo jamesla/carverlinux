@@ -19,12 +19,15 @@
   };
   security.sudo.wheelNeedsPassword = false;
 
+  programs.ssh.startAgent = true;
+
   virtualisation.docker.enable = true;
   virtualisation.virtualbox.host.enable = true;
   users.extraGroups.vboxusers.members = [ "user-with-access-to-virtualbox" ];
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
+    pkgs.alacritty
     pkgs.love
     pkgs.twilio-cli
     pkgs.gcc
