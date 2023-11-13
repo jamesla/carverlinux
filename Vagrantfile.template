@@ -12,8 +12,6 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "nixos"
-  config.vm.hostname = "carverlinux"
 
   # disabling here because vagrants inbuilt way of doing this
   # also tries to manage fstab which obviously won't work for nixos
@@ -22,13 +20,6 @@ Vagrant.configure("2") do |config|
   # ssh key
   config.vm.provision 'file', source: "#{Dir.home}/.ssh/id_rsa", destination: "~/.ssh/id_rsa"
   config.vm.provision 'shell', privileged: false, inline: 'chmod 600 ~/.ssh/id_rsa'
-
-  #provision
-  config.vm.provision 'shell', privileged: false, inline: <<-SHELL
-    echo -e "vagrant\nvagrant" | sudo passwd vagrant
-    cd /vagrant
-    make parallels
-  SHELL
 
   config.vm.provider 'parallels' do |prl|
     prl.name = config.vm.hostname

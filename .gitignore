@@ -2,3 +2,5 @@
 .vagrant
 *.box
 output-*
+machines
+boxes

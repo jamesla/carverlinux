@@ -7,6 +7,11 @@ packer {
   }
 }
 
+variable "build_id" {
+  type    = string
+  default = "unknown"
+}
+
 source "parallels-iso" "nixos" {
   boot_command           = ["echo -e 'root\\nroot' | sudo passwd root", "<enter>"]
   boot_wait              = "30s"
@@ -22,11 +27,11 @@ source "parallels-iso" "nixos" {
   ssh_port               = "22"
   ssh_username           = "root"
   ssh_wait_timeout       = "1800s"
-  vm_name                = "nixos-base"
+  vm_name                = "carverlinux-builder"
 }
 
 build {
-  name    = "nixos-base"
+  name    = "carverlinux-builder"
   
   sources = [
     "source.parallels-iso.nixos"
@@ -44,23 +49,19 @@ build {
   }
 
   provisioner "file" {
-    source = "scripts/configuration.nix"
-    destination = "/mnt/etc/nixos/configuration.nix"
-  }
-
-  provisioner "file" {
-    source = "scripts/hardware-configuration.nix"
-    destination = "/mnt/etc/nixos/hardware-configuration.nix"
+    source = "nixos"
+    destination = "/mnt/etc/"
   }
 
   provisioner "shell" {
-    inline = ["nixos-install"]
+    inline = ["nixos-install --root /mnt --flake /mnt/etc/nixos/flake.nix#carverlinux-prl"]
   }
 
   post-processors {
     post-processor "vagrant" {
-      compression_level = "1"
-      output            = "nixos.box"
+      compression_level    = "0"
+      output               = "./boxes/carverlinux-${var.build_id}.box"
+      vagrantfile_template = "./Vagrantfile.template"
     }
   }
 }

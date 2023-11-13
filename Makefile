@@ -4,17 +4,19 @@ PACKAGE ?= carverlinux
 
 .ONESHELL:
 
-build: build-base run-vagrant
+# create a random id we use this throughout the build
+ID := $(shell openssl rand -base64 100 | tr -dc 'a-z' | head -c 8)
 
-.PHONY: build-base
-build-base: ## build base box with packer
-	packer init nixos.pkr.hcl
-	packer build -on-error=ask nixos.pkr.hcl
-	vagrant box add --force nixos nixos.box
+.PHONY: build
+build: ## build base box with packer
+	packer init carverlinux.pkr.hcl
+	packer build -var build_id=$(ID) -on-error=ask carverlinux.pkr.hcl
+	vagrant box add carverlinux-$(ID) boxes/carverlinux-$(ID).box
 
-.PHONY: run-vagrant
-run-vagrant: ## run vagrant
-	vagrant up --provider parallels
+	mkdir -p machines/carverlinux-$(ID) \
+	  && cd machines/carverlinux-$(ID) \
+	  && vagrant init -m carverlinux-$(ID) \
+	  && vagrant up --provider parallels
 
 .PHONY: parallels
 parallels: ## build parallels vm
@@ -37,7 +39,6 @@ clean: ## clean nixos
 update: ## update flake lock file
 	cd nixos
 	sudo nix flake update --extra-experimental-features nix-command --extra-experimental-features flakes
-
 
 .PHONY: help
 help:
