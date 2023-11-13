@@ -4,7 +4,7 @@
 
 1. Install parallels, packer, vagrant
 
-2. Provision:
+2. Create new machine:
 ```bash
-make
+make build
 ```
