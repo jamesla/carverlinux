@@ -6,6 +6,8 @@
 
 {
   networking.hostName = "carverlinux"; # Define your hostname.
+  networking.firewall.enable = false;
+  
   time.timeZone = "Australia/Brisbane";
   networking.useDHCP = true;
 
@@ -27,6 +29,8 @@
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
+    pkgs.rar
+    pkgs.git-lfs
     pkgs.alacritty
     pkgs.love
     pkgs.twilio-cli
