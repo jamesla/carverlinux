@@ -20,7 +20,7 @@ source "parallels-iso" "nixos" {
   boot_command           = ["echo -e 'root\\nroot' | sudo passwd root", "<enter>"]
   boot_wait              = "30s"
   cpus                   = "2"
-  disk_size              = "81920"
+  disk_size              = "200000"
   guest_os_type          = "debian"
   iso_checksum           = "d43b34629140dadeb8d721e219f9835f15251978b075f41a25da9ee7f884f895"
   iso_urls               = ["https://channels.nixos.org/nixos-23.05/latest-nixos-minimal-x86_64-linux.iso"]
