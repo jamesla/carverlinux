@@ -1,13 +1,6 @@
-output-*
+*.swp
 .vagrant
-.DS_Store
-ansible/.molecule
-*.lock
-ansible/.vagrant
-*.un~
-*~
 *.box
-*.iso
-*.temp
-.molecule
-packer_cache
+output-*
+machines
+boxes

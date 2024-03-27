@@ -1,8 +1,0 @@
----
-extends: default
-
-ignore: |
-  molecule/
-
-rules:
-  line-length: disable
