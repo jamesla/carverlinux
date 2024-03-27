@@ -52,6 +52,7 @@
     pkgs.minikube
     pkgs.kubectl
     pkgs.git
+    unstable.nodePackages_latest.cdktf-cli
     pkgs.nodejs
     pkgs.nodePackages.npm-check-updates
     pkgs.nodePackages.eslint
