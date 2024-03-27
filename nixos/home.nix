@@ -71,7 +71,7 @@
       bind '%' split-window -h -c '#{pane_current_path}'  # Split panes horizontal
       bind '"' split-window -v -c '#{pane_current_path}'  # Split panes vertically
       bind 'c' run-shell "tmux new-window -c '~'; tmux split-window -h -c '~'; tmux select-pane -R"
-      run-shell ${pkgs.tmuxPlugins.yank}/yank.tmux
+      run-shell ${pkgs.tmuxPlugins.yank}/share/tmux-plugins/yank/yank.tmux
     '';
   };
 
