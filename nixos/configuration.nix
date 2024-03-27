@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, unstable, old, ... }:
+{ config, pkgs, unstable, ... }:
 
 {
   networking.hostName = "carverlinux"; # Define your hostname.
@@ -79,8 +79,6 @@
   fonts.fonts = with pkgs; [
     nerdfonts
   ];
-
-  nixpkgs.config.allowInsecure = true;
 
   #terminal
   environment.sessionVariables.TERMINAL= [ "st" ];

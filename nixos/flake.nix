@@ -4,17 +4,15 @@
   '';
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.05";
-    oldpkgs.url = "github:nixos/nixpkgs/nixos-22.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
     unstablepkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    home-manager.url = "github:nix-community/home-manager/release-23.05";
+    home-manager.url = "github:nix-community/home-manager/release-23.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs @ {
     self,
     nixpkgs,
-    oldpkgs,
     unstablepkgs,
     home-manager,
     ...
@@ -22,11 +20,6 @@
     system = "x86_64-linux";
 
     unstable = import unstablepkgs {
-      inherit system;
-      config.allowUnfree = true;
-    };
-
-    old = import unstablepkgs {
       inherit system;
       config.allowUnfree = true;
     };
@@ -54,7 +47,7 @@
         system = "x86_64-linux";
 
         specialArgs = {
-          inherit unstable old;
+          inherit unstable;
         };
 
         modules = [
