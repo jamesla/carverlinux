@@ -163,6 +163,53 @@
           autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
         '';
       }
+      pkgs.vimPlugins.vim-gitgutter
+      {
+        plugin = pkgs.vimPlugins.vim-gitgutter;
+        config = ''
+          set updatetime=100
+        '';
+      }
+      pkgs.vimPlugins.mason-nvim
+      {
+        plugin = pkgs.vimPlugins.mason-nvim;
+        config = ''
+          lua require("mason").setup()
+        '';
+      }
+      pkgs.vimPlugins.mason-lspconfig-nvim
+      {
+        plugin = pkgs.vimPlugins.mason-lspconfig-nvim;
+        config = ''
+          lua <<EOF
+            require("mason-lspconfig").setup({
+              ensure_installed = { "tsserver", "terraformls" }
+            })
+          EOF
+        '';
+      }
+      pkgs.vimPlugins.nvim-lspconfig
+      {
+        plugin = pkgs.vimPlugins.nvim-lspconfig;
+        config = ''
+          lua require('lspconfig').tsserver.setup {}
+          lua require('lspconfig').terraformls.setup {}
+        '';
+      }
+      pkgs.vimPlugins.hardtime-nvim
+      {
+        plugin = pkgs.vimPlugins.hardtime-nvim;
+        config = ''
+          lua require("hardtime").setup()
+        '';
+      }
+      pkgs.vimPlugins.neoscroll-nvim
+      {
+        plugin = pkgs.vimPlugins.neoscroll-nvim;
+        config = ''
+          lua require('neoscroll').setup()
+        '';
+      }
       pkgs.vimPlugins.vim-sensible
       pkgs.vimPlugins.vim-tmux-navigator
       pkgs.vimPlugins.nvim-treesitter
@@ -179,7 +226,6 @@
     ];
 
     extraPackages = [
-      pkgs.terraform-lsp
       pkgs.ripgrep
       pkgs.fd
     ];
