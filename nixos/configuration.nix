@@ -8,7 +8,7 @@
   networking.hostName = "carverlinux"; # Define your hostname.
   networking.firewall.enable = false;
   
-  time.timeZone = "Australia/Brisbane";
+  time.timeZone = "Pacific/Auckland";
   networking.useDHCP = true;
 
   users.users.vagrant = {
