@@ -183,7 +183,7 @@
         config = ''
           lua <<EOF
             require("mason-lspconfig").setup({
-              ensure_installed = { "tsserver", "terraformls" }
+              ensure_installed = { "tsserver", "terraformls", "eslint" }
             })
           EOF
         '';
@@ -193,6 +193,7 @@
         plugin = pkgs.vimPlugins.nvim-lspconfig;
         config = ''
           lua require('lspconfig').tsserver.setup {}
+          lua require('lspconfig').eslint.setup{}
           lua require('lspconfig').terraformls.setup {}
         '';
       }
