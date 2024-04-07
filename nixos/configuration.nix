@@ -29,6 +29,7 @@
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
+    pkgs.vagrant
     pkgs.rar
     pkgs.git-lfs
     pkgs.alacritty
