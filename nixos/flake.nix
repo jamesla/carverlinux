@@ -52,7 +52,6 @@
 
         modules = [
           { nixpkgs.pkgs = pkgs; }
-          ./computers/parallels/hardware-configuration.nix
           ./configuration.nix
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;

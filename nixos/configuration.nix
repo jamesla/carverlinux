@@ -27,6 +27,29 @@
   virtualisation.virtualbox.host.enable = true;
   users.extraGroups.vboxusers.members = [ "user-with-access-to-virtualbox" ];
 
+  services.xserver = {
+    autoRepeatDelay = 150;
+    autoRepeatInterval = 50;
+    xkbOptions = "caps:escape, altwin:ctrl_win";
+    enable = true;
+    windowManager.xmonad = import ./packages/xmonad;
+    displayManager = {
+      autoLogin = {
+        enable = true;
+        user = "vagrant";
+      };
+    };
+    libinput = {
+      enable = true;
+      # disabling mouse acceleration
+      mouse = {
+        accelProfile = "flat";
+      };
+    };
+    exportConfiguration = true;
+  };
+
+
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
     pkgs.vagrant
