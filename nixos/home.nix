@@ -204,13 +204,6 @@
           lua require("hardtime").setup()
         '';
       }
-      pkgs.vimPlugins.neoscroll-nvim
-      {
-        plugin = pkgs.vimPlugins.neoscroll-nvim;
-        config = ''
-          lua require('neoscroll').setup()
-        '';
-      }
       pkgs.vimPlugins.vim-sensible
       pkgs.vimPlugins.vim-tmux-navigator
       pkgs.vimPlugins.nvim-treesitter
