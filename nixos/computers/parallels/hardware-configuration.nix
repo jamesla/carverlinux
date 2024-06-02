@@ -27,23 +27,27 @@
   services.xserver = {
     autoRepeatDelay = 150;
     autoRepeatInterval = 50;
-    xkbOptions = "caps:escape, altwin:ctrl_win";
+    xkb = {
+      options = "caps:escape, altwin:ctrl_win";
+    };
     enable = true;
     windowManager.xmonad = import ../../packages/xmonad;
-    displayManager = {
-      autoLogin = {
-        enable = true;
-        user = "vagrant";
-      };
-    };
-    libinput = {
-      enable = true;
-      # disabling mouse acceleration
-      mouse = {
-        accelProfile = "flat";
-      };
-    };
     exportConfiguration = true;
+  };
+
+  services.displayManager = {
+    autoLogin = {
+      enable = true;
+      user = "vagrant";
+    };
+  };
+
+  services.libinput = {
+    enable = true;
+    # disabling mouse acceleration
+    mouse = {
+      accelProfile = "flat";
+    };
   };
 
   hardware.cpu.intel.updateMicrocode =
