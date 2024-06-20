@@ -1,6 +1,4 @@
 *.swp
-.vagrant
-*.box
-output-*
-machines
-boxes
+.DS_Store
+*.qcow2
+result

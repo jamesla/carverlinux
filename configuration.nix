@@ -2,24 +2,45 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, unstable, ... }:
+{ config, pkgs, unstable, home-manager, ... }:
 
 {
+  imports = [
+    home-manager.nixosModules.home-manager
+  ];
+
   networking.hostName = "carverlinux"; # Define your hostname.
   networking.firewall.enable = false;
   
   time.timeZone = "Pacific/Auckland";
   networking.useDHCP = true;
 
-  users.users.vagrant = {
+  users.users.james = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "docker" "vboxusers" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "docker" "vboxusers" ];
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [
-      "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA6NF8iallvQVp22WDkTkyrtvp9eWW6A8YVr+kz4TjGYe7gHzIw+niNltGEFHzD8+v1I2YJ6oXevct1YeS0o9HZyN1Q9qgCgzUFtdOKLv6IedplqoPkcmF0aYet2PkEDo3MlTBckFXPITAMzF8dJSIFo9D8HfdOV0IAdx4O7PtixWKn5y2hMNG0zQPyUecp4pzC6kivAIhyfHilFR61RGL+GPXQ2MWZWFYbAGjyiYJnAmCP3NOTd0jMZEnDkbUvxhMmBYSdETk1rRgm+R4LOzFUGaHqHDLKLX+FIPKcF96hrucXzcWyLbIbEgE98OHlnVYCzRdK8jlqm8tehUc9c9WhQ== vagrant insecure public key"
+      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBlkZ7yS+y5Jp/K18ZE3Swi4sfEWokEdNv0BwfDzYVEfSEKmWr9zKXhfm4pvhyxcWtqshYOzKMS3u6a8tpChEPlmVW5AkZeAPJk+Rwn++eANjeXpkvQ8zvfV6ALBU2FUiE60oGIA+tZOEbzUcgZ15CilFpwatnbe0whVocYsYAn4F9d3CLbt8U6miG4NjdSDP3E5OukuVyhF2dXEBVa9N0erLKZyL7hkePTWqoCY9hOvoxgMgopBNHLy2Q0yxkL9M3zgi8qQwa0L0ORcolBk4AVMV6+Wjt+lqYoTtn7GupFC3pZLwWRIqOvneb2oo37JVeUeIRSNSKKrwE7SGSaSAX"
     ];
   };
+
   security.sudo.wheelNeedsPassword = false;
+
+  services.xserver = {
+    autoRepeatDelay = 150;
+    autoRepeatInterval = 50;
+    xkb.options = "caps:escape, altwin:ctrl_win";
+    enable = true;
+    windowManager.xmonad = import ./packages/xmonad.nix;
+    exportConfiguration = true;
+  };
+
+  services.displayManager = {
+    autoLogin = {
+      enable = true;
+      user = "james";
+    };
+  };
 
   programs.ssh.startAgent = true;
 
@@ -29,6 +50,8 @@
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
+    pkgs.spice-vdagent
+    pkgs.nixos-generators
     pkgs.vagrant
     pkgs.rar
     pkgs.git-lfs
@@ -65,7 +88,7 @@
     pkgs.python3
     pkgs.ncdu
     pkgs.inetutils
-    pkgs.steamcmd
+    #pkgs.steamcmd # breaks nix-darwin builder
     unstable.terraform
     pkgs.envsubst
     pkgs.awscli2
@@ -85,19 +108,19 @@
   environment.sessionVariables.TERMINAL= [ "st" ];
   environment.variables.EDITOR = "nvim";
 
-  # FISH
-  programs.fish = import ./packages/fish;
+  programs.fish = import ./packages/fish.nix;
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
   programs.ssh.askPassword = "";
 
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "23.05"; # Did you read the comment?
-}
+  home-manager.users.james = {
+    programs.git = import ./packages/git.nix;
+    programs.chromium = import ./packages/chromium.nix;
+    programs.tmux = import ./packages/tmux.nix { inherit config pkgs; };
+    programs.neovim = import ./packages/neovim.nix { inherit config pkgs; };
+    home.stateVersion = "24.05";
+  };
 
+  system.stateVersion = "24.05";
+}
