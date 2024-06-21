@@ -31,9 +31,9 @@ nix.settings.trusted-users = [ "@admin" ];
 darwin-rebuild switch
 ```
 
-4. Build flake
+4. Provision vm
 ```bash
-make build
+make provision
 ```
 
 5. Can rebuild vm from inside itself with
