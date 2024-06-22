@@ -20,10 +20,19 @@
     fsType = "autofs";
   };
 
-  fileSystems."/mnt" = {
+  fileSystems."/mnt/carverlinux" = {
     device = "share";
     fsType = "9p";
-    options = [ "trans=virtio" "version=9p2000.L" ];
+    options = [ "trans=virtio" "version=9p2000.L" "nofail" ];
+  };
+
+  fileSystems."/home/james/carverlinux" = {
+    device = "/mnt/carverlinux";
+    fsType = "fuse.bindfs";
+    options = [
+      "map=501/1000:@20/@1000"
+      "_netdev"
+    ];
   };
 
   swapDevices = [ ];

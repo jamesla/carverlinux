@@ -50,6 +50,7 @@
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
+    pkgs.bindfs
     pkgs.spice-vdagent
     pkgs.nixos-generators
     pkgs.vagrant
@@ -120,6 +121,7 @@
     programs.tmux = import ./packages/tmux.nix { inherit config pkgs; };
     programs.neovim = import ./packages/neovim.nix { inherit config pkgs; };
     home.stateVersion = "24.05";
+    home.file."carverlinux/.create".text = "created";
   };
 
   system.stateVersion = "24.05";
