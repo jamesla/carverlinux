@@ -14,7 +14,7 @@
 			<key>DynamicResolution</key>
 			<true/>
 			<key>Hardware</key>
-			<string>virtio-gpu-pci</string>
+			<string>virtio-gpu-gl-pci</string>
 			<key>NativeResolution</key>
 			<false/>
 			<key>UpscalingFilter</key>
@@ -45,7 +45,7 @@
 		<key>IconCustom</key>
 		<false/>
 		<key>Name</key>
-		<string>Linux</string>
+		<string>carverlinux</string>
 		<key>UUID</key>
 		<string>D80C9AEB-0AF1-4550-8F28-2CCD3AE906F7</string>
 	</dict>
@@ -54,7 +54,7 @@
 		<key>MaximumUsbShare</key>
 		<integer>3</integer>
 		<key>UsbBusSupport</key>
-		<string>3.0</string>
+		<string>Disabled</string>
 		<key>UsbSharing</key>
 		<false/>
 	</dict>
@@ -62,7 +62,7 @@
 	<array>
 		<dict>
 			<key>Hardware</key>
-			<string>e1000</string>
+			<string>virtio-net-pci-transitional</string>
 			<key>IsolateFromHost</key>
 			<false/>
 			<key>MacAddress</key>
@@ -108,12 +108,7 @@
 		<false/>
 	</dict>
 	<key>Sound</key>
-	<array>
-		<dict>
-			<key>Hardware</key>
-			<string>intel-hda</string>
-		</dict>
-	</array>
+	<array/>
 	<key>System</key>
 	<dict>
 		<key>Architecture</key>
