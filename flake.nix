@@ -46,7 +46,7 @@
         format = "qcow";
         specialArgs = {
           inherit pkgs unstable home-manager;
-          diskSize = 100 * 1024;
+          diskSize = 200 * 1024;
         };
       };
     };
