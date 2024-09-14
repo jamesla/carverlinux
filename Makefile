@@ -25,7 +25,6 @@ clean: ## clean nixos
 
 .PHONY: update
 update: ## update flake lock file
-	@cd nixos
 	@sudo nix flake update --extra-experimental-features nix-command --extra-experimental-features flakes
 
 .PHONY: help
