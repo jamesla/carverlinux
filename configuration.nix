@@ -15,7 +15,7 @@
   time.timeZone = "Pacific/Auckland";
 
   networking = {
-    nameservers = [ "8.8.8.8" "8.8.4.4" ];
+    nameservers = [ "8.8.8.8" "8.8.4.4" "192.168.1.253" ];
     dhcpcd.enable = false;
     enableIPv6 = false;
     interfaces.eth0 = {
