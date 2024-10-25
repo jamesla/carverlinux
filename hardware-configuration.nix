@@ -9,15 +9,17 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
+  boot.loader.systemd-boot.enable = true;
 
   fileSystems."/" = {
     device = "/dev/disk/by-label/nixos";
     fsType = "ext4";
   };
 
-  fileSystems."/boot" = {
-    device = "systemd-1";
-    fsType = "autofs";
+  fileSystems."/boot" ={
+    device = "/dev/disk/by-label/ESP";
+    fsType = "vfat";
+    options = [ "fmask=0077" "dmask=0077" ];
   };
 
   fileSystems."/mnt/carverlinux" = {
