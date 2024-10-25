@@ -43,7 +43,7 @@
           ./hardware-configuration.nix
           ./configuration.nix
         ];
-        format = "qcow";
+        format = "qcow-efi";
         specialArgs = {
           inherit pkgs unstable home-manager;
           diskSize = 200 * 1024;

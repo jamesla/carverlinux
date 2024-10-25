@@ -94,7 +94,7 @@
 		<key>TSO</key>
 		<false/>
 		<key>UEFIBoot</key>
-		<false/>
+		<true/>
 	</dict>
 	<key>Serial</key>
 	<array/>
