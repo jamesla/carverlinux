@@ -10,7 +10,7 @@
     };
   };
   outputs = { self, nixpkgs, unstablepkgs, home-manager, nixos-generators, ... }: let
-    system = "x86_64-linux";
+    system = "aarch64-linux";
 
     unstable = import unstablepkgs {
       inherit system;
@@ -36,7 +36,7 @@
      };
     };
 
-    packages.x86_64-darwin = {
+    packages.aarch64-darwin = {
       default = nixos-generators.nixosGenerate {
         inherit system;
         modules = [

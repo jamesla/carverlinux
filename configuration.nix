@@ -45,8 +45,8 @@
   programs.ssh.startAgent = true;
 
   virtualisation.docker.enable = true;
-  virtualisation.virtualbox.host.enable = true;
-  users.extraGroups.vboxusers.members = [ "user-with-access-to-virtualbox" ];
+  #virtualisation.virtualbox.host.enable = true;
+  #users.extraGroups.vboxusers.members = [ "user-with-access-to-virtualbox" ];
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
@@ -54,7 +54,7 @@
     pkgs.spice-vdagent
     pkgs.nixos-generators
     pkgs.vagrant
-    pkgs.rar
+    #pkgs.rar
     pkgs.git-lfs
     pkgs.alacritty
     pkgs.love
@@ -84,7 +84,7 @@
     pkgs.yarn
     pkgs.wget
     pkgs.gnumake
-    pkgs.discord
+    #pkgs.discord
     pkgs.dmenu
     pkgs.python3
     pkgs.ncdu
