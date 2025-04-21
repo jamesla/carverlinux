@@ -14,7 +14,7 @@
 			<key>DynamicResolution</key>
 			<true/>
 			<key>Hardware</key>
-			<string>virtio-gpu-gl-pci</string>
+			<string>virtio-ramfb</string>
 			<key>NativeResolution</key>
 			<false/>
 			<key>UpscalingFilter</key>
@@ -54,7 +54,7 @@
 		<key>MaximumUsbShare</key>
 		<integer>3</integer>
 		<key>UsbBusSupport</key>
-		<string>Disabled</string>
+		<string>3.0</string>
 		<key>UsbSharing</key>
 		<false/>
 	</dict>
@@ -62,11 +62,11 @@
 	<array>
 		<dict>
 			<key>Hardware</key>
-			<string>virtio-net-pci-transitional</string>
+			<string>virtio-net-pci</string>
 			<key>IsolateFromHost</key>
 			<false/>
 			<key>MacAddress</key>
-			<string>96:15:A3:C0:D8:ED</string>
+			<string>76:67:95:D1:21:94</string>
 			<key>Mode</key>
 			<string>Shared</string>
 			<key>PortForward</key>
@@ -103,16 +103,21 @@
 		<key>ClipboardSharing</key>
 		<true/>
 		<key>DirectoryShareMode</key>
-		<string>VirtFS</string>
+		<string>WebDAV</string>
 		<key>DirectoryShareReadOnly</key>
 		<false/>
 	</dict>
 	<key>Sound</key>
-	<array/>
+	<array>
+		<dict>
+			<key>Hardware</key>
+			<string>intel-hda</string>
+		</dict>
+	</array>
 	<key>System</key>
 	<dict>
 		<key>Architecture</key>
-		<string>x86_64</string>
+		<string>aarch64</string>
 		<key>CPU</key>
 		<string>default</string>
 		<key>CPUCount</key>
@@ -128,7 +133,7 @@
 		<key>MemorySize</key>
 		<integer>12288</integer>
 		<key>Target</key>
-		<string>q35</string>
+		<string>virt</string>
 	</dict>
 </dict>
 </plist>
