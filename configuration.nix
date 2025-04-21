@@ -89,5 +89,6 @@
     home.file."carverlinux/.create".text = "created";
   };
 
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
   system.stateVersion = "24.05";
 }
