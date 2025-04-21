@@ -1,7 +1,7 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
-    home-manager.url = "github:nix-community/home-manager/release-24.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    home-manager.url = "github:nix-community/home-manager/release-24.11";
     unstablepkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     nixos-generators = {
@@ -46,7 +46,7 @@
         format = "qcow-efi";
         specialArgs = {
           inherit pkgs unstable home-manager;
-          diskSize = 200 * 1024;
+          diskSize = 100 * 1024;
         };
       };
     };

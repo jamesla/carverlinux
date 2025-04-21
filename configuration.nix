@@ -45,59 +45,24 @@
   programs.ssh.startAgent = true;
 
   virtualisation.docker.enable = true;
-  #virtualisation.virtualbox.host.enable = true;
-  #users.extraGroups.vboxusers.members = [ "user-with-access-to-virtualbox" ];
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
     pkgs.bindfs
     pkgs.spice-vdagent
-    pkgs.nixos-generators
-    pkgs.vagrant
-    #pkgs.rar
     pkgs.git-lfs
-    pkgs.alacritty
-    pkgs.love
-    pkgs.twilio-cli
     pkgs.gcc
-    pkgs.aws-sam-cli
-    pkgs.rubyPackages.rails
     pkgs.jq
-    pkgs.ffmpeg
-    pkgs.certbot
-    pkgs.ngrok
-    pkgs.postgresql
-    pkgs.flameshot
     pkgs.openssl
     pkgs.unzip
-    pkgs.vscode
-    pkgs.jdk11
     pkgs.xclip
-    pkgs.maven
-    pkgs.minikube
-    pkgs.kubectl
     pkgs.git
-    unstable.nodePackages_latest.cdktf-cli
-    pkgs.nodejs
-    pkgs.nodePackages.npm-check-updates
-    pkgs.nodePackages.eslint
-    pkgs.yarn
     pkgs.wget
     pkgs.gnumake
-    #pkgs.discord
     pkgs.dmenu
-    pkgs.python3
     pkgs.ncdu
     pkgs.inetutils
-    #pkgs.steamcmd # breaks nix-darwin builder
-    unstable.terraform
-    pkgs.envsubst
-    pkgs.awscli2
-    pkgs.tree
     pkgs.killall
-    pkgs.docker-compose
-    pkgs.azure-cli
-    pkgs.kubernetes-helm
     (pkgs.callPackage ./packages/st { })
   ];
 
