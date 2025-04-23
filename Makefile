@@ -13,7 +13,7 @@ provision: ## provision nixos vm
 	
 .PHONY: rebuild
 rebuild: ## rebuild system
-	@sudo nixos-rebuild switch --flake ".#default" --install-bootloader
+	@sudo nixos-rebuild switch --flake ".#default"
 
 .PHONY: version
 version: ## gets current version
