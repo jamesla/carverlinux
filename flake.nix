@@ -26,7 +26,6 @@
       default = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
-          { boot.loader.grub.devices = [ "/dev/sda" ]; }
           ./hardware-configuration.nix
           ./configuration.nix
         ];

@@ -17,7 +17,7 @@
   };
 
   fileSystems."/boot" ={
-    device = "/dev/disk/by-label/ESP";
+    device = "/dev/disk/by-label/boot";
     fsType = "vfat";
     options = [ "fmask=0077" "dmask=0077" ];
   };
@@ -34,6 +34,7 @@
     options = [
       "map=501/1000:@20/@1000"
       "_netdev"
+      "nofail"
     ];
   };
 
