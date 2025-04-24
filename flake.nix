@@ -41,11 +41,11 @@
         modules = [
           ./hardware-configuration.nix
           ./configuration.nix
+          { virtualisation.diskSize = 50 * 1024; }
         ];
         format = "qcow-efi";
         specialArgs = {
           inherit pkgs unstable home-manager;
-          diskSize = 100 * 1024;
         };
       };
     };
