@@ -48,6 +48,7 @@
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
+    pkgs.nodejs
     pkgs.mesa.drivers
     pkgs.mesa-demos
     pkgs.pciutils
