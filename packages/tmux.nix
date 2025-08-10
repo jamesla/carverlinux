@@ -4,7 +4,6 @@
   plugins = with pkgs; [
     tmuxPlugins.sensible
     tmuxPlugins.yank
-    #tmuxPlugins.dracula
     tmuxPlugins.open
     {
       plugin = tmuxPlugins.resurrect;
@@ -25,6 +24,7 @@
     }
   ];
   extraConfig = ''
+    set-environment -g WAYLAND_DISPLAY wayland-1
     set-option -g pane-active-border-style "bg=colour208"
     set-option -ag pane-active-border-style "fg=black"
     bind down resize-pane -D 40

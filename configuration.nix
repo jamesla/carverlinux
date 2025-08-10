@@ -86,6 +86,7 @@
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
+    pkgs.wl-clipboard
     pkgs.ghostty
     pkgs.bemenu
     pkgs.nodejs
