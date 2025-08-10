@@ -116,12 +116,18 @@
 
   home-manager.users.james = {
     programs.git = import ./packages/git.nix;
-    programs.chromium = import ./packages/chromium.nix;
+    #programs.chromium = import ./packages/chromium.nix;
     programs.tmux = import ./packages/tmux.nix { inherit config pkgs; };
     programs.neovim = import ./packages/neovim.nix { inherit config pkgs; };
     home.stateVersion = "24.05";
     home.file.".config/hypr/hyprland.conf".source = ./hyprland.conf;
-  };
+
+    home.packages = with pkgs; [
+      (writeShellScriptBin "chromium" ''
+        exec ${pkgs.chromium}/bin/chromium --ozone-platform=wayland "$@"
+      '')
+      ];
+    };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   system.stateVersion = "24.05";
