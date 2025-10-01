@@ -54,7 +54,7 @@
     pkgs.gcc
     pkgs.jq
     pkgs.openssl
-    pkgs.unzip
+    #pkgs.unzip
     pkgs.xclip
     pkgs.git
     pkgs.wget
@@ -67,7 +67,7 @@
   ];
 
   fonts.packages = with pkgs; [
-    nerdfonts
+    nerd-fonts.liberation
   ];
 
   #terminal

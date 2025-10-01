@@ -11,32 +11,32 @@
   boot.extraModulePackages = [ ];
   boot.loader.systemd-boot.enable = true;
 
-  fileSystems."/" = {
-    device = "/dev/disk/by-label/nixos";
-    fsType = "ext4";
-  };
+  #fileSystems."/" = {
+  #  device = "/dev/disk/by-label/nixos";
+  #  fsType = "ext4";
+  #};
 
-  fileSystems."/boot" ={
-    device = "/dev/disk/by-label/boot";
-    fsType = "vfat";
-    options = [ "fmask=0077" "dmask=0077" ];
-  };
+  #fileSystems."/boot" ={
+  #  device = "/dev/disk/by-label/boot";
+  #  fsType = "vfat";
+  #  options = [ "fmask=0077" "dmask=0077" ];
+  #};
 
-  fileSystems."/mnt/carverlinux" = {
-    device = "share";
-    fsType = "9p";
-    options = [ "trans=virtio" "version=9p2000.L" "nofail" ];
-  };
+  #fileSystems."/mnt/carverlinux" = {
+  #  device = "share";
+  #  fsType = "9p";
+  #  options = [ "trans=virtio" "version=9p2000.L" "nofail" ];
+  #};
 
-  fileSystems."/home/james/carverlinux" = {
-    device = "/mnt/carverlinux";
-    fsType = "fuse.bindfs";
-    options = [
-      "map=501/1000:@20/@1000"
-      "_netdev"
-      "nofail"
-    ];
-  };
+  #fileSystems."/home/james/carverlinux" = {
+  #  device = "/mnt/carverlinux";
+  #  fsType = "fuse.bindfs";
+  #  options = [
+  #    "map=501/1000:@20/@1000"
+  #    "_netdev"
+  #    "nofail"
+  #  ];
+  #};
 
   swapDevices = [ ];
 

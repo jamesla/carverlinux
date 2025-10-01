@@ -25,13 +25,13 @@
 	<array>
 		<dict>
 			<key>Identifier</key>
-			<string>93F94E62-06E7-4EE8-8CF5-70DBF6FAD893</string>
+			<string>9B207D1D-3203-4855-BDDE-64AACD6A892B</string>
 			<key>ImageName</key>
 			<string>nixos.qcow2</string>
 			<key>ImageType</key>
 			<string>Disk</string>
 			<key>Interface</key>
-			<string>IDE</string>
+			<string>VirtIO</string>
 			<key>InterfaceVersion</key>
 			<integer>1</integer>
 			<key>ReadOnly</key>
@@ -66,7 +66,7 @@
 			<key>IsolateFromHost</key>
 			<false/>
 			<key>MacAddress</key>
-			<string>76:67:95:D1:21:94</string>
+			<string>1A:17:E9:8C:89:E0</string>
 			<key>Mode</key>
 			<string>Shared</string>
 			<key>PortForward</key>

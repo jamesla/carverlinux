@@ -3,3 +3,4 @@
 *.qcow2
 result
 *.fd
+keys/*
