@@ -7,7 +7,7 @@ index 91ab8ca..ccf91ef 100644
   * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
   */
 -static char *font = "Liberation Mono:pixelsize=12:antialias=true:autohint=true";
-+static char *font = "Hack Nerd Font:pixelsize=15:antialias=false:autohint=true";
++static char *font = "Liberation Mono:pixelsize=25::antialias=true:autohint=false:dpi=254";
  static int borderpx = 2;
 
  /*

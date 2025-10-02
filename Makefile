@@ -7,7 +7,7 @@ PACKAGE ?= carverlinux
 .PHONY: provision
 provision: ## provision nixos vm
 	@nix build ".#default"
-	@cp -n result/nixos.qcow2 vm.utm/Data/nixos.qcow2 || (echo "copy failed: file already exists ./vm.utm/Data/nixos.qcow2")
+	@cp -n result/nixos.qcow2 vm.utm/Data/nixos.qcow2
 	@chmod 644 vm.utm/Data/nixos.qcow2
 	@open vm.utm
 	

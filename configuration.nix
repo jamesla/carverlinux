@@ -26,6 +26,9 @@
 
   security.sudo.wheelNeedsPassword = false;
 
+  services.spice-vdagentd.enable = true;
+  services.spice-autorandr.enable = true;
+
   services.xserver = {
     autoRepeatDelay = 150;
     autoRepeatInterval = 50;
@@ -33,6 +36,7 @@
     enable = true;
     windowManager.xmonad = import ./packages/xmonad.nix;
     exportConfiguration = true;
+    dpi = 254;
   };
 
   services.displayManager = {
@@ -48,12 +52,6 @@
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
-    pkgs.nodejs
-    pkgs.mesa.drivers
-    pkgs.mesa-demos
-    pkgs.pciutils
-    pkgs.glib
-    pkgs.bindfs
     pkgs.spice-vdagent
     pkgs.git-lfs
     pkgs.gcc
@@ -72,7 +70,7 @@
   ];
 
   fonts.packages = with pkgs; [
-    nerdfonts
+    nerd-fonts.liberation
   ];
 
   #terminal
@@ -90,10 +88,9 @@
     programs.chromium = import ./packages/chromium.nix;
     programs.tmux = import ./packages/tmux.nix { inherit config pkgs; };
     programs.neovim = import ./packages/neovim.nix { inherit config pkgs; };
-    home.stateVersion = "24.05";
-    home.file."carverlinux/.create".text = "created";
+    home.stateVersion = "25.05";
   };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  system.stateVersion = "24.05";
+  system.stateVersion = "25.05";
 }
