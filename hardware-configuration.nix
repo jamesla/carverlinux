@@ -5,11 +5,32 @@
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "uhci_hcd" "ehci_pci" "ahci" "usbhid" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
+  boot.initrd.availableKernelModules = [
+    "xhci_pci"
+    "uhci_hcd"
+    "ehci_pci"
+    "ahci"
+    "usbhid"
+    "sd_mod"
+    "virtio_pci"
+    "virtio_blk"
+    "virtio_scsi"
+    "virtio_net"
+    "virtio_balloon"
+    "virtio_console"
+    "virtio_rng"
+  ];
+
+  boot.initrd.kernelModules = ["virtio_gpu"];
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
   boot.loader.systemd-boot.enable = true;
+
+  services.xserver.videoDrivers = [ "virtio" ];
+
+  hardware.graphics = {
+    enable = true;
+  };
 
   fileSystems."/" = {
     device = "/dev/disk/by-label/nixos";
