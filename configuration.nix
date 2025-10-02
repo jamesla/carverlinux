@@ -35,6 +35,7 @@
     enable = true;
     windowManager.xmonad = import ./packages/xmonad.nix;
     exportConfiguration = true;
+    dpi = 254;
   };
 
   services.displayManager = {

@@ -10,6 +10,7 @@ st.overrideAttrs (oldAttrs: rec {
   patches = [
     ./st-clipboard-0.8.2.diff
     ./st-dracula-0.8.5.diff
+    ./st-font.diff
     ./st-latency.diff
   ];
 })

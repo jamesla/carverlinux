@@ -18,13 +18,13 @@
     main :: IO ()
     main = xmonad $ defaultConfig
         { borderWidth        = 0
-        , terminal         = "st -e tmux new-session -A -s carver"
+        , terminal         = "st"
         , normalBorderColor  = "#000000"
         , focusedBorderColor = "#000000"
         , layoutHook = spacingRaw True (Border 0 10 10 10) True (Border 10 10 10 10) True $
             layoutHook def
         , startupHook = do
-          spawn "st -e tmux new-session -A -s carver"
+          spawn "st"
           spawn "feh --bg-scale /etc/wallpaper.png"
         }
   '';
