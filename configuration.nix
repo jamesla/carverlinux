@@ -27,6 +27,7 @@
   security.sudo.wheelNeedsPassword = false;
 
   services.spice-vdagentd.enable = true;
+  services.spice-autorandr.enable = true;
 
   services.xserver = {
     autoRepeatDelay = 150;
@@ -87,10 +88,9 @@
     programs.chromium = import ./packages/chromium.nix;
     programs.tmux = import ./packages/tmux.nix { inherit config pkgs; };
     programs.neovim = import ./packages/neovim.nix { inherit config pkgs; };
-    home.stateVersion = "24.05";
-    home.file."carverlinux/.create".text = "created";
+    home.stateVersion = "25.05";
   };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  system.stateVersion = "24.05";
+  system.stateVersion = "25.05";
 }
