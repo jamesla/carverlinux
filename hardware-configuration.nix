@@ -11,16 +11,16 @@
   boot.extraModulePackages = [ ];
   boot.loader.systemd-boot.enable = true;
 
-  #fileSystems."/" = {
-  #  device = "/dev/disk/by-label/nixos";
-  #  fsType = "ext4";
-  #};
+  fileSystems."/" = {
+    device = "/dev/disk/by-label/nixos";
+    fsType = "ext4";
+  };
 
-  #fileSystems."/boot" ={
-  #  device = "/dev/disk/by-label/boot";
-  #  fsType = "vfat";
-  #  options = [ "fmask=0077" "dmask=0077" ];
-  #};
+  fileSystems."/boot" ={
+    device = "/dev/disk/by-label/boot";
+    fsType = "vfat";
+    options = [ "fmask=0077" "dmask=0077" ];
+  };
 
   #fileSystems."/mnt/carverlinux" = {
   #  device = "share";
@@ -43,7 +43,4 @@
   networking.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-
-  services.qemuGuest.enable = true;
-  services.spice-vdagentd.enable = true;
 }

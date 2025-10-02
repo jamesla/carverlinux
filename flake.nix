@@ -39,7 +39,6 @@
       default = nixos-generators.nixosGenerate {
         inherit system;
         modules = [
-          ./hardware-configuration.nix
           ./configuration.nix
           { virtualisation.diskSize = 50 * 1024; }
         ];

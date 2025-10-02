@@ -26,6 +26,8 @@
 
   security.sudo.wheelNeedsPassword = false;
 
+  services.spice-vdagentd.enable = true;
+
   services.xserver = {
     autoRepeatDelay = 150;
     autoRepeatInterval = 50;
@@ -48,7 +50,6 @@
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
-    pkgs.bindfs
     pkgs.spice-vdagent
     pkgs.git-lfs
     pkgs.gcc
