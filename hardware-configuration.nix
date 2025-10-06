@@ -43,21 +43,16 @@
     options = [ "fmask=0077" "dmask=0077" ];
   };
 
-  #fileSystems."/mnt/carverlinux" = {
-  #  device = "share";
-  #  fsType = "9p";
-  #  options = [ "trans=virtio" "version=9p2000.L" "nofail" ];
-  #};
+  fileSystems."/home/james/carverlinux" = {
+    device = "/mnt/carverlinux/carverlinux.nosync";
+    options = [ "bind" ];
+  };
 
-  #fileSystems."/home/james/carverlinux" = {
-  #  device = "/mnt/carverlinux";
-  #  fsType = "fuse.bindfs";
-  #  options = [
-  #    "map=501/1000:@20/@1000"
-  #    "_netdev"
-  #    "nofail"
-  #  ];
-  #};
+  fileSystems."/mnt/carverlinux" = {
+    device = "share";
+    fsType = "virtiofs";
+    options = [ "nofail" ];
+  };
 
   swapDevices = [ ];
 
