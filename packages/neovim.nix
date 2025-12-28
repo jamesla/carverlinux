@@ -120,13 +120,12 @@
         lua require('lspconfig').terraformls.setup {}
       '';
     }
-    pkgs.vimPlugins.hardtime-nvim
-    {
-      plugin = pkgs.vimPlugins.hardtime-nvim;
-      config = ''
-        lua require("hardtime").setup()
-      '';
-    }
+    #{
+    #  plugin = pkgs.vimPlugins.hardtime-nvim;
+    #  config = ''
+    #    lua require("hardtime").setup()
+    #  '';
+    #}
     pkgs.vimPlugins.neoscroll-nvim
     {
       plugin = pkgs.vimPlugins.neoscroll-nvim;
