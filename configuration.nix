@@ -52,6 +52,11 @@
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
+    pkgs.awscli2
+    pkgs.terraform
+    pkgs.kubectl
+    pkgs.nodejs
+    pkgs.docker-compose
     pkgs.spice-vdagent
     pkgs.git-lfs
     pkgs.gcc
