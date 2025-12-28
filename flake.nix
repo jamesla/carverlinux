@@ -40,7 +40,7 @@
         inherit system;
         modules = [
           ./configuration.nix
-          { virtualisation.diskSize = 50 * 1024; }
+          { virtualisation.diskSize = 150 * 1024; }
         ];
         format = "qcow-efi";
         specialArgs = {
