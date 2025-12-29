@@ -6,7 +6,7 @@ PACKAGE ?= carverlinux
 
 .PHONY: provision
 provision: ## provision nixos vm
-	@nix build ".#default"
+	@nix build --max-jobs 1 --cores 1 ".#default"
 	@cp -n result/nixos.qcow2 vm.utm/Data/nixos.qcow2
 	@chmod 644 vm.utm/Data/nixos.qcow2
 	@open vm.utm
