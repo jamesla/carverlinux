@@ -1,9 +1,7 @@
 { config, lib, pkgs, modulesPath, ... }:
 
 {
-  imports = [
-    (modulesPath + "/profiles/qemu-guest.nix")
-  ];
+  boot.initrd.kernelModules = ["virtio_gpu" "virtio_pci" "virtio" ];
 
   boot.initrd.availableKernelModules = [
     "xhci_pci"
@@ -21,7 +19,6 @@
     "virtio_rng"
   ];
 
-  boot.initrd.kernelModules = ["virtio_gpu"];
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
   boot.loader.systemd-boot.enable = true;
@@ -37,19 +34,13 @@
     fsType = "ext4";
   };
 
-  fileSystems."/boot" ={
-    device = "/dev/disk/by-label/boot";
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-label/ESP";
     fsType = "vfat";
-    options = [ "fmask=0077" "dmask=0077" ];
   };
 
-  fileSystems."/home/james/carverlinux" = {
-    device = "/mnt/carverlinux/carverlinux.nosync";
-    options = [ "bind" ];
-  };
-
-  fileSystems."/mnt/carverlinux" = {
-    device = "share";
+  fileSystems."/carverlinux" = {
+    device = "com.apple.virtio-fs.automount";
     fsType = "virtiofs";
     options = [ "nofail" ];
   };
@@ -57,6 +48,4 @@
   swapDevices = [ ];
 
   networking.useDHCP = lib.mkDefault true;
-
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }
