@@ -6,21 +6,11 @@
     tmuxPlugins.yank
     tmuxPlugins.dracula
     tmuxPlugins.open
-    {
-      plugin = tmuxPlugins.resurrect;
-      extraConfig = ''
-        set -g @resurrect-strategy-nvim 'session'
-        set -g @resurrect-processes '~nvim'
-        set -g @resurrect-capture-pane-contents 'on'
-      '';
-    }
+    tmuxPlugins.resurrect
     {
       plugin = tmuxPlugins.continuum;
       extraConfig = ''
-        set -g @continuum-boot 'on'
-        set -g @continuum-restore 'on'
         set -g @continuum-save-interval '1';
-        set -g status-right 'Continuum status: #{continuum_status}'
       '';
     }
   ];
@@ -39,10 +29,11 @@
     setw -g mode-keys vi
     bind-key -T copy-mode-vi 'v' send -X begin-selection
     bind-key -T copy-mode-vi 'y' send -X copy-selection
-    set -g @continuum-restore 'on'
     bind '%' split-window -h -c '#{pane_current_path}'  # Split panes horizontal
     bind '"' split-window -v -c '#{pane_current_path}'  # Split panes vertically
     bind 'c' run-shell "tmux new-window -c '~'; tmux split-window -h -c '~'; tmux select-pane -R"
+
     run-shell ${pkgs.tmuxPlugins.yank}/share/tmux-plugins/yank/yank.tmux
+    set-hook -g session-created "run-shell ${pkgs.tmuxPlugins.resurrect}/share/tmux-plugins/resurrect/scripts/restore.sh"
   '';
 }

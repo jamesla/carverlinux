@@ -1,6 +1,6 @@
 *.swp
 .DS_Store
-*.qcow2
 result
 *.fd
 keys/*
+nixos.img
