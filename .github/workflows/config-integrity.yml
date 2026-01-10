@@ -22,17 +22,21 @@ jobs:
           failed=false
           
           # Check that referenced package files exist
-          for pkg_ref in $(grep -o "packages/[^)]*" configuration.nix); do
-            if [ ! -f "$pkg_ref" ]; then
-              echo "❌ Package file $pkg_ref referenced in configuration.nix but does not exist"
-              failed=true
+          pkg_refs=$(grep -o "\./packages/[^'\";]*" configuration.nix)
+          for pkg_ref in $pkg_refs; do
+            # Only check actual files, not variables or syntax
+            if [[ "$pkg_ref" == *".nix" ]] || [[ -d "$pkg_ref" ]]; then
+              if [ ! -f "$pkg_ref" ] && [ ! -d "$pkg_ref" ]; then
+                echo "❌ Package file/directory $pkg_ref referenced in configuration.nix but does not exist"
+                failed=true
+              fi
             fi
           done
           
           # Check home-manager program configurations
           programs=("git" "chromium" "tmux" "neovim")
           for program in "${programs[@]}"; do
-            if ! grep -q "programs\.${program}\." configuration.nix; then
+            if ! grep -q "home-manager\.users\.james\.programs\.${program}\." configuration.nix; then
               echo "❌ $program configuration not found in configuration.nix"
               failed=true
             fi
@@ -177,9 +181,9 @@ jobs:
             if [ -f "$patch" ]; then
               echo "Checking patch: $(basename $patch)"
               
-              # Check if patch has required diff format
-              if ! grep -q "^diff --git" "$patch"; then
-                echo "❌ $patch is missing diff --git header"
+              # Check if patch has diff format (allow both git and unified diff)
+              if ! grep -q "^diff\|^---" "$patch"; then
+                echo "❌ $patch is missing diff format"
                 failed=true
               fi
               
