@@ -34,12 +34,12 @@
     nixosConfigurations = {
       default = nixpkgs.lib.nixosSystem {
         modules = [
-	  nixpkgs.nixosModules.readOnlyPkgs
+          nixpkgs.nixosModules.readOnlyPkgs
           { nixpkgs.pkgs = pkgs; }
 
           ./hardware-configuration.nix
           ./configuration.nix
-	  { virtualisation.diskSize = 120 * 1024; }
+          { virtualisation.diskSize = 120 * 1024; }
         ];
         specialArgs = {
           inherit unstable home-manager;

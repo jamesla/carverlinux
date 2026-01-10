@@ -7,6 +7,7 @@
 - `make clean` - Clean nix garbage
 - `make update` - Update flake lock file
 - `make test` - Test CI validation workflows
+- `make validate` - Run CI validation checks locally
 
 ## Code Style Guidelines
 - Use Nix functional style with proper indentation (2 spaces)
