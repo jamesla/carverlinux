@@ -1,10 +1,13 @@
 {
-  lfs.enable = true;
   enable = true;
-  userName = "jamesla";
-  userEmail = "jamesgmccallum@gmail.com";
+  lfs.enable = true;
 
-  extraConfig = {
+  settings = {
+    user = {
+      email = "jamesgmccallum@gmail.com";
+      name = "James McCallum";
+    };
+
     core = {
       autocrlf = "false";
     };

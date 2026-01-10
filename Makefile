@@ -4,15 +4,20 @@ PACKAGE ?= carverlinux
 
 .ONESHELL:
 
-.PHONY: provision
-provision: ## provision nixos vm
-	@nix build --max-jobs 1 --cores 1 ".#default"
-	@cp -n result/nixos.qcow2 vm.utm/Data/nixos.qcow2
-	@chmod 644 vm.utm/Data/nixos.qcow2
-	@open vm.utm
+.PHONY: build
+build: ## build system (from MacOS)
+	@nix build .#nixosConfigurations.default.config.system.build.images.raw-efi
+	@cp result/*.img nixos.img
+	@chmod 644 nixos.img
+
+.PHONY: run
+run: ## run carvelinux
+	@tart create --disk-size 0 carverlinux --linux
+	@tart set carverlinux --memory 24000 --cpu 6 --display-refit
+	@tart run --dir ./ --disk nixos.img carverlinux
 	
 .PHONY: rebuild
-rebuild: ## rebuild system
+rebuild: ## rebuild system (from NixOS)
 	@sudo nixos-rebuild switch --flake ".#default"
 
 .PHONY: version
