@@ -2,10 +2,11 @@
 
 ## Build Commands
 - `make build` - Build system image from macOS
-- `make rebuild` - Rebuild system from NixOS
+- `make rebuild` - Rebuild system from NixOS  
 - `make run` - Run carverlinux VM
 - `make clean` - Clean nix garbage
 - `make update` - Update flake lock file
+- `make test` - Test CI validation workflows
 
 ## Code Style Guidelines
 - Use Nix functional style with proper indentation (2 spaces)

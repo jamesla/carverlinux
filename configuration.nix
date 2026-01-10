@@ -53,6 +53,7 @@
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
     unstable.opencode
+    pkgs.gh
     pkgs.awscli2
     pkgs.terraform
     pkgs.kubectl

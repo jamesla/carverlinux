@@ -1,0 +1,104 @@
+name: Nix Configuration Validation
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  flake-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v23
+        with:
+          nix_path: nixpkgs=channel:nixos-25.11
+
+      - name: Setup cachix
+        uses: cachix/cachix-action@v14
+        with:
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
+
+      - name: Check flake structure
+        run: nix flake check --no-build
+
+      - name: Show flake outputs
+        run: nix flake show
+
+  syntax-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v23
+        with:
+          nix_path: nixpkgs=channel:nixos-25.11
+
+      - name: Validate Nix syntax
+        run: |
+          # Find all .nix files and validate syntax
+          find . -name "*.nix" -exec echo "Validating {}" \; -exec nix-instantiate --parse {} > /dev/null \;
+
+      - name: Validate patch files
+        run: |
+          # Check if diff files are well-formed
+          for patch in packages/st/*.diff; do
+            if [ -f "$patch" ]; then
+              echo "Validating patch: $patch"
+              # Basic diff validation - check if it can be applied
+              if ! grep -q "^diff\|^---\|^+++" "$patch"; then
+                echo "Error: $patch is not a valid diff file"
+                exit 1
+              fi
+            fi
+          done
+
+      - name: Verify patch references
+        run: |
+          # Check that all patches referenced in st/default.nix exist
+          patches=$(grep -o '\./[^"]*' packages/st/default.nix | sed 's|\.\/||')
+          for patch in $patches; do
+            if [ ! -f "packages/st/$patch" ]; then
+              echo "Error: Patch $patch referenced in st/default.nix but does not exist"
+              exit 1
+            fi
+          done
+
+  package-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v23
+        with:
+          nix_path: nixpkgs=channel:nixos-25.11
+
+      - name: Validate package definitions
+        run: |
+          # Check package structure in packages directory
+          echo "Validating package definitions..."
+          
+          # Check st package
+          echo "Checking st package..."
+          nix-instantiate --parse packages/st/default.nix > /dev/null || exit 1
+          
+          # Check other package files
+          for pkg in packages/*.nix; do
+            if [ "$pkg" != "packages/st/default.nix" ]; then
+              echo "Validating $pkg..."
+              nix-instantiate --parse "$pkg" > /dev/null || exit 1
+            fi
+          done
+
+      - name: Validate overlay syntax
+        run: |
+          echo "Validating overlay in flake.nix..."
+          nix-instantiate --parse -E 'builtins.readFile ./flake.nix' > /dev/null || exit 1

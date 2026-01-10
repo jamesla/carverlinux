@@ -1,0 +1,161 @@
+name: Code Quality & Formatting
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  nix-formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v23
+        with:
+          nix_path: nixpkgs=channel:nixos-25.11
+
+      - name: Install nixfmt
+        run: nix profile install nixpkgs#nixfmt
+
+      - name: Check Nix formatting
+        run: |
+          # Check formatting for all .nix files
+          echo "Checking Nix formatting..."
+          failed=false
+          for file in $(find . -name "*.nix"); do
+            if ! nixfmt --check "$file"; then
+              echo "❌ $file is not properly formatted"
+              failed=true
+            else
+              echo "✅ $file is properly formatted"
+            fi
+          done
+          
+          if [ "$failed" = true ]; then
+            echo ""
+            echo "To fix formatting issues, run: nixfmt $(find . -name "*.nix")"
+            exit 1
+          fi
+
+  style-consistency:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check indentation consistency
+        run: |
+          echo "Checking indentation consistency (2 spaces per guidelines)..."
+          failed=false
+          
+          for file in $(find . -name "*.nix"); do
+            # Check for tabs
+            if grep -P '\t' "$file" > /dev/null; then
+              echo "❌ $file contains tabs (should use 2 spaces)"
+              failed=true
+            fi
+            
+            # Check for inconsistent indentation (more than 2 spaces at start of lines)
+            if grep -P '^[ ]{3,}' "$file" > /dev/null; then
+              echo "❌ $file has inconsistent indentation (should use 2 spaces)"
+              failed=true
+            fi
+          done
+          
+          if [ "$failed" = true ]; then
+            exit 1
+          fi
+
+      - name: Check variable naming conventions
+        run: |
+          echo "Checking variable naming conventions..."
+          failed=false
+          
+          # Check for snake_case in package definitions (per guidelines)
+          if grep -r '^[a-z][a-zA-Z0-9]*[A-Z].*=' packages/ --include="*.nix" | grep -v 'st\|xmonad\|chromium\|fish\|git\|neovim\|tmux'; then
+            echo "❌ Found potential camelCase variable in packages (should use snake_case)"
+            failed=true
+          fi
+          
+          if [ "$failed" = true ]; then
+            exit 1
+          fi
+
+      - name: Check imports ordering and structure
+        run: |
+          echo "Checking Nix module structure..."
+          failed=false
+          
+          # Check configuration.nix has proper structure
+          if grep -n 'imports' configuration.nix | head -1 | grep -v '^[ ]*imports.*=.*\['; then
+            echo "❌ configuration.nix imports should be at the beginning"
+            failed=true
+          fi
+          
+          # Check flake.nix has proper input ordering
+          if ! grep -q 'nixpkgs\.url' flake.nix || ! grep -q 'home-manager\.url' flake.nix; then
+            echo "❌ flake.nix should include nixpkgs and home-manager inputs"
+            failed=true
+          fi
+          
+          if [ "$failed" = true ]; then
+            exit 1
+          fi
+
+  file-organization:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check directory structure
+        run: |
+          echo "Checking directory structure..."
+          
+          # Check packages directory structure
+          if [ ! -d "packages" ]; then
+            echo "❌ packages directory not found"
+            exit 1
+          fi
+          
+          if [ ! -d "packages/st" ]; then
+            echo "❌ packages/st directory not found"
+            exit 1
+          fi
+          
+          # Check for required package files
+          required_packages=("chromium.nix" "fish.nix" "git.nix" "neovim.nix" "tmux.nix" "xmonad.nix")
+          for pkg in "${required_packages[@]}"; do
+            if [ ! -f "packages/$pkg" ]; then
+              echo "❌ Required package file $pkg not found"
+              exit 1
+            fi
+          done
+          
+          # Check st package structure
+          if [ ! -f "packages/st/default.nix" ]; then
+            echo "❌ packages/st/default.nix not found"
+            exit 1
+          fi
+          
+          echo "✅ Directory structure is correct"
+
+      - name: Check file naming conventions
+        run: |
+          echo "Checking file naming conventions..."
+          failed=false
+          
+          # Check .nix files use lowercase with hyphens
+          for file in packages/*.nix; do
+            basename=$(basename "$file" .nix)
+            if [[ ! "$basename" =~ ^[a-z][a-z0-9-]*$ ]]; then
+              echo "❌ Package file $file should use lowercase with hyphens"
+              failed=true
+            fi
+          done
+          
+          if [ "$failed" = true ]; then
+            exit 1
+          fi

@@ -1,0 +1,272 @@
+name: Documentation & Metadata
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  readme-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate README syntax
+        run: |
+          echo "Validating README.md syntax..."
+          
+          # Check if README exists
+          if [ ! -f "README.md" ]; then
+            echo "❌ README.md not found"
+            exit 1
+          fi
+          
+          # Basic markdown syntax check
+          if ! command -v markdownlint >/dev/null 2>&1; then
+            echo "⚠️  markdownlint not available, skipping syntax check"
+          else
+            markdownlint README.md || echo "⚠️  markdownlint found issues"
+          fi
+
+      - name: Verify code examples in README
+        run: |
+          echo "Validating code examples in README.md..."
+          failed=false
+          
+          # Extract code blocks and validate them
+          # Check nix configuration snippet
+          if grep -A 20 "darwin-configuration.nix" README.md | grep -q "nix.linux-builder"; then
+            echo "✅ Nix configuration example found"
+          else
+            echo "❌ Nix configuration example not found or incomplete"
+            failed=true
+          fi
+          
+          # Check bash commands
+          commands=("darwin-rebuild switch" "make provision" "make rebuild")
+          for cmd in "${commands[@]}"; do
+            if grep -q "$cmd" README.md; then
+              echo "✅ Command '$cmd' found in README"
+            else
+              echo "❌ Command '$cmd' not found in README"
+              failed=true
+            fi
+          done
+          
+          if [ "$failed" = true ]; then
+            exit 1
+          fi
+
+      - name: Verify Makefile reference consistency
+        run: |
+          echo "Checking README commands against Makefile..."
+          failed=false
+          
+          # Get commands mentioned in README
+          readme_commands=$(grep -o 'make [a-zA-Z-]*' README.md | sed 's/make //' | sort -u)
+          
+          for cmd in $readme_commands; do
+            if [ "$cmd" != "provision" ]; then  # provision might be special
+              if ! grep -q "^$cmd:" Makefile; then
+                echo "❌ README mentions 'make $cmd' but target not found in Makefile"
+                failed=true
+              fi
+            fi
+          done
+          
+          # Check if provision command exists or is special
+          if grep -q "make provision" README.md; then
+            if ! grep -q "^provision:" Makefile; then
+              echo "⚠️  README mentions 'make provision' but target not in Makefile - might be handled elsewhere"
+            fi
+          fi
+          
+          if [ "$failed" = true ]; then
+            exit 1
+          fi
+
+  agents-compliance:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check AGENTS.md exists
+        run: |
+          echo "Checking AGENTS.md..."
+          
+          if [ ! -f "AGENTS.md" ]; then
+            echo "❌ AGENTS.md not found"
+            exit 1
+          fi
+          
+          echo "✅ AGENTS.md found"
+
+      - name: Validate AGENTS.md content
+        run: |
+          echo "Validating AGENTS.md content..."
+          failed=false
+          
+          # Check for required sections
+          required_sections=("Build Commands" "Code Style Guidelines")
+          for section in "${required_sections[@]}"; do
+            if ! grep -q "## $section" AGENTS.md; then
+              echo "❌ Section '$section' not found in AGENTS.md"
+              failed=true
+            fi
+          done
+          
+          # Check Makefile commands are documented
+          if grep -q "## Build Commands" AGENTS.md; then
+            commands=("build" "rebuild" "run" "clean" "update")
+            for cmd in "${commands[@]}"; do
+              if ! grep -q "$cmd" AGENTS.md; then
+                echo "⚠️  Command '$cmd' not documented in AGENTS.md Build Commands section"
+              fi
+            done
+          fi
+          
+          # Check style guidelines mention Nix specifics
+          if ! grep -q "2 spaces" AGENTS.md; then
+            echo "❌ AGENTS.md should mention 2-space indentation"
+            failed=true
+          fi
+          
+          if [ "$failed" = true ]; then
+            exit 1
+          fi
+
+      - name: Check style guide adherence
+        run: |
+          echo "Checking if code follows AGENTS.md guidelines..."
+          failed=false
+          
+          # Check 2-space indentation (mentioned in AGENTS.md)
+          for file in $(find . -name "*.nix"); do
+            # Check for tabs
+            if grep -P '\t' "$file" > /dev/null; then
+              echo "❌ $file contains tabs (AGENTS.md specifies 2 spaces)"
+              failed=true
+            fi
+            
+            # Check for 4+ spaces at start (indicating wrong indentation)
+            if grep -P '^[ ]{4,}' "$file" > /dev/null; then
+              echo "❌ $file has incorrect indentation (should be 2 spaces per AGENTS.md)"
+              failed=true
+            fi
+          done
+          
+          # Check for functional style Nix patterns
+          if grep -q "with pkgs;" packages/*.nix; then
+            echo "⚠️  Found 'with pkgs;' - AGENTS.md recommends functional style"
+          fi
+          
+          if [ "$failed" = true ]; then
+            exit 1
+          fi
+
+  metadata-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check project metadata
+        run: |
+          echo "Checking project metadata..."
+          failed=false
+          
+          # Check for .gitignore
+          if [ ! -f ".gitignore" ]; then
+            echo "❌ .gitignore not found"
+            failed=true
+          fi
+          
+          # Check .gitignore has essential entries
+          essential_ignores=("result" "*.img" ".direnv" "/.env")
+          for ignore in "${essential_ignores[@]}"; do
+            if ! grep -q "^$ignore" .gitignore; then
+              echo "⚠️  '$ignore' not found in .gitignore"
+            fi
+          done
+          
+          # Check for flake.nix (required for flakes)
+          if [ ! -f "flake.nix" ]; then
+            echo "❌ flake.nix not found (required for flakes)"
+            failed=true
+          fi
+          
+          # Check for configuration.nix
+          if [ ! -f "configuration.nix" ]; then
+            echo "❌ configuration.nix not found"
+            failed=true
+          fi
+          
+          if [ "$failed" = true ]; then
+            exit 1
+          fi
+
+      - name: Validate flake metadata
+        run: |
+          echo "Validating flake.nix metadata..."
+          failed=false
+          
+          # Check for required flake inputs
+          if ! grep -q "nixpkgs\.url" flake.nix; then
+            echo "❌ nixpkgs input not found in flake.nix"
+            failed=true
+          fi
+          
+          if ! grep -q "home-manager\.url" flake.nix; then
+            echo "❌ home-manager input not found in flake.nix"
+            failed=true
+          fi
+          
+          # Check for required outputs
+          if ! grep -q "nixosConfigurations" flake.nix; then
+            echo "❌ nixosConfigurations output not found in flake.nix"
+            failed=true
+          fi
+          
+          # Check system architecture
+          if ! grep -q "system.*=.*aarch64-linux" flake.nix; then
+            echo "❌ aarch64-linux system not found in flake.nix"
+            failed=true
+          fi
+          
+          if [ "$failed" = true ]; then
+            exit 1
+          fi
+
+      - name: Check version consistency
+        run: |
+          echo "Checking version consistency..."
+          
+          # Get NixOS version from flake.nix
+          nixos_version=$(grep -o 'nixos-[0-9]*\.[0-9]*' flake.nix | head -1)
+          
+          if [ -z "$nixos_version" ]; then
+            echo "❌ Could not determine NixOS version from flake.nix"
+            exit 1
+          fi
+          
+          echo "NixOS version: $nixos_version"
+          
+          # Check state version in configuration.nix matches
+          state_version=$(grep "system\.stateVersion" configuration.nix | sed 's/.*"\([^"]*\)".*/\1/')
+          
+          if [ -z "$state_version" ]; then
+            echo "❌ Could not find stateVersion in configuration.nix"
+            exit 1
+          fi
+          
+          echo "State version: $state_version"
+          
+          # Extract version numbers for comparison
+          nixos_num=$(echo "$nixos_version" | sed 's/nixos-//')
+          state_num=$(echo "$state_version" | tr -d '"')
+          
+          if [ "$nixos_num" != "$state_num" ]; then
+            echo "⚠️  NixOS version ($nixos_num) doesn't match state version ($state_num)"
+            echo "    This may be intentional but worth reviewing"
+          fi
