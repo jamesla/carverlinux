@@ -9,7 +9,7 @@
     home-manager.nixosModules.home-manager
   ];
 
-  networking.hostName = "carverlinux"; # Define your hostname.
+  networking.hostName = "carverlinux";
   networking.firewall.enable = false;
 
   time.timeZone = "Pacific/Auckland";
@@ -52,6 +52,7 @@
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
+    pkgs.opencode
     pkgs.awscli2
     pkgs.terraform
     pkgs.kubectl
@@ -93,9 +94,9 @@
     programs.chromium = import ./packages/chromium.nix;
     programs.tmux = import ./packages/tmux.nix { inherit config pkgs; };
     programs.neovim = import ./packages/neovim.nix { inherit config pkgs; };
-    home.stateVersion = "25.05";
+    home.stateVersion = "25.11";
   };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  system.stateVersion = "25.05";
+  system.stateVersion = "25.11";
 }
