@@ -46,8 +46,8 @@ jobs:
           echo "Scanning for passwords and tokens..."
           failed=false
           
-          # Check for password fields
-          if rg -i "password\s*=\s*['\"]" --type-add 'nix:*.nix' --type nix .; then
+          # Check for password fields (exclude askPassword which is legitimate config)
+          if rg -i "password\s*=\s*['\"][^'\"]{3,}" --type-add 'nix:*.nix' --type nix . | grep -v "askPassword"; then
             echo "❌ Found potential hardcoded password"
             failed=true
           fi
