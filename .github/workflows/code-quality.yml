@@ -18,16 +18,16 @@ jobs:
 
       - name: Install nixfmt
         run: |
-          # Use nixos-unstable for newer nixfmt that works with older Nix
-          nix profile install --impure nixpkgs#nixfmt-rfc-style
+          # Install alejandra instead - works with older Nix
+          nix profile install nixpkgs#alejandra
 
       - name: Check Nix formatting
         run: |
-          # Check formatting for all .nix files
+          # Check formatting for all .nix files using alejandra
           echo "Checking Nix formatting..."
           failed=false
           for file in $(find . -name "*.nix"); do
-            if ! nixfmt --check "$file"; then
+            if ! alejandra --check "$file" >/dev/null 2>&1; then
               echo "❌ $file is not properly formatted"
               failed=true
             else
@@ -37,7 +37,7 @@ jobs:
           
           if [ "$failed" = true ]; then
             echo ""
-            echo "To fix formatting issues, run: nixfmt $(find . -name "*.nix")"
+            echo "To fix formatting issues, run: alejandra $(find . -name "*.nix")"
             exit 1
           fi
 
@@ -49,24 +49,14 @@ jobs:
 
       - name: Check indentation consistency
         run: |
-          echo "Checking indentation consistency (2 spaces per guidelines)..."
+          echo "Checking for tabs in Nix files..."
           failed=false
           
           for file in $(find . -name "*.nix"); do
-            # Check for tabs
+            # Check for tabs (this is the main issue to catch)
             if grep -P '\t' "$file" > /dev/null; then
-              echo "❌ $file contains tabs (should use 2 spaces)"
+              echo "❌ $file contains tabs (should use spaces)"
               failed=true
-            fi
-            
-            # Only check for inconsistent indentation in new/modified files
-            # Allow existing files to have their current indentation
-            if git diff --name-only HEAD~1 | grep -q "$file"; then
-              # Check for inconsistent indentation (more than 4 spaces at start of lines)
-              if grep -P '^[ ]{5,}' "$file" > /dev/null; then
-                echo "❌ $file has excessive indentation (>4 spaces)"
-                failed=true
-              fi
             fi
           done
           

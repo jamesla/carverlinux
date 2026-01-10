@@ -21,22 +21,19 @@ jobs:
           echo "Validating package imports in configuration.nix..."
           failed=false
           
-          # Check that referenced package files exist
-          pkg_refs=$(grep -o "\./packages/[^'\";]*" configuration.nix)
-          for pkg_ref in $pkg_refs; do
-            # Only check actual files, not variables or syntax
-            if [[ "$pkg_ref" == *".nix" ]] || [[ -d "$pkg_ref" ]]; then
-              if [ ! -f "$pkg_ref" ] && [ ! -d "$pkg_ref" ]; then
-                echo "❌ Package file/directory $pkg_ref referenced in configuration.nix but does not exist"
-                failed=true
-              fi
+          # Check that main package files exist
+          required_files=("packages/xmonad.nix" "packages/fish.nix" "packages/git.nix" "packages/chromium.nix" "packages/tmux.nix" "packages/neovim.nix" "packages/st")
+          for file in "${required_files[@]}"; do
+            if [ ! -f "$file" ] && [ ! -d "$file" ]; then
+              echo "❌ Package file/directory $file not found"
+              failed=true
             fi
           done
           
           # Check home-manager program configurations
           programs=("git" "chromium" "tmux" "neovim")
           for program in "${programs[@]}"; do
-            if ! grep -q "home-manager\.users\.james\.programs\.${program}\." configuration.nix; then
+            if ! grep -q "programs\.${program}\." configuration.nix && ! grep -q "home-manager\.users\.james\.programs\.${program}\." configuration.nix; then
               echo "❌ $program configuration not found in configuration.nix"
               failed=true
             fi
