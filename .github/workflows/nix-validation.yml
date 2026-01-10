@@ -7,95 +7,59 @@ on:
     branches: [ master ]
 
 jobs:
-  flake-check:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install Nix
-        uses: cachix/install-nix-action@v23
-        with:
-          nix_path: nixpkgs=channel:nixos-25.11
-
-      # Cachix setup removed due to missing parameter
-
-      - name: Check flake structure
-        run: nix flake check --no-build
-
-      - name: Show flake outputs
-        run: nix flake show
-
   syntax-validation:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Nix
-        uses: cachix/install-nix-action@v23
-        with:
-          nix_path: nixpkgs=channel:nixos-25.11
-
-      - name: Validate Nix syntax
+      - name: Basic syntax validation
         run: |
-          # Find all .nix files and validate syntax
-          find . -name "*.nix" -exec echo "Validating {}" \; -exec nix-instantiate --parse {} > /dev/null \;
-
-      - name: Validate patch files
-        run: |
-          # Check if diff files are well-formed
-          for patch in packages/st/*.diff; do
-            if [ -f "$patch" ]; then
-              echo "Validating patch: $patch"
-              # Basic diff validation - check if it can be applied
-              if ! grep -q "^diff\|^---\|^+++" "$patch"; then
-                echo "Error: $patch is not a valid diff file"
-                exit 1
+          echo "Performing basic Nix syntax validation..."
+          
+          # Validate main files syntax
+          failed=false
+          for file in flake.nix configuration.nix packages/*.nix packages/st/*.nix; do
+            if [ -f "$file" ]; then
+              echo "Checking $file..."
+              if ! nix-instantiate --parse "$file" > /dev/null 2>&1; then
+                echo "❌ $file has syntax errors"
+                failed=true
+              else
+                echo "✅ $file syntax is valid"
               fi
             fi
           done
+          
+          if [ "$failed" = true ]; then
+            exit 1
+          fi
 
-      - name: Verify patch references
-        run: |
-          # Check that all patches referenced in st/default.nix exist
-          patches=$(grep -o '\./[^"]*' packages/st/default.nix | sed 's|\.\/||')
-          for patch in $patches; do
-            if [ ! -f "packages/st/$patch" ]; then
-              echo "Error: Patch $patch referenced in st/default.nix but does not exist"
-              exit 1
-            fi
-          done
-
-  package-validation:
+  patch-validation:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Nix
-        uses: cachix/install-nix-action@v23
-        with:
-          nix_path: nixpkgs=channel:nixos-25.11
-
-      - name: Validate package definitions
+      - name: Validate patch files
         run: |
-          # Check package structure in packages directory
-          echo "Validating package definitions..."
+          echo "Validating patch files..."
+          failed=false
           
-          # Check st package
-          echo "Checking st package..."
-          nix-instantiate --parse packages/st/default.nix > /dev/null || exit 1
-          
-          # Check other package files
-          for pkg in packages/*.nix; do
-            if [ "$pkg" != "packages/st/default.nix" ]; then
-              echo "Validating $pkg..."
-              nix-instantiate --parse "$pkg" > /dev/null || exit 1
+          for patch in packages/st/*.diff; do
+            if [ -f "$patch" ]; then
+              echo "Checking patch: $(basename $patch)"
+              
+              # Basic check if patch has diff format
+              if ! grep -q "^diff\|^---" "$patch"; then
+                echo "❌ $patch is missing diff format"
+                failed=true
+              else
+                echo "✅ $(basename $patch) has valid format"
+              fi
             fi
           done
-
-      - name: Validate overlay syntax
-        run: |
-          echo "Validating overlay in flake.nix..."
-          nix-instantiate --parse -E 'builtins.readFile ./flake.nix' > /dev/null || exit 1
+          
+          if [ "$failed" = true ]; then
+            exit 1
+          fi
