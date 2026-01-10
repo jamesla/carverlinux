@@ -13,6 +13,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install Nix
+        uses: cachix/install-nix-action@v23
+        with:
+          nix_path: nixpkgs=channel:nixos-25.11
+
       - name: Basic syntax validation
         run: |
           echo "Performing basic Nix syntax validation..."
