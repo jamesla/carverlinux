@@ -2,7 +2,7 @@ name: Configuration Integrity
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   cross-file-validation:

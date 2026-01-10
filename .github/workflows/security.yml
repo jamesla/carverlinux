@@ -2,7 +2,7 @@ name: Security & Sensitive Data
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   secret-detection:

@@ -2,7 +2,7 @@ name: Code Quality & Formatting
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   nix-formatting:
