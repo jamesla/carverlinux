@@ -14,6 +14,7 @@
     import XMonad.Actions.SpawnOn
     import XMonad.Util.EZConfig
     import XMonad.Layout.Spacing
+    import XMonad.Util.SpawnOnce
 
     main :: IO ()
     main = xmonad $ defaultConfig
@@ -24,6 +25,7 @@
         , layoutHook = spacingRaw True (Border 0 10 10 10) True (Border 10 10 10 10) True $
             layoutHook def
         , startupHook = do
+          spawnOnce "spice-vdagent"
           spawn "st tmux"
         }
   '';
