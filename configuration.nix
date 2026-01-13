@@ -90,13 +90,16 @@
   services.openssh.enable = true;
   programs.ssh.askPassword = "";
 
-  home-manager.users.james = {
-    programs.git = import ./packages/git.nix;
-    programs.chromium = import ./packages/chromium.nix;
-    programs.tmux = import ./packages/tmux.nix { inherit config pkgs; };
-    programs.neovim = import ./packages/neovim.nix { inherit config pkgs; };
-    home.stateVersion = "25.11";
-  };
+   home-manager.users.james = {
+     imports = [
+       ./packages/opencode.nix
+     ];
+     programs.git = import ./packages/git.nix;
+     programs.chromium = import ./packages/chromium.nix;
+     programs.tmux = import ./packages/tmux.nix { inherit config pkgs; };
+     programs.neovim = import ./packages/neovim.nix { inherit config pkgs; };
+     home.stateVersion = "25.11";
+   };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   system.stateVersion = "25.11";
