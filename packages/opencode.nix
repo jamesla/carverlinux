@@ -8,7 +8,7 @@
 
     **Workflow (No Merging Allowed):**
     1. Check for unstaged changes in repository
-    2. If on master/main, create a feature branch with conventional commit prefix
+    2. If on master/main, create a feature branch with conventional commit prefix and name of what the PR does.
     3. Stage and commit changes with conventional commit message format
     4. Push branch and create/open PR (NEVER merge)
 
