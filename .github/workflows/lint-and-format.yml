@@ -1,4 +1,4 @@
-name: Nix Configuration Validation
+name: Lint & Format
 
 on:
   pull_request:
@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  syntax-validation:
+  nix-syntax:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -18,12 +18,11 @@ jobs:
         with:
           nix_path: nixpkgs=channel:nixos-25.11
 
-      - name: Basic syntax validation
+      - name: Validate Nix syntax
         run: |
-          echo "Performing basic Nix syntax validation..."
-          
-          # Validate main files syntax
+          echo "Validating Nix syntax..."
           failed=false
+          
           for file in flake.nix configuration.nix packages/*.nix packages/st/*.nix; do
             if [ -f "$file" ]; then
               echo "Checking $file..."
@@ -40,7 +39,49 @@ jobs:
             exit 1
           fi
 
-  patch-validation:
+  formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check formatting
+        run: |
+          echo "Checking formatting issues..."
+          failed=false
+          
+          # Check for tabs in Nix files
+          for file in $(find . -name "*.nix"); do
+            if grep -P '\t' "$file" > /dev/null; then
+              echo "❌ $file contains tabs (should use spaces)"
+              failed=true
+            fi
+          done
+          
+          if [ "$failed" = true ]; then
+            exit 1
+          fi
+          
+          echo "✅ Formatting checks passed"
+
+  makefile-syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate Makefile
+        run: |
+          echo "Validating Makefile syntax..."
+          
+          if ! make -n -p Makefile 2>/dev/null >/dev/null; then
+            echo "❌ Makefile has syntax errors"
+            exit 1
+          fi
+          
+          echo "✅ Makefile syntax is valid"
+
+  patch-format:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
