@@ -9,6 +9,11 @@
 - `make test` - Test CI validation workflows
 - `make validate` - Run CI validation checks locally
 
+## Workflow Automation
+- `./workflow.sh` - Run auto PR workflow (no merging allowed)
+- `./workflow.sh --check` - Check for unstaged changes only
+- `./workflow.sh --help` - Show usage information
+
 ## Code Style Guidelines
 - Use Nix functional style with proper indentation (2 spaces)
 - Follow NixOS module patterns with imports and config sections

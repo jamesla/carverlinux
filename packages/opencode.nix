@@ -22,5 +22,6 @@
     - Generate commit message from change analysis
     - Create PR with conventional commit title
     - Strict no-merge policy (assumes this is configured elsewhere)
+    - No creating scripts in the repository to handle this. Run the shell commands directly.
   '';
 }
