@@ -1,6 +1,6 @@
 {
   # Custom commit-pr command using markdown declaration style
-  home.file.".opencode/command/commit-pr.md".text = ''
+  home.file.".opencode/command/commit-push-pr.md".text = ''
     ---
     description: commit push and open a PR with conventional commits
     agent: general
