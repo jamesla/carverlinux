@@ -37,6 +37,11 @@
     windowManager.xmonad = import ./packages/xmonad.nix;
     exportConfiguration = true;
     dpi = 254;
+    deviceSection = ''
+      Driver "virtio"
+      Option "HWCursor" "true"
+      Option "AccelMethod" "glamor"
+    '';
   };
 
   services.displayManager = {
@@ -73,6 +78,7 @@
     pkgs.ncdu
     pkgs.inetutils
     pkgs.killall
+    pkgs.mesa-demos
     (pkgs.callPackage ./packages/st { })
   ];
 
@@ -83,6 +89,10 @@
   #terminal
   environment.sessionVariables.TERMINAL= [ "st" ];
   environment.variables.EDITOR = "nvim";
+  environment.sessionVariables = {
+    LIBGL_ALWAYS_SOFTWARE = "true";
+    GALLIUM_DRIVER = "llvmpipe";
+  };
 
   programs.fish = import ./packages/fish.nix;
 
