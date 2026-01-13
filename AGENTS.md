@@ -20,3 +20,4 @@
 - Maintain consistent ordering: inputs, overlays, pkgs, configurations
 - Use comments sparingly - Nix should be self-documenting
 - Follow Nixpkgs conventions for package definitions
+- Only write to flake.nix if necessary - prefer writing to configuration.nix, hardware-configuration.nix or the nix files in the packages directory.
