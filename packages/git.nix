@@ -12,4 +12,8 @@
       autocrlf = "false";
     };
   };
+
+  extraConfig = {
+    pull.rebase = true;
+  };
 }
