@@ -25,5 +25,6 @@
     - No creating scripts in the repository (like workflow.sh) to handle this. Run the shell commands directly.
     - If the PR already exists you can just push the changes to that PR
     - Do not use a browser just shell tools
+    - Never commit to master
   '';
 }

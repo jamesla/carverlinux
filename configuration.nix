@@ -87,9 +87,9 @@
   ];
 
   #terminal
-  environment.sessionVariables.TERMINAL= [ "st" ];
-  environment.variables.EDITOR = "nvim";
   environment.sessionVariables = {
+    TERMINAL = "st";
+    EDITOR = "nvim";
     LIBGL_ALWAYS_SOFTWARE = "true";
     GALLIUM_DRIVER = "llvmpipe";
   };
@@ -104,10 +104,11 @@
      imports = [
        ./packages/opencode.nix
      ];
-     programs.git = import ./packages/git.nix;
-     programs.chromium = import ./packages/chromium.nix;
-     programs.tmux = import ./packages/tmux.nix { inherit config pkgs; };
-     programs.neovim = import ./packages/neovim.nix { inherit config pkgs; };
+      programs.git = import ./packages/git.nix;
+      programs.chromium = import ./packages/chromium.nix;
+      programs.tmux = import ./packages/tmux.nix { inherit config pkgs; };
+      programs.neovim = import ./packages/neovim.nix { inherit config pkgs; };
+      programs.ghostty = import ./packages/ghostty.nix { inherit pkgs; };
      home.stateVersion = "25.11";
    };
 
