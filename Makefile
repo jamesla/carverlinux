@@ -14,7 +14,7 @@ build: ## build system (from MacOS)
 run: ## run carvelinux
 	@tart create --disk-size 0 carverlinux --linux
 	@tart set carverlinux --memory 24000 --cpu 6 --display-refit
-	@tart run --dir ./ --disk nixos.img carverlinux
+	@tart run --dir ./ --disk nixos.img carverlinux &
 	
 .PHONY: rebuild
 rebuild: ## rebuild system (from NixOS)
