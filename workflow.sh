@@ -78,7 +78,7 @@ detect_commit_type() {
     
     if echo "$changed_files" | grep -q "\.nix$"; then
         commit_type="feat"
-    elif echo "$changed_files" | grep -q -E "(README|CHANGELOG|\.md)$"; then
+    el    if echo "$changed_files" | grep -q -E "(README|CHANGELOG|\\.md)$"; then
         commit_type="docs"
     elif echo "$changed_files" | grep -q -E "(Makefile|\.sh|\.py|workflow|agent)"; then
         commit_type="chore"
