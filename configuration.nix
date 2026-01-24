@@ -80,6 +80,7 @@
     pkgs.killall
     pkgs.mesa-demos
     (pkgs.callPackage ./packages/st { })
+    (pkgs.callPackage ./packages/claude.nix { })
   ];
 
   fonts.packages = with pkgs; [
