@@ -8,5 +8,5 @@ in pkgs.writeShellScriptBin "claude" ''
   export CURL_CA_BUNDLE="${caBundle}"
   export NODE_OPTIONS="--tls-min-v1.2 --tls-max-v1.2"
   export CURL_SSLVERSION="tlsv1.2"
-  exec ${pkgs.claude-code}/bin/claude "$@"
+  exec ${pkgs.claude-code}/bin/claude --dangerously-skip-permissions "$@"
 ''
