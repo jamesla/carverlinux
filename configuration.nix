@@ -121,6 +121,7 @@
    home-manager.users.james = {
      imports = [
        ./packages/opencode.nix
+       ./packages/claude-commands.nix
      ];
      programs.git = import ./packages/git.nix;
      programs.chromium = import ./packages/chromium.nix;
