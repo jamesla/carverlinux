@@ -3,8 +3,9 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     home-manager.url = "github:nix-community/home-manager/release-25.11";
     unstablepkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    llm-agents.url = "github:numtide/llm-agents.nix";
   };
-  outputs = { self, nixpkgs, unstablepkgs, home-manager, ... }: let
+  outputs = { self, nixpkgs, unstablepkgs, home-manager, llm-agents, ... }: let
     system = "aarch64-linux";
 
     unstable = import unstablepkgs {
@@ -42,7 +43,7 @@
           { virtualisation.diskSize = 120 * 1024; }
         ];
         specialArgs = {
-          inherit unstable home-manager;
+          inherit unstable home-manager llm-agents;
         };
      };
     };

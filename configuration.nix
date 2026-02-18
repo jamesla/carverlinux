@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, unstable, home-manager, ... }:
+{ config, pkgs, unstable, home-manager, llm-agents, ... }:
 
 {
   imports = [
@@ -74,6 +74,7 @@
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
+    llm-agents.packages.${pkgs.system}.agent-browser
     unstable.opencode
     pkgs.gh
     pkgs.awscli2
