@@ -74,8 +74,8 @@
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
-    llm-agents.packages.${pkgs.system}.agent-browser
     unstable.opencode
+    pkgs.dotnet-sdk
     pkgs.gh
     pkgs.awscli2
     pkgs.terraform
@@ -98,7 +98,7 @@
     pkgs.killall
     pkgs.mesa-demos
     (pkgs.callPackage ./packages/st { })
-    (pkgs.callPackage ./packages/claude.nix { })
+    (unstable.callPackage ./packages/claude.nix { })
   ];
 
   fonts.packages = with pkgs; [
