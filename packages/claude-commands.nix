@@ -1,4 +1,20 @@
 {
+  # Manage Claude settings to allow tools without permission prompts in plan mode
+  home.file.".claude/settings.json" = {
+    force = true;
+    text = builtins.toJSON {
+      permissions = {
+        defaultMode = "plan";
+        allow = ["*"];
+      };
+      model = "haiku";
+      alwaysThinkingEnabled = true;
+      skipDangerousModePermissionPrompt = true;
+      effortLevel = "low";
+      webFetchAllowedDomains = ["*"];
+    };
+  };
+
   # Port commit-push-pr command from opencode to Claude global commands
   home.file.".claude/commands/commit-push-pr.md".text = ''
     **Workflow (No Merging Allowed):**
