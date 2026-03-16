@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, unstable, home-manager, llm-agents, ... }:
+{ config, pkgs, unstable, home-manager, llm-agents, peon-ping, ... }:
 
 {
   imports = [
@@ -17,7 +17,7 @@
 
   users.users.james = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "docker" "vboxusers" "video" ];
+    extraGroups = [ "wheel" "docker" "vboxusers" "video" "audio" ];
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBlkZ7yS+y5Jp/K18ZE3Swi4sfEWokEdNv0BwfDzYVEfSEKmWr9zKXhfm4pvhyxcWtqshYOzKMS3u6a8tpChEPlmVW5AkZeAPJk+Rwn++eANjeXpkvQ8zvfV6ALBU2FUiE60oGIA+tZOEbzUcgZ15CilFpwatnbe0whVocYsYAn4F9d3CLbt8U6miG4NjdSDP3E5OukuVyhF2dXEBVa9N0erLKZyL7hkePTWqoCY9hOvoxgMgopBNHLy2Q0yxkL9M3zgi8qQwa0L0ORcolBk4AVMV6+Wjt+lqYoTtn7GupFC3pZLwWRIqOvneb2oo37JVeUeIRSNSKKrwE7SGSaSAX"
@@ -28,6 +28,28 @@
 
   services.spice-vdagentd.enable = true;
   services.spice-autorandr.enable = true;
+
+  # Audio: PipeWire with ALSA backend
+  services.pipewire.enable = true;
+  services.pipewire.alsa.enable = true;
+  hardware.pulseaudio.enable = false;
+
+  # Set default ALSA device to hw:0,1 (Virtio audio device)
+  environment.etc."asound.conf".text = ''
+    defaults.pcm.card 0
+    defaults.pcm.device 1
+    defaults.ctl.card 0
+
+    pcm.!default {
+      type plug
+      slave.pcm "hw:0,1"
+    }
+
+    ctl.!default {
+      type hw
+      card 0
+    }
+  '';
 
   services.xserver = {
     autoRepeatDelay = 150;
@@ -97,6 +119,8 @@
     pkgs.inetutils
     pkgs.killall
     pkgs.mesa-demos
+    pkgs.alsa-utils
+    pkgs.ffmpeg
     (pkgs.callPackage ./packages/st { })
     (unstable.callPackage ./packages/claude.nix { })
   ];
@@ -123,12 +147,69 @@
      imports = [
        ./packages/opencode.nix
        ./packages/claude-commands.nix
+       peon-ping.homeManagerModules.default
      ];
      programs.git = import ./packages/git.nix;
      programs.chromium = import ./packages/chromium.nix;
      programs.tmux = import ./packages/tmux.nix { inherit config pkgs; };
      programs.neovim = import ./packages/neovim.nix { inherit config pkgs; };
      programs.ghostty = import ./packages/ghostty.nix { inherit pkgs; };
+     programs.peon-ping = {
+        enable = true;
+        package = peon-ping.packages."${pkgs.system}".default;
+        settings = {
+          default_pack = "sc_scv";
+          volume = 0.7;
+          enabled = true;
+          desktop_notifications = true;
+          suppress_subagent_complete = true;
+          #annoyed_threshold = 1;
+          #annoyed_window_seconds = 10;
+          categories = {
+            "session.start" = true;
+            "session.end" = true;
+            "task.complete" = true;
+            "task.acknowledge" = true;
+            "task.error" = true;
+            "task.progress" = true;
+            "input.required" = true;
+            "resource.limit" = true;
+            "user.spam" = true;
+          };
+        };
+        installPacks = [ "sc_scv" ];
+     };
+     #programs.peon-ping = {
+     #  enable = true;
+     #  package = peon-ping.packages."${pkgs.system}".default;
+     #};
+     home.packages = [ peon-ping.packages."${pkgs.system}".default ];
+
+     # Link peon-ping skills into Claude Code's skills directory
+     home.file.".claude/skills/peon-ping-toggle/SKILL.md".source =
+       "${peon-ping.packages.${pkgs.system}.default}/share/peon-ping/skills/peon-ping-toggle/SKILL.md";
+     home.file.".claude/skills/peon-ping-config/SKILL.md".source =
+       "${peon-ping.packages.${pkgs.system}.default}/share/peon-ping/skills/peon-ping-config/SKILL.md";
+     home.file.".claude/skills/peon-ping-rename/SKILL.md".source =
+       "${peon-ping.packages.${pkgs.system}.default}/share/peon-ping/skills/peon-ping-rename/SKILL.md";
+     home.file.".claude/skills/peon-ping-use/SKILL.md".source =
+       "${peon-ping.packages.${pkgs.system}.default}/share/peon-ping/skills/peon-ping-use/SKILL.md";
+     home.file.".claude/skills/peon-ping-log/SKILL.md".source =
+       "${peon-ping.packages.${pkgs.system}.default}/share/peon-ping/skills/peon-ping-log/SKILL.md";
+
+     # Set Virtio audio card to pro-audio profile for output
+     systemd.user.services.set-audio-profile = {
+       Unit.Description = "Set PipeWire audio profile for Virtio card";
+       Unit.After = [ "pipewire.service" ];
+       Unit.PartOf = [ "graphical-session.target" ];
+       Service = {
+         Type = "oneshot";
+         RemainAfterExit = true;
+         ExecStart = "${pkgs.lib.getExe pkgs.pulseaudio} set-card-profile alsa_card.pci-0000_00_0a.0 pro-audio";
+       };
+       Install.WantedBy = [ "graphical-session.target" ];
+     };
+
      home.stateVersion = "25.11";
    };
 
