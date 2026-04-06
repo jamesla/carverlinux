@@ -125,6 +125,7 @@
     pkgs.ffmpeg
     (pkgs.callPackage ./packages/st { })
     (unstable.callPackage ./packages/claude.nix { })
+    (pkgs.callPackage ./packages/bitbucket-cli.nix { })
   ];
 
   fonts.packages = with pkgs; [
