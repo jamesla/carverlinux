@@ -97,7 +97,9 @@
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
     unstable.opencode
-    pkgs.dotnet-sdk
+    pkgs.ngrok
+    pkgs.zip
+    pkgs.lsof
     pkgs.gh
     pkgs.awscli2
     pkgs.terraform
@@ -179,23 +181,7 @@
         };
         installPacks = [ "sc_scv" ];
      };
-     #programs.peon-ping = {
-     #  enable = true;
-     #  package = peon-ping.packages."${pkgs.system}".default;
-     #};
      home.packages = [ peon-ping.packages."${pkgs.system}".default ];
-
-     # Link peon-ping skills into Claude Code's skills directory
-     home.file.".claude/skills/peon-ping-toggle/SKILL.md".source =
-       "${peon-ping.packages.${pkgs.system}.default}/share/peon-ping/skills/peon-ping-toggle/SKILL.md";
-     home.file.".claude/skills/peon-ping-config/SKILL.md".source =
-       "${peon-ping.packages.${pkgs.system}.default}/share/peon-ping/skills/peon-ping-config/SKILL.md";
-     home.file.".claude/skills/peon-ping-rename/SKILL.md".source =
-       "${peon-ping.packages.${pkgs.system}.default}/share/peon-ping/skills/peon-ping-rename/SKILL.md";
-     home.file.".claude/skills/peon-ping-use/SKILL.md".source =
-       "${peon-ping.packages.${pkgs.system}.default}/share/peon-ping/skills/peon-ping-use/SKILL.md";
-     home.file.".claude/skills/peon-ping-log/SKILL.md".source =
-       "${peon-ping.packages.${pkgs.system}.default}/share/peon-ping/skills/peon-ping-log/SKILL.md";
 
      # Set Virtio audio card to pro-audio profile for output
      systemd.user.services.set-audio-profile = {

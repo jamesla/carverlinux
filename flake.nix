@@ -4,8 +4,9 @@
     home-manager.url = "github:nix-community/home-manager/release-25.11";
     unstablepkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     llm-agents.url = "github:numtide/llm-agents.nix";
+    peon-ping.url = "github:PeonPing/peon-ping";
   };
-  outputs = { self, nixpkgs, unstablepkgs, home-manager, llm-agents, ... }: let
+  outputs = { self, nixpkgs, unstablepkgs, home-manager, llm-agents, peon-ping, ... }: let
     system = "aarch64-linux";
 
     unstable = import unstablepkgs {
@@ -43,7 +44,7 @@
           { virtualisation.diskSize = 120 * 1024; }
         ];
         specialArgs = {
-          inherit unstable home-manager llm-agents;
+          inherit unstable home-manager llm-agents peon-ping;
         };
      };
     };
