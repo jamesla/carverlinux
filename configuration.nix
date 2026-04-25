@@ -32,7 +32,7 @@
   # Audio: PipeWire with ALSA backend
   services.pipewire.enable = true;
   services.pipewire.alsa.enable = true;
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
 
   # Set default ALSA device to hw:0,1 (Virtio audio device)
   environment.etc."asound.conf".text = ''
@@ -142,7 +142,7 @@
      programs.neovim = import ./packages/neovim.nix { inherit config pkgs; };
      programs.ghostty = import ./packages/ghostty.nix { inherit pkgs; };
      programs.peon-ping = import ./packages/peon-ping.nix { inherit pkgs peon-ping; };
-     home.packages = [ peon-ping.packages."${pkgs.system}".default ];
+     home.packages = [ peon-ping.packages."${pkgs.stdenv.hostPlatform.system}".default ];
 
      # Set Virtio audio card to pro-audio profile for output
      systemd.user.services.set-audio-profile = {
@@ -152,7 +152,7 @@
        Service = {
          Type = "oneshot";
          RemainAfterExit = true;
-         ExecStart = "${pkgs.lib.getExe pkgs.pulseaudio} set-card-profile alsa_card.pci-0000_00_0a.0 pro-audio";
+         ExecStart = "${pkgs.lib.getExe' pkgs.pulseaudio "pactl"} set-card-profile alsa_card.pci-0000_00_0a.0 pro-audio";
        };
        Install.WantedBy = [ "graphical-session.target" ];
      };
