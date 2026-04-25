@@ -182,6 +182,10 @@ in
             matcher = "";
             hooks = [{ type = "command"; command = "${config.home.homeDirectory}/.claude/hooks/peon-ping/peon.sh"; timeout = 10; async = true; }];
           }];
+          SubagentStop = [{
+            matcher = "";
+            hooks = [{ type = "command"; command = "${config.home.homeDirectory}/.claude/hooks/peon-ping/peon.sh"; timeout = 10; async = true; }];
+          }];
           UserPromptSubmit = [
             {
               matcher = "";
