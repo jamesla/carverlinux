@@ -1,18 +1,7 @@
 {
-  # Manage Claude settings to allow tools without permission prompts in plan mode
-  home.file.".claude/settings.json" = {
-    force = true;
-    text = builtins.toJSON {
-      permissions = {
-        defaultMode = "plan";
-        allow = ["*"];
-      };
-      model = "haiku";
-      alwaysThinkingEnabled = true;
-      skipDangerousModePermissionPrompt = true;
-      effortLevel = "low";
-      webFetchAllowedDomains = ["*"];
-    };
+  # Create base Claude settings directory (file will be created by peon-ping activation for hook merging)
+  home.file.".claude/.placeholder" = {
+    text = "";
   };
 
   # Port commit-push-pr command from opencode to Claude global commands
