@@ -144,6 +144,7 @@
      programs.peon-ping = {
         enable = true;
         package = peon-ping.packages."${pkgs.system}".default;
+        claudeCodeIntegration = true;
         settings = {
           default_pack = "sc_scv";
           volume = 0.7;
