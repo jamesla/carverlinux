@@ -141,32 +141,7 @@
      programs.tmux = import ./packages/tmux.nix { inherit config pkgs; };
      programs.neovim = import ./packages/neovim.nix { inherit config pkgs; };
      programs.ghostty = import ./packages/ghostty.nix { inherit pkgs; };
-     programs.peon-ping = {
-        enable = true;
-        package = peon-ping.packages."${pkgs.system}".default;
-        claudeCodeIntegration = true;
-        settings = {
-          default_pack = "sc_scv";
-          volume = 0.7;
-          enabled = true;
-          desktop_notifications = true;
-          suppress_subagent_complete = true;
-          #annoyed_threshold = 1;
-          #annoyed_window_seconds = 10;
-          categories = {
-            "session.start" = true;
-            "session.end" = true;
-            "task.complete" = true;
-            "task.acknowledge" = true;
-            "task.error" = true;
-            "task.progress" = true;
-            "input.required" = true;
-            "resource.limit" = true;
-            "user.spam" = true;
-          };
-        };
-        installPacks = [ "sc_scv" ];
-     };
+     programs.peon-ping = import ./packages/peon-ping.nix { inherit pkgs peon-ping; };
      home.packages = [ peon-ping.packages."${pkgs.system}".default ];
 
      # Set Virtio audio card to pro-audio profile for output
