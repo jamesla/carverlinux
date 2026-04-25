@@ -76,23 +76,8 @@
   programs.ssh.startAgent = true;
 
   virtualisation.docker.enable = true;
-
-  # Mount binfmt_misc filesystem (required for emulation)
-  boot.binfmt.emulatedSystems = [ ];
-
-  # Enable multi-architecture container support using tonistiigi/binfmt
-  # This registers static QEMU binaries for x86_64 and other architectures
-  systemd.services.docker-binfmt = {
-    description = "Register binfmt interpreters for multi-arch Docker support";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "docker.service" "proc-sys-fs-binfmt_misc.mount" ];
-    requires = [ "docker.service" "proc-sys-fs-binfmt_misc.mount" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = "${pkgs.docker}/bin/docker run --privileged --rm tonistiigi/binfmt --install all";
-    };
-  };
+  boot.binfmt.emulatedSystems = [ "x86_64-linux" ];
+  boot.binfmt.preferStaticEmulators = true;
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [

@@ -27,10 +27,26 @@
       });
     };
 
+    # Fix nettle GOT overflow on aarch64 static builds (nixpkgs#392673)
+    nettleStaticOverlay = final: prev: {
+      nettle = prev.nettle.overrideAttrs (nixpkgs.lib.optionalAttrs final.stdenv.hostPlatform.isStatic {
+        CCPIC = "-fPIC";
+      });
+    };
+
+    # Fix qemu-user-static segfault on aarch64 (nixpkgs#366902)
+    qemuStaticOverlay = final: prev: {
+      qemu-user = prev.qemu-user.overrideAttrs (old:
+        nixpkgs.lib.optionalAttrs final.stdenv.hostPlatform.isStatic {
+          configureFlags = old.configureFlags ++ [ "--disable-pie" ];
+        }
+      );
+    };
+
     pkgs = import nixpkgs {
       inherit system;
       config.allowUnfree = true;
-      overlays = [ lklMemoryOverlay ];
+      overlays = [ lklMemoryOverlay nettleStaticOverlay qemuStaticOverlay ];
     };
   in {
     nixosConfigurations = {
