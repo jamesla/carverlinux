@@ -12,12 +12,12 @@
     #annoyed_threshold = 1;
     #annoyed_window_seconds = 10;
     categories = {
-      "session.start" = true;
+      "session.start" = false;
       "session.end" = true;
       "task.complete" = true;
-      "task.acknowledge" = true;
+      "task.acknowledge" = false;
       "task.error" = true;
-      "task.progress" = true;
+      "task.progress" = false;
       "input.required" = true;
       "resource.limit" = true;
       "user.spam" = true;
