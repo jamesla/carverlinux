@@ -134,7 +134,7 @@
      imports = [
        ./packages/opencode.nix
        ./packages/claude-commands.nix
-       peon-ping.homeManagerModules.default
+       ./packages/peon-ping-fixed.nix
      ];
      programs.git = import ./packages/git.nix;
      programs.chromium = import ./packages/chromium.nix;
