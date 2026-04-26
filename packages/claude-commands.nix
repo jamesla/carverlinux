@@ -7,10 +7,10 @@
   # Port commit-push-pr command from opencode to Claude global commands
   home.file.".claude/commands/commit-push-pr.md".text = ''
     **Workflow (No Merging Allowed):**
-    1. Check for unstaged changes in repository
-    2. If on master/main, create a feature branch with conventional commit prefix and name of what the PR does.
-    3. Stage and commit changes with conventional commit message format
-    4. Push branch and create/open PR (NEVER merge)
+    1. Add all unstaged changes to git
+    2. Commit with a relevant commit message (using conventional commits)
+    3. Push changes
+    4. Open a pull request
 
     **Conventional Commit Standards:**
     - Branch names: `feat/description`, `fix/description`, `docs/description`, etc.
@@ -18,7 +18,6 @@
     - Types: feat, fix, docs, style, refactor, test, chore, etc.
 
     **Implementation:**
-    - Auto-detect branch prefix from changed file types
     - Generate commit message from change analysis
     - Create PR with conventional commit title
     - Strict no-merge policy (assumes this is configured elsewhere)

@@ -11,9 +11,9 @@
     core = {
       autocrlf = "false";
     };
-  };
 
-  extraConfig = {
-    pull.rebase = true;
+    pull = {
+      rebase = true;
+    };
   };
 }
