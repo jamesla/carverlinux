@@ -25,3 +25,4 @@
 ## Important
 
 - Never git commit or push
+- Do not create git branches

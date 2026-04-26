@@ -15,7 +15,7 @@
       "session.start" = false;
       "session.end" = true;
       "task.complete" = true;
-      "task.acknowledge" = false;
+      "task.acknowledge" = true;
       "task.error" = true;
       "task.progress" = false;
       "input.required" = true;
