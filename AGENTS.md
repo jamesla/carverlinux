@@ -26,3 +26,7 @@
 
 - Never git commit or push
 - Do not create git branches
+- Don't make changes to the system directly. Make them to the nixos configuration so that the change is made for all applies going forward.
+
+## Testing
+- Test with make rebuild and ensure it completes succesfully
