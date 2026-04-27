@@ -12,7 +12,7 @@
     #annoyed_threshold = 1;
     #annoyed_window_seconds = 10;
     categories = {
-      "session.start" = false;
+      "session.start" = true;
       "session.end" = true;
       "task.complete" = true;
       "task.acknowledge" = true;
