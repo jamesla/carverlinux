@@ -34,23 +34,6 @@
   services.pipewire.alsa.enable = true;
   services.pulseaudio.enable = false;
 
-  # Set default ALSA device to hw:0,1 (Virtio audio device)
-  environment.etc."asound.conf".text = ''
-    defaults.pcm.card 0
-    defaults.pcm.device 1
-    defaults.ctl.card 0
-
-    pcm.!default {
-      type plug
-      slave.pcm "hw:0,1"
-    }
-
-    ctl.!default {
-      type hw
-      card 0
-    }
-  '';
-
   services.xserver = {
     autoRepeatDelay = 150;
     autoRepeatInterval = 50;
@@ -143,19 +126,6 @@
      programs.ghostty = import ./packages/ghostty.nix { inherit pkgs; };
      programs.peon-ping = import ./packages/peon-ping.nix { inherit pkgs peon-ping; };
      home.packages = [ peon-ping.packages."${pkgs.stdenv.hostPlatform.system}".default ];
-
-     # Set Virtio audio card to pro-audio profile for output
-     systemd.user.services.set-audio-profile = {
-       Unit.Description = "Set PipeWire audio profile for Virtio card";
-       Unit.After = [ "pipewire.service" ];
-       Unit.PartOf = [ "graphical-session.target" ];
-       Service = {
-         Type = "oneshot";
-         RemainAfterExit = true;
-         ExecStart = "${pkgs.lib.getExe' pkgs.pulseaudio "pactl"} set-card-profile alsa_card.pci-0000_00_0a.0 pro-audio";
-       };
-       Install.WantedBy = [ "graphical-session.target" ];
-     };
 
      home.stateVersion = "25.11";
    };
