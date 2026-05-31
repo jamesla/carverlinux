@@ -42,7 +42,7 @@
     fsType = "vfat";
   };
 
-  fileSystems."/carverlinux" = {
+  fileSystems."/mnt/carverlinux-raw" = {
     device = "share";
     fsType = "9p";
     options = [
@@ -51,6 +51,16 @@
       "msize=104857600"
       "access=any"
       "nofail"
+    ];
+  };
+
+  fileSystems."/carverlinux" = {
+    device = "/mnt/carverlinux-raw";
+    fsType = "fuse.bindfs";
+    options = [
+      "map=501/1000:@26/@100"
+      "nofail"
+      "x-systemd.requires-mounts-for=/mnt/carverlinux-raw"
     ];
   };
 

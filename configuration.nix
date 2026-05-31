@@ -17,6 +17,10 @@
 
   users.users.james = {
     isNormalUser = true;
+    group = "users";
+    home = "/home/james";
+    createHome = true;
+    homeMode = "700";
     extraGroups = [ "wheel" "docker" "vboxusers" "video" "audio" ];
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [
@@ -124,6 +128,7 @@
     pkgs.ffmpeg
     (pkgs.callPackage ./packages/st { })
     (unstable.callPackage ./packages/claude.nix { })
+    pkgs.bindfs
   ];
 
   fonts.packages = with pkgs; [
@@ -158,9 +163,9 @@
      programs.peon-ping = import ./packages/peon-ping.nix { inherit pkgs peon-ping; };
      home.packages = [ peon-ping.packages."${pkgs.stdenv.hostPlatform.system}".default ];
 
-     home.stateVersion = "25.11";
+     home.stateVersion = "26.05";
    };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  system.stateVersion = "25.11";
+  system.stateVersion = "26.05";
 }

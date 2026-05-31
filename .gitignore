@@ -4,3 +4,4 @@ result
 *.fd
 keys/*
 nixos.img
+nixos.qcow2
