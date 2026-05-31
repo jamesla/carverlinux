@@ -19,7 +19,7 @@
     "virtio_rng"
   ];
 
-  boot.kernelModules = [ ];
+  boot.kernelModules = [ "virtio_snd" ];
   boot.extraModulePackages = [ ];
   boot.loader.systemd-boot.enable = true;
 
