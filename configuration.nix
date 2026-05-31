@@ -151,8 +151,6 @@
 
    home-manager.users.james = {
      imports = [
-       ./packages/opencode.nix
-       ./packages/claude-commands.nix
        ./packages/peon-ping-fixed.nix
      ];
      programs.git = import ./packages/git.nix;
