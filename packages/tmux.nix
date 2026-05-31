@@ -15,6 +15,11 @@
     }
   ];
   extraConfig = ''
+    # st-256color terminfo omits AX, so tmux can't emit ESC[39m/ESC[49m to
+    # reset to default fg/bg; dracula's status-bar greens then leak into pane text.
+    set -ga terminal-overrides ",st-256color:AX"
+    set -as terminal-features ",st-256color:RGB"
+
     set-option -g pane-active-border-style "bg=colour208"
     set-option -ag pane-active-border-style "fg=black"
     bind down resize-pane -D 40

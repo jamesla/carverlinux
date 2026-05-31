@@ -43,8 +43,7 @@
     exportConfiguration = true;
     dpi = 254;
     deviceSection = ''
-      Driver "virtio"
-      Option "HWCursor" "true"
+      Driver "modesetting"
       Option "AccelMethod" "glamor"
     '';
   };

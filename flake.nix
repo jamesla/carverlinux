@@ -1,7 +1,7 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
-    home-manager.url = "github:nix-community/home-manager/release-25.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
+    home-manager.url = "github:nix-community/home-manager/release-26.05";
     unstablepkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     llm-agents.url = "github:numtide/llm-agents.nix";
     peon-ping.url = "github:PeonPing/peon-ping";

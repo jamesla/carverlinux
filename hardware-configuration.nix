@@ -23,7 +23,7 @@
   boot.extraModulePackages = [ ];
   boot.loader.systemd-boot.enable = true;
 
-  services.xserver.videoDrivers = [ "virtio" ];
+  services.xserver.videoDrivers = [ "modesetting" ];
 
   hardware.graphics = {
     enable = true;

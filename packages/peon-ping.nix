@@ -12,15 +12,15 @@
     #annoyed_threshold = 1;
     #annoyed_window_seconds = 10;
     categories = {
-      "session.start" = true;
-      "session.end" = true;
+      "session.start" = false;
+      "session.end" = false;
       "task.complete" = true;
       "task.acknowledge" = true;
-      "task.error" = true;
+      "task.error" = false;
       "task.progress" = false;
-      "input.required" = true;
+      "input.required" = false;
       "resource.limit" = true;
-      "user.spam" = true;
+      "user.spam" = false;
     };
   };
   installPacks = [ "sc_scv" ];
