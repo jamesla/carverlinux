@@ -28,28 +28,18 @@
     {
       plugin = pkgs.vimPlugins.nvim-lspconfig;
       config = ''
-        lua <<EOF
-
-        -- Setup language servers.
         local lspconfig = require('lspconfig')
 
-        -- Global mappings.
-        -- See `:help vim.diagnostic.*` for documentation on any of the below functions
         vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
         vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
         vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
         vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
 
-        -- Use LspAttach autocommand to only map the following keys
-        -- after the language server attaches to the current buffer
         vim.api.nvim_create_autocmd('LspAttach', {
           group = vim.api.nvim_create_augroup('UserLspConfig', {}),
           callback = function(ev)
-            -- Enable completion triggered by <c-x><c-o>
             vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
-            -- Buffer local mappings.
-            -- See `:help vim.lsp.*` for documentation on any of the below functions
             local opts = { buffer = ev.buf }
             vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
             vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
@@ -70,69 +60,76 @@
             end, opts)
           end,
         })
-
-        EOF
       '';
     }
     pkgs.vimPlugins.nerdtree
     {
       plugin = pkgs.vimPlugins.vim-tmux-navigator;
       config = ''
-        " bind nerdtree
-        nnoremap <C-n> :NERDTree<CR>
+        vim.keymap.set('n', '<C-n>', ':NERDTree<CR>')
 
-        " Start NERDTree and put the cursor back in the other window.
-        autocmd VimEnter * NERDTree | wincmd p
+        vim.api.nvim_create_autocmd('VimEnter', {
+          callback = function()
+            vim.cmd('NERDTree | wincmd p')
+          end,
+        })
 
-        " Exit Vim if NERDTree is the only window remaining in the only tab.
-        autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+        vim.api.nvim_create_autocmd('BufEnter', {
+          callback = function()
+            if vim.fn.tabpagenr('$') == 1 and vim.fn.winnr('$') == 1 then
+              local nerdtree = vim.b.NERDTree
+              if nerdtree ~= nil and nerdtree.isTabTree() then
+                vim.cmd('quit')
+              end
+            end
+          end,
+        })
       '';
     }
     pkgs.vimPlugins.vim-gitgutter
     {
       plugin = pkgs.vimPlugins.vim-gitgutter;
       config = ''
-        set updatetime=100
+        vim.opt.updatetime = 100
       '';
     }
     pkgs.vimPlugins.mason-nvim
     {
       plugin = pkgs.vimPlugins.mason-nvim;
       config = ''
-        lua require("mason").setup()
+        require("mason").setup()
       '';
     }
     pkgs.vimPlugins.mason-lspconfig-nvim
     {
       plugin = pkgs.vimPlugins.mason-lspconfig-nvim;
       config = ''
-        lua <<EOF
-          require("mason-lspconfig").setup({
-            ensure_installed = { "ts_ls", "terraformls", "eslint" }
-          })
-        EOF
+        require("mason-lspconfig").setup({
+          ensure_installed = { "ts_ls", "terraformls", "eslint" }
+        })
       '';
     }
     pkgs.vimPlugins.nvim-lspconfig
     {
       plugin = pkgs.vimPlugins.nvim-lspconfig;
       config = ''
-        lua require('lspconfig').ts_ls.setup {}
-        lua require('lspconfig').eslint.setup{}
-        lua require('lspconfig').terraformls.setup {}
+        local lspconfig = require('lspconfig')
+        lspconfig.ts_ls.setup {}
+        lspconfig.eslint.setup {}
+        lspconfig.terraformls.setup {}
       '';
     }
     #{
     #  plugin = pkgs.vimPlugins.hardtime-nvim;
     #  config = ''
-    #    lua require("hardtime").setup()
+    #    require("hardtime").setup()
     #  '';
     #}
     pkgs.vimPlugins.neoscroll-nvim
     {
       plugin = pkgs.vimPlugins.neoscroll-nvim;
       config = ''
-        lua require('neoscroll').setup()
+        require('neoscroll').setup()
       '';
     }
     pkgs.vimPlugins.vim-sensible
@@ -142,10 +139,10 @@
     {
       plugin = pkgs.vimPlugins.telescope-nvim;
       config = ''
-        nnoremap <leader>ff :Telescope find_files<CR>
-        nnoremap <leader>fg :Telescope live_grep<CR>
-        nnoremap <leader>fb :Telescope buffers<CR>
-        nnoremap <leader>fh :Telescope help_tags<CR>
+        vim.keymap.set('n', '<leader>ff', ':Telescope find_files<CR>')
+        vim.keymap.set('n', '<leader>fg', ':Telescope live_grep<CR>')
+        vim.keymap.set('n', '<leader>fb', ':Telescope buffers<CR>')
+        vim.keymap.set('n', '<leader>fh', ':Telescope help_tags<CR>')
       '';
     }
   ];
