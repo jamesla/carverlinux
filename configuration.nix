@@ -29,10 +29,40 @@
   services.spice-vdagentd.enable = true;
   services.spice-autorandr.enable = true;
 
-  # Audio: PipeWire with ALSA backend
-  services.pipewire.enable = true;
-  services.pipewire.alsa.enable = true;
+  # Audio: PipeWire with ALSA + PulseAudio shim
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    wireplumber.enable = true;
+  };
   services.pulseaudio.enable = false;
+
+  # WirePlumber persists muted state in ~/.local/state/wireplumber/, which
+  # survives reboots. This oneshot forces the default sink/source unmuted at
+  # login so audio never gets stuck silent across rebuilds.
+  systemd.user.services.unmute-audio = {
+    description = "Unmute default PipeWire sink and source at login";
+    wantedBy = [ "default.target" ];
+    after = [ "pipewire.service" "wireplumber.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "unmute-audio" ''
+        for i in 1 2 3 4 5; do
+          if ${pkgs.wireplumber}/bin/wpctl status >/dev/null 2>&1; then
+            break
+          fi
+          sleep 1
+        done
+        ${pkgs.wireplumber}/bin/wpctl set-mute   @DEFAULT_AUDIO_SINK@   0 || true
+        ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@   0.6 || true
+        ${pkgs.wireplumber}/bin/wpctl set-mute   @DEFAULT_AUDIO_SOURCE@ 0 || true
+        ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 0.6 || true
+      '';
+    };
+  };
 
   services.xserver = {
     autoRepeatDelay = 150;
@@ -89,6 +119,8 @@
     pkgs.killall
     pkgs.mesa-demos
     pkgs.alsa-utils
+    pkgs.pavucontrol
+    pkgs.pamixer
     pkgs.ffmpeg
     (pkgs.callPackage ./packages/st { })
     (unstable.callPackage ./packages/claude.nix { })
