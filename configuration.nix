@@ -54,16 +54,19 @@
     serviceConfig = {
       Type = "oneshot";
       ExecStart = pkgs.writeShellScript "unmute-audio" ''
-        for i in 1 2 3 4 5; do
-          if ${pkgs.wireplumber}/bin/wpctl status >/dev/null 2>&1; then
+        # wpctl status succeeds before WirePlumber has selected a default sink,
+        # which makes @DEFAULT_AUDIO_SINK@ resolve to -1. Poll wpctl inspect
+        # instead so we only proceed once a real default exists.
+        for i in $(seq 1 20); do
+          if ${pkgs.wireplumber}/bin/wpctl inspect @DEFAULT_AUDIO_SINK@ >/dev/null 2>&1; then
             break
           fi
-          sleep 1
+          sleep 0.5
         done
-        ${pkgs.wireplumber}/bin/wpctl set-mute   @DEFAULT_AUDIO_SINK@   0 || true
-        ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@   0.6 || true
-        ${pkgs.wireplumber}/bin/wpctl set-mute   @DEFAULT_AUDIO_SOURCE@ 0 || true
-        ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 0.6 || true
+        ${pkgs.wireplumber}/bin/wpctl set-mute   @DEFAULT_AUDIO_SINK@   0
+        ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@   0.6
+        ${pkgs.wireplumber}/bin/wpctl set-mute   @DEFAULT_AUDIO_SOURCE@ 0
+        ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 0.6
       '';
     };
   };
