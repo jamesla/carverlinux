@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, unstable, home-manager, llm-agents, peon-ping, ... }:
+{ config, pkgs, unstable, home-manager, llm-agents, peon-ping, workmux, ... }:
 
 {
   imports = [
@@ -155,6 +155,7 @@
    home-manager.users.james = {
      imports = [
        ./packages/peon-ping-fixed.nix
+       (import ./packages/workmux.nix { inherit pkgs workmux; })
      ];
      programs.git = import ./packages/git.nix;
      programs.chromium = import ./packages/chromium.nix;
