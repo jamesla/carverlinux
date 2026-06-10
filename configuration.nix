@@ -41,35 +41,19 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     wireplumber.enable = true;
-  };
-  services.pulseaudio.enable = false;
-
-  # WirePlumber persists muted state in ~/.local/state/wireplumber/, which
-  # survives reboots. This oneshot forces the default sink/source unmuted at
-  # login so audio never gets stuck silent across rebuilds.
-  systemd.user.services.unmute-audio = {
-    description = "Unmute default PipeWire sink and source at login";
-    wantedBy = [ "default.target" ];
-    after = [ "pipewire.service" "wireplumber.service" ];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = pkgs.writeShellScript "unmute-audio" ''
-        # wpctl status succeeds before WirePlumber has selected a default sink,
-        # which makes @DEFAULT_AUDIO_SINK@ resolve to -1. Poll wpctl inspect
-        # instead so we only proceed once a real default exists.
-        for i in $(seq 1 20); do
-          if ${pkgs.wireplumber}/bin/wpctl inspect @DEFAULT_AUDIO_SINK@ >/dev/null 2>&1; then
-            break
-          fi
-          sleep 0.5
-        done
-        ${pkgs.wireplumber}/bin/wpctl set-mute   @DEFAULT_AUDIO_SINK@   0
-        ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@   0.6
-        ${pkgs.wireplumber}/bin/wpctl set-mute   @DEFAULT_AUDIO_SOURCE@ 0
-        ${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SOURCE@ 0.6
-      '';
+    # WirePlumber otherwise remembers and restores per-device route state from
+    # ~/.local/state/wireplumber/, and the UTM VirtIO sink/source get stuck
+    # restored as muted/zero-volume across reboots. Disable route restoration
+    # and pin sane defaults so audio always comes up unmuted.
+    wireplumber.extraConfig."51-virtio-audio" = {
+      "wireplumber.settings" = {
+        "device.restore-routes" = false;
+        "device.routes.default-sink-volume" = 0.6;
+        "device.routes.default-source-volume" = 0.6;
+      };
     };
   };
+  services.pulseaudio.enable = false;
 
   services.xserver = {
     autoRepeatDelay = 150;
