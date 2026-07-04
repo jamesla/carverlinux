@@ -13,6 +13,7 @@ in
   xdg.configFile."workmux/config.yaml".text = ''
     merge_strategy: rebase
     agent: claude
+    nerdfont: true
     panes:
       - command: nvim
       - command: <agent>
