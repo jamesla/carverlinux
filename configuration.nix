@@ -176,6 +176,16 @@
      home.stateVersion = "26.05";
    };
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings = {
+    experimental-features = [ "nix-command" "flakes" ];
+    # Use all 8 vCPUs for parallel builds (max-jobs) and per-build compilation (cores).
+    max-jobs = "auto";
+    cores = 0;
+    # Keep build outputs/derivations so back-to-back `make rebuild`s don't refetch or
+    # rebuild dev dependencies.
+    keep-outputs = true;
+    keep-derivations = true;
+    builders-use-substitutes = true;
+  };
   system.stateVersion = "26.05";
 }
