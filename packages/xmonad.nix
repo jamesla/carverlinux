@@ -8,6 +8,7 @@
   ];
   config = ''
     import XMonad
+    import XMonad.Hooks.EwmhDesktops
     import qualified XMonad.StackSet as W
     import qualified XMonad.Util.CustomKeys as C
     import qualified Data.Map as M
@@ -17,7 +18,7 @@
     import XMonad.Util.SpawnOnce
 
     main :: IO ()
-    main = xmonad $ defaultConfig
+    main = xmonad $ ewmhFullscreen $ ewmh $ defaultConfig
         { borderWidth        = 0
         , terminal         = "st"
         , normalBorderColor  = "#000000"

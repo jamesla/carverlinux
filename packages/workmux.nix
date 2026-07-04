@@ -14,8 +14,11 @@ in
     merge_strategy: rebase
     agent: claude
     panes:
+      - command: nvim
       - command: <agent>
+        split: horizontal
+        percentage: 50
         focus: true
-      - split: horizontal
+      - split: vertical
   '';
 }
