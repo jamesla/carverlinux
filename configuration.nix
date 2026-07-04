@@ -18,6 +18,26 @@
   # and go with containers made dhcpcd SIGSEGV in a crash-loop.
   networking.dhcpcd.denyInterfaces = [ "veth*" "docker*" "br-*" "vboxnet*" ];
 
+  # Compressed in-RAM swap: cheap headroom so a memory spike can't hard-freeze the VM.
+  # memoryPercent = 100 gives more compressed swap before real pressure; zstd is default.
+  zramSwap.enable = true;
+  zramSwap.memoryPercent = 100;
+
+  # Run /tmp in RAM so temp-heavy compiles and tool scratch avoid the virtio disk.
+  # Overflow spills to zram swap, so a large build can't hard-fail; point TMPDIR at
+  # a disk path for the rare multi-GB nix image build if it ever exhausts this.
+  boot.tmp.useTmpfs = true;
+  boot.tmp.tmpfsSize = "60%";
+
+  boot.kernel.sysctl = {
+    # With zram, swapping to RAM is cheaper than evicting page cache, so bias hard
+    # toward keeping hot file cache resident for better interactive responsiveness.
+    "vm.swappiness" = 180;
+    # Writeback in small frequent batches instead of large stalls -> fewer UI hitches.
+    "vm.dirty_background_ratio" = 5;
+    "vm.dirty_ratio" = 15;
+  };
+
   users.users.james = {
     isNormalUser = true;
     group = "users";
