@@ -80,7 +80,7 @@
 
   services.xserver = {
     autoRepeatDelay = 150;
-    autoRepeatInterval = 50;
+    autoRepeatInterval = 30;
     xkb.options = "caps:escape, altwin:ctrl_win";
     enable = true;
     windowManager.xmonad = import ./packages/xmonad.nix;
@@ -149,8 +149,6 @@
   environment.sessionVariables = {
     TERMINAL = "st";
     EDITOR = "nvim";
-    LIBGL_ALWAYS_SOFTWARE = "true";
-    GALLIUM_DRIVER = "llvmpipe";
   };
 
   programs.fish = import ./packages/fish.nix;
