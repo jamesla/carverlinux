@@ -242,8 +242,12 @@ else:
         "alwaysThinkingEnabled": True,
         "skipDangerousModePermissionPrompt": True,
         "effortLevel": "low",
-        "webFetchAllowedDomains": ["*"]
+        "webFetchAllowedDomains": ["*"],
+        "remoteControlAtStartup": True
     }
+
+# Always enable Claude Code Remote Control at startup (phone/web session access)
+settings["remoteControlAtStartup"] = True
 
 incoming = json.loads(hooks_path.read_text())["hooks"]
 hooks = settings.setdefault("hooks", {})
