@@ -10,12 +10,17 @@
     {
       plugin = tmuxPlugins.continuum;
       extraConfig = ''
-        set -g @continuum-save-interval '1';
+        set -g @continuum-save-interval '60';
         set -g @continuum-restore 'on';
       '';
     }
   ];
   extraConfig = ''
+    # Latency/redraw tuning: the tmux server is single-threaded, so keep per-event
+    # work low when many panes stream output (e.g. several Claude Code TUIs).
+    set -sg escape-time 0          # remove ESC input delay
+    set -g status-interval 5       # refresh dracula status every 5s, not every 1s
+
     # st-256color terminfo omits AX, so tmux can't emit ESC[39m/ESC[49m to
     # reset to default fg/bg; dracula's status-bar greens then leak into pane text.
     set -ga terminal-overrides ",st-256color:AX"
