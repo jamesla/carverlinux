@@ -11,6 +11,7 @@
       plugin = tmuxPlugins.continuum;
       extraConfig = ''
         set -g @continuum-save-interval '1';
+        set -g @continuum-restore 'on';
       '';
     }
   ];
@@ -39,6 +40,5 @@
     bind 'c' run-shell "tmux new-window -c '~'; tmux split-window -h -c '~'; tmux select-pane -R"
 
     run-shell ${pkgs.tmuxPlugins.yank}/share/tmux-plugins/yank/yank.tmux
-    set-hook -g session-created "run-shell ${pkgs.tmuxPlugins.resurrect}/share/tmux-plugins/resurrect/scripts/restore.sh"
   '';
 }
