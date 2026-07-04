@@ -14,6 +14,9 @@ in
     merge_strategy: rebase
     agent: claude
     nerdfont: true
+    files:
+      copy:
+        - .env
     panes:
       - command: nvim
       - command: <agent>
