@@ -22,6 +22,8 @@
   boot.kernelModules = [ "virtio_snd" ];
   boot.extraModulePackages = [ ];
   boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.configurationLimit = 10;
+  boot.loader.timeout = 1;
 
   services.xserver.videoDrivers = [ "modesetting" ];
 
@@ -35,6 +37,7 @@
   fileSystems."/" = {
     device = "/dev/disk/by-label/nixos";
     fsType = "ext4";
+    options = [ "noatime" ];
   };
 
   fileSystems."/boot" = {
