@@ -14,6 +14,9 @@
 
   time.timeZone = "Pacific/Auckland";
   networking.useDHCP = true;
+  # Keep dhcpcd off Docker/VirtualBox virtual interfaces; managing veths that come
+  # and go with containers made dhcpcd SIGSEGV in a crash-loop.
+  networking.dhcpcd.denyInterfaces = [ "veth*" "docker*" "br-*" "vboxnet*" ];
 
   users.users.james = {
     isNormalUser = true;
