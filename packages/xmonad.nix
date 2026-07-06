@@ -27,7 +27,10 @@
             layoutHook def
         , startupHook = do
           spawnOnce "spice-vdagent"
-          spawn "st tmux"
+          spawnOnce "tmux start-server; sleep 0.5; st -e tmux new-session -A -s main"
         }
+        `additionalKeys`
+        [ ((mod1Mask .|. shiftMask, xK_Return), spawn "st -e tmux new-session -A -s main")
+        ]
   '';
 }
