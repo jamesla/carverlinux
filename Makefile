@@ -12,7 +12,7 @@ build: ## build system (from MacOS)
 
 .PHONY: rebuild
 rebuild: ## rebuild system (from NixOS)
-	@sudo nixos-rebuild switch --flake ".#default"
+	@sudo nixos-rebuild switch --flake "path:.#default"
 
 .PHONY: version
 version: ## gets current version
