@@ -157,6 +157,7 @@
   services.openssh.enable = true;
   programs.ssh.askPassword = "";
 
+   home-manager.backupFileExtension = "backup";
    home-manager.users.james = {
      imports = [
        ./packages/peon-ping-fixed.nix
