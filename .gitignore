@@ -5,3 +5,4 @@ result
 keys/*
 nixos.img
 nixos.qcow2
+/.env
