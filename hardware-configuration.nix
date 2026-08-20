@@ -53,6 +53,7 @@
       "version=9p2000.L"
       "msize=104857600"
       "access=any"
+      "cache=loose"
       "nofail"
     ];
   };

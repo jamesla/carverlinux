@@ -193,6 +193,8 @@ in
     '';
   };
 
+  systemd.tmpfiles.rules = [];
+
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
     unstable.opencode
