@@ -139,6 +139,27 @@
         "type": "github"
       }
     },
+    "multica-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1789173416,
+        "narHash": "sha256-h5sPx+3mYjLrVTM9yaU0pzUoAl0KSgl7XRbkdIQlsn4=",
+        "owner": "jamesla",
+        "repo": "multica-nix",
+        "rev": "5b0c7f984e900358f14768b5f68be69fa59c5460",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jamesla",
+        "ref": "1.0.0",
+        "repo": "multica-nix",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1780453794,
@@ -242,6 +263,7 @@
       "inputs": {
         "home-manager": "home-manager",
         "llm-agents": "llm-agents",
+        "multica-nix": "multica-nix",
         "nixpkgs": "nixpkgs_3",
         "peon-ping": "peon-ping",
         "unstablepkgs": "unstablepkgs",

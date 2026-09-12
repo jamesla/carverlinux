@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, unstable, home-manager, llm-agents, peon-ping, workmux, ... }:
+{ config, pkgs, unstable, home-manager, llm-agents, peon-ping, workmux, multica-nix, ... }:
 
 let
   multica = pkgs.callPackage ./packages/multica.nix { };
@@ -10,6 +10,7 @@ in
 {
   imports = [
     home-manager.nixosModules.home-manager
+    ./packages/multica
   ];
 
   networking.hostName = "carverlinux";
@@ -193,8 +194,6 @@ in
     '';
   };
 
-  systemd.tmpfiles.rules = [];
-
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
     unstable.opencode
@@ -254,6 +253,7 @@ in
      imports = [
        ./packages/peon-ping-fixed.nix
        (import ./packages/workmux.nix { inherit pkgs workmux; })
+       ./packages/opencode.nix
      ];
      programs.git = import ./packages/git.nix;
      programs.ssh = import ./packages/ssh.nix;
