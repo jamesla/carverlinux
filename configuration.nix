@@ -109,83 +109,12 @@ in
   boot.binfmt.emulatedSystems = [ "x86_64-linux" ];
   boot.binfmt.preferStaticEmulators = true;
 
-  # Multica self-hosted server stack (github.com/multica-ai/multica), run declaratively
-  # as containers instead of the vendor's docker-compose.selfhost.yml. Postgres + Go
-  # backend (:8080) + Next.js web (:3000), all bound to loopback. Secrets come from
-  # /etc/multica/multica.env, installed from the repo .env by multica-secrets below.
-  virtualisation.oci-containers = {
-    backend = "docker";
-    containers = {
-      multica-postgres = {
-        image = "pgvector/pgvector:pg17";
-        environment = {
-          POSTGRES_DB = "multica";
-          POSTGRES_USER = "multica";
-        };
-        environmentFiles = [ "/etc/multica/multica.env" ]; # POSTGRES_PASSWORD
-        volumes = [ "multica-pgdata:/var/lib/postgresql/data" ];
-        extraOptions = [ "--network=multica" ];
-      };
-      multica-backend = {
-        image = "ghcr.io/multica-ai/multica-backend:latest";
-        dependsOn = [ "multica-postgres" ];
-        ports = [ "0.0.0.0:8080:8080" ];
-        environment = {
-          APP_ENV = "production";
-          FRONTEND_ORIGIN = "http://192.168.1.87:3000";
-          CORS_ALLOWED_ORIGINS = "http://localhost:3000,http://192.168.1.87:3000";
-        };
-        environmentFiles = [ "/etc/multica/multica.env" ]; # DATABASE_URL, JWT_SECRET
-        volumes = [ "multica-uploads:/app/data/uploads" ];
-        extraOptions = [ "--network=multica" ];
-      };
-      multica-web = {
-        image = "ghcr.io/multica-ai/multica-web:latest";
-        dependsOn = [ "multica-backend" ];
-        ports = [ "0.0.0.0:3000:3000" ];
-        environment = {
-          NEXT_PUBLIC_API_URL = "http://192.168.1.87:8080";
-          NEXT_PUBLIC_WS_URL = "ws://192.168.1.87:8080";
-          # Server-side proxy target (SSR + /api,/auth proxy used by the desktop app).
-          # Defaults to http://backend:8080 in the image, which does not resolve on our
-          # network; the backend container is named multica-backend.
-          REMOTE_API_URL = "http://multica-backend:8080";
-        };
-        extraOptions = [ "--network=multica" ];
-      };
-    };
-  };
-
-  # oci-containers does not create networks; the backend needs a user-defined network to
-  # resolve multica-postgres by name (the default bridge has no DNS).
-  systemd.services.init-multica-network = {
-    description = "Create the multica docker network";
-    after = [ "docker.service" ];
-    requires = [ "docker.service" ];
-    wantedBy = [ "multi-user.target" ];
-    before = [
-      "docker-multica-postgres.service"
-      "docker-multica-backend.service"
-      "docker-multica-web.service"
-    ];
-    serviceConfig.Type = "oneshot";
-    serviceConfig.RemainAfterExit = true;
-    script = ''
-      ${pkgs.docker}/bin/docker network inspect multica >/dev/null 2>&1 \
-        || ${pkgs.docker}/bin/docker network create multica
-    '';
-  };
 
   # Install secrets from the repo .env (gitignored) into a root-only file, keeping them
   # out of the world-readable nix store.
   systemd.services.multica-secrets = {
     description = "Install multica secrets from repo .env";
     wantedBy = [ "multi-user.target" ];
-    before = [
-      "docker-multica-postgres.service"
-      "docker-multica-backend.service"
-      "docker-multica-web.service"
-    ];
     serviceConfig.Type = "oneshot";
     serviceConfig.RemainAfterExit = true;
     script = ''
@@ -226,6 +155,7 @@ in
     pkgs.pamixer
     pkgs.ffmpeg
     pkgs.firefox
+    pkgs.obsidian
     (pkgs.callPackage ./packages/st { })
     (unstable.callPackage ./packages/claude.nix { })
     multica
@@ -281,6 +211,7 @@ in
          Type = "simple";
          Environment = [
            "MULTICA_WORKSPACES_ROOT=%h/multica_workspaces"
+           "OBSIDIAN_VAULT=/carverlinux/knowledge"
            # Ensure the detected agent CLIs are on the daemon's PATH.
            "PATH=/run/current-system/sw/bin:/etc/profiles/per-user/james/bin:%h/.nix-profile/bin"
          ];

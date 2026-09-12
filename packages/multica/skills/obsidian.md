@@ -110,6 +110,91 @@ rg -o '\[\[[^]]+\]\]' "$OBSIDIAN_VAULT/Projects/<topic>.md"
 rg -l --glob '*.md' '\[\[<topic>(\||#|\]\])' "$OBSIDIAN_VAULT"
 ```
 
+## Writing to the vault
+
+**Create a new note:**
+
+```bash
+cat > "$OBSIDIAN_VAULT/My Note.md" <<'EOF'
+---
+title: My Note
+tags: [learning, backend]
+created: 2026-09-12
+---
+
+# My Note
+
+Content here.
+EOF
+```
+
+**Append to an existing note:**
+
+```bash
+cat >> "$OBSIDIAN_VAULT/Learnings.md" <<'EOF'
+
+## New learning - $(date +%Y-%m-%d)
+
+- Point one
+- Point two
+EOF
+```
+
+**Create a dated archive (YYYY-MM-DD format):**
+
+```bash
+cat > "$OBSIDIAN_VAULT/2026-09-12 Incident Log.md" <<'EOF'
+---
+date: 2026-09-12
+tags: [incident, postmortem]
+---
+
+# Incident on 2026-09-12
+
+## What happened
+...
+
+## Why it happened
+...
+
+## How we fixed it
+...
+
+## To prevent next time
+- Action 1
+- Action 2
+EOF
+```
+
+**Add to a section within a note (append after a heading):**
+
+```bash
+# Find the line number of the heading
+line=$(rg -n '^## Log$' "$OBSIDIAN_VAULT/Learnings.md" | head -1 | cut -d: -f1)
+
+# Insert new content after that line
+if [ -n "$line" ]; then
+  sed -i "${line}a\\
+- New entry on $(date +%Y-%m-%d): description" "$OBSIDIAN_VAULT/Learnings.md"
+fi
+```
+
+**Link notes together (append a backlink):**
+
+```bash
+# Add a wikilink to another note
+echo "See also: [[Related Note]]" >> "$OBSIDIAN_VAULT/My Note.md"
+```
+
+**Best practices for vault writes:**
+
+- **Use descriptive filenames** — `2026-09-12 Deploy rollback.md` vs `incident.md`
+- **Add frontmatter** — `title:`, `tags:`, `created:`, `status:` help organize and query
+- **Use dated archives** — for logs and incidents, start the filename with `YYYY-MM-DD`
+- **Link as you write** — add `[[Related Note]]` wikilinks to connect discoveries
+- **Append vs create** — append to `Learnings.md` or `Log.md` for an ongoing log; create dated files for discrete events
+- **Tag consistently** — use tags like `#incident`, `#learning`, `#bug-pattern`, `#gotcha` for filtering
+
 ## Notes & gotchas
 
 - **Skip `.obsidian/`.** The vault's `.obsidian/` directory holds JSON app config
@@ -120,3 +205,7 @@ rg -l --glob '*.md' '\[\[<topic>(\||#|\]\])' "$OBSIDIAN_VAULT"
   resolving links.
 - **A vault may be nested** (notes in subfolders) — always search recursively from
   `$OBSIDIAN_VAULT`, never assume a flat layout.
+- **Frontmatter must be valid YAML.** Colons and special characters need quoting:
+  `title: "Backend: API Gateway"`. Use `cat <<'EOF'` (single quotes) to avoid shell expansion.
+- **File permissions** — new files are created with default umask; vault is readable
+  only by the user, so no secrets in notes.
