@@ -31,6 +31,7 @@
     enable = true;
     extraPackages = with pkgs; [
       mesa
+      vulkan-loader
     ];
   };
 

@@ -6,6 +6,7 @@
 
 let
   multica = pkgs.callPackage ./packages/multica.nix { };
+  agent-browser = pkgs.callPackage ./packages/agent-browser.nix { };
 in
 {
   imports = [
@@ -48,7 +49,7 @@ in
     home = "/home/james";
     createHome = true;
     homeMode = "700";
-    extraGroups = [ "wheel" "docker" "vboxusers" "video" "audio" ];
+    extraGroups = [ "wheel" "docker" "vboxusers" "video" "audio" "render" ];
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBlkZ7yS+y5Jp/K18ZE3Swi4sfEWokEdNv0BwfDzYVEfSEKmWr9zKXhfm4pvhyxcWtqshYOzKMS3u6a8tpChEPlmVW5AkZeAPJk+Rwn++eANjeXpkvQ8zvfV6ALBU2FUiE60oGIA+tZOEbzUcgZ15CilFpwatnbe0whVocYsYAn4F9d3CLbt8U6miG4NjdSDP3E5OukuVyhF2dXEBVa9N0erLKZyL7hkePTWqoCY9hOvoxgMgopBNHLy2Q0yxkL9M3zgi8qQwa0L0ORcolBk4AVMV6+Wjt+lqYoTtn7GupFC3pZLwWRIqOvneb2oo37JVeUeIRSNSKKrwE7SGSaSAX"
@@ -89,7 +90,7 @@ in
     enable = true;
     windowManager.xmonad = import ./packages/xmonad.nix;
     exportConfiguration = true;
-    dpi = 254;
+    dpi = 120;
     deviceSection = ''
       Driver "modesetting"
       Option "AccelMethod" "glamor"
@@ -150,6 +151,7 @@ in
     pkgs.inetutils
     pkgs.killall
     pkgs.mesa-demos
+    pkgs.vulkan-tools
     pkgs.alsa-utils
     pkgs.pavucontrol
     pkgs.pamixer
@@ -159,7 +161,9 @@ in
     (pkgs.callPackage ./packages/st { })
     (unstable.callPackage ./packages/claude.nix { })
     multica
+    agent-browser
     pkgs.bindfs
+    pkgs.libglvnd
   ];
 
   fonts.packages = with pkgs; [
@@ -170,6 +174,7 @@ in
   environment.sessionVariables = {
     TERMINAL = "st";
     EDITOR = "nvim";
+    MESA_LOADER_DRIVER_OVERRIDE = "zink";
   };
 
   programs.fish = import ./packages/fish.nix;

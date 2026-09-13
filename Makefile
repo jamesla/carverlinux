@@ -26,6 +26,14 @@ clean: ## clean nixos
 update: ## update flake lock file
 	@sudo nix flake update --extra-experimental-features nix-command --extra-experimental-features flakes
 
+.PHONY: benchmark
+benchmark: ## run GUI benchmarks (glmark2 + vkmark)
+	@echo "Running glmark2 (OpenGL)..."
+	@nix run nixpkgs#glmark2 -- --off-screen
+	@echo ""
+	@echo "Running vkmark (Vulkan)..."
+	@nix run nixpkgs#vkmark
+
 .PHONY: help
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
