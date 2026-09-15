@@ -80,8 +80,8 @@ in
   services.pulseaudio.enable = false;
 
   services.xserver = {
-    autoRepeatDelay = 300;
-    autoRepeatInterval = 50;
+    autoRepeatDelay = 500;
+    autoRepeatInterval = 100;
     xkb.options = "caps:escape, altwin:ctrl_win";
     enable = true;
     windowManager.xmonad = import ./packages/xmonad.nix;
