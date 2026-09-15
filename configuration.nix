@@ -199,13 +199,10 @@ in
      programs.peon-ping = import ./packages/peon-ping.nix { inherit pkgs peon-ping; };
      home.packages = [ peon-ping.packages."${pkgs.stdenv.hostPlatform.system}".default ];
 
+
      # Multica agent daemon: auto-detects the coding agent CLIs on PATH (claude,
      # opencode) and registers each as a runtime the local server can assign tasks to.
-     # Credentials (token + workspace) are established once via `multica login --token`
-     # and then persist in ~/.multica/config.json; the daemon authenticates from there,
-     # so the service never runs the interactive (browser-spawning) login itself.
-     # One-time bootstrap after first boot (mint a PAT in the web UI, put it in .env):
-     #   multica login --token "$(sed -n 's/^MULTICA_TOKEN=//p' /carverlinux/.env)"
+     # Token must be in ~/.multica/config.json before daemon starts (injected at provisioning time).
      systemd.user.services.multica-daemon = {
        Unit = {
          Description = "Multica agent daemon (registers local coding agents)";
