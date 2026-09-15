@@ -26,6 +26,7 @@
         , layoutHook = spacingRaw True (Border 0 10 10 10) True (Border 10 10 10 10) True $
             layoutHook def
         , startupHook = do
+          spawnOnce "xset r rate 300 50"
           spawnOnce "tmux start-server; sleep 0.5; st -e tmux new-session -A -s main"
         }
         `additionalKeys`
