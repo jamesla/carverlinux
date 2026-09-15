@@ -146,16 +146,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1789173416,
-        "narHash": "sha256-h5sPx+3mYjLrVTM9yaU0pzUoAl0KSgl7XRbkdIQlsn4=",
+        "lastModified": 1789515154,
+        "narHash": "sha256-GbRvMXM/8K88MGBHkmncBMEcuigAfOZy4pDy2bwmYFA=",
         "owner": "jamesla",
         "repo": "multica-nix",
-        "rev": "5b0c7f984e900358f14768b5f68be69fa59c5460",
+        "rev": "4448478d36a538878e62c35a6ab2d960f3625d7d",
         "type": "github"
       },
       "original": {
         "owner": "jamesla",
-        "ref": "1.0.0",
+        "ref": "v1.0.1",
         "repo": "multica-nix",
         "type": "github"
       }

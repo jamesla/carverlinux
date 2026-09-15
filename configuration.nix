@@ -202,7 +202,6 @@ in
 
      # Multica agent daemon: auto-detects the coding agent CLIs on PATH (claude,
      # opencode) and registers each as a runtime the local server can assign tasks to.
-     # Token must be in ~/.multica/config.json before daemon starts (injected at provisioning time).
      systemd.user.services.multica-daemon = {
        Unit = {
          Description = "Multica agent daemon (registers local coding agents)";

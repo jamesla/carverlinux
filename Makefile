@@ -1,14 +1,22 @@
 PACKAGE ?= carverlinux
+VM ?= Carverlinux
 
 .DEFAULT_GOAL := help
 
 .ONESHELL:
 
 .PHONY: build
-build: ## build system (from MacOS)
-	@nix build .#nixosConfigurations.default.config.system.build.images.qemu-efi
-	@cp result/*.qcow2 nixos.qcow2
-	@chmod 644 nixos.qcow2
+build: ## build system image for Parallels Desktop (from macOS)
+	@nix build .#nixosConfigurations.default.config.system.build.images.raw-efi
+	@cp result/*.img nixos-parallels.img
+	@chmod 644 nixos-parallels.img
+
+.PHONY: parallels-share
+parallels-share: ## register this repo as the 'carverlinux' Parallels shared folder
+	@# The share NAME must stay 'carverlinux' -- it is the mount device in
+	@# hardware-configuration.nix. Run once per VM; safe to re-run.
+	@prlctl set $(VM) --shf-host on
+	@prlctl set $(VM) --shf-host-add carverlinux --path $(CURDIR) --mode rw
 
 .PHONY: rebuild
 rebuild: ## rebuild system (from NixOS)
