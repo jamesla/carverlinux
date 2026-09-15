@@ -80,8 +80,8 @@ in
   services.pulseaudio.enable = false;
 
   services.xserver = {
-    autoRepeatDelay = 150;
-    autoRepeatInterval = 30;
+    autoRepeatDelay = 300;
+    autoRepeatInterval = 50;
     xkb.options = "caps:escape, altwin:ctrl_win";
     enable = true;
     windowManager.xmonad = import ./packages/xmonad.nix;
@@ -91,6 +91,7 @@ in
       Driver "modesetting"
       Option "AccelMethod" "glamor"
     '';
+    libinput.enable = true;
   };
 
   services.displayManager = {
@@ -173,6 +174,7 @@ in
     TERMINAL = "st";
     EDITOR = "nvim";
     MESA_LOADER_DRIVER_OVERRIDE = "zink";
+    LIBGL_ALWAYS_INDIRECT = "0";
   };
 
   programs.fish = import ./packages/fish.nix;
