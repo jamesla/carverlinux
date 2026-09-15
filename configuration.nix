@@ -58,9 +58,6 @@ in
 
   security.sudo.wheelNeedsPassword = false;
 
-  services.spice-vdagentd.enable = true;
-  services.spice-autorandr.enable = true;
-
   # Audio: PipeWire with ALSA + PulseAudio shim
   security.rtkit.enable = true;
   services.pipewire = {
@@ -69,10 +66,9 @@ in
     alsa.support32Bit = true;
     pulse.enable = true;
     wireplumber.enable = true;
-    # WirePlumber otherwise remembers and restores per-device route state from
-    # ~/.local/state/wireplumber/, and the UTM VirtIO sink/source get stuck
-    # restored as muted/zero-volume across reboots. Disable route restoration
-    # and pin sane defaults so audio always comes up unmuted.
+    # WirePlumber restores per-device route state and VirtIO audio devices can
+    # come back muted/zero-volume across reboots. Disable route restoration and
+    # pin sane defaults so audio always comes up unmuted.
     wireplumber.extraConfig."51-virtio-audio" = {
       "wireplumber.settings" = {
         "device.restore-routes" = false;
@@ -116,6 +112,9 @@ in
   systemd.services.multica-secrets = {
     description = "Install multica secrets from repo .env";
     wantedBy = [ "multi-user.target" ];
+    # Order after (and require) the Parallels share -- otherwise this races
+    # prltoolsd at boot and fails on a missing /carverlinux/.env.
+    unitConfig.RequiresMountsFor = "/carverlinux";
     serviceConfig.Type = "oneshot";
     serviceConfig.RemainAfterExit = true;
     script = ''
@@ -162,7 +161,6 @@ in
     (unstable.callPackage ./packages/claude.nix { })
     multica
     agent-browser
-    pkgs.bindfs
     pkgs.libglvnd
   ];
 
