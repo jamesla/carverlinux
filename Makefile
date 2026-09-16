@@ -1,5 +1,4 @@
 PACKAGE ?= carverlinux
-VM ?= Carverlinux
 
 .DEFAULT_GOAL := help
 
@@ -13,10 +12,8 @@ build: ## build system image for Parallels Desktop (from macOS)
 
 .PHONY: parallels-share
 parallels-share: ## register this repo as the 'carverlinux' Parallels shared folder
-	@# The share NAME must stay 'carverlinux' -- it is the mount device in
-	@# hardware-configuration.nix. Run once per VM; safe to re-run.
-	@prlctl set $(VM) --shf-host on
-	@prlctl set $(VM) --shf-host-add carverlinux --path $(CURDIR) --mode rw
+	@prlctl set Carverlinux --shf-host on
+	@prlctl set Carverlinux --shf-host-add carverlinux --path $(CURDIR) --mode rw
 
 .PHONY: rebuild
 rebuild: ## rebuild system (from NixOS)
@@ -33,14 +30,6 @@ clean: ## clean nixos
 .PHONY: update
 update: ## update flake lock file
 	@sudo nix flake update --extra-experimental-features nix-command --extra-experimental-features flakes
-
-.PHONY: benchmark
-benchmark: ## run GUI benchmarks (glmark2 + vkmark)
-	@echo "Running glmark2 (OpenGL)..."
-	@nix run nixpkgs#glmark2 -- --off-screen
-	@echo ""
-	@echo "Running vkmark (Vulkan)..."
-	@nix run nixpkgs#vkmark
 
 .PHONY: help
 help:

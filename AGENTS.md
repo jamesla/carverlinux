@@ -1,8 +1,7 @@
 # Carverlinux Agent Guidelines
 
 ## Build Commands
-- `make build` - Build system image from macOS
-- `make build-parallels` - Build Parallels Desktop image from macOS
+- `make build` - Build Parallels Desktop image (from macOS)
 - `make rebuild` - Rebuild system from NixOS  
 - `make run` - Run carverlinux VM
 - `make clean` - Clean nix garbage

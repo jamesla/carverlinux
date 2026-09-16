@@ -20,12 +20,9 @@ pkgs.stdenv.mkDerivation rec {
     runHook postInstall
   '';
 
-  # Force software GL (SwiftShader) so the browser it launches renders inside
-  # the VM's limited GPU. Uses agent-browser's own AGENT_BROWSER_ARGS env var;
-  # --set-default keeps it overridable at runtime.
   postFixup = ''
     wrapProgram $out/bin/agent-browser \
-      --set-default AGENT_BROWSER_ARGS "--use-gl=swiftshader,--no-sandbox,--disable-setuid-sandbox,--disable-dev-shm-usage,--ignore-gpu-blocklist"
+      --set-default AGENT_BROWSER_ARGS "--no-sandbox,--disable-setuid-sandbox,--disable-dev-shm-usage,--ignore-gpu-blocklist"
   '';
 
   meta = with pkgs.lib; {

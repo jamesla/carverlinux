@@ -27,8 +27,6 @@
 
   services.xserver.videoDrivers = [ "modesetting" ];
 
-  # Parallels Tools: display/3D/clipboard integration, and the prl_fsd mount
-  # helper that fileSystems."/carverlinux" below depends on.
   hardware.parallels.enable = true;
   hardware.parallels.package = unstable.prl-tools;
 
@@ -55,15 +53,6 @@
     fsType = "vfat";
   };
 
-  # The host repo checkout, shared in by Parallels. "device" is the shared-folder
-  # NAME as registered on the host (see `make parallels-share`), not a path --
-  # this is the same mount Parallels' own automounter performs for /mnt/psf.
-  #
-  # uid/gid matter: prl_fsd passes the host's mode bits through verbatim but
-  # reports every file as root, so without the remap james cannot enter the 0700
-  # knowledge/ vault. nofail because the share is host-side config the guest
-  # cannot guarantee; multica-secrets carries RequiresMountsFor so a missing
-  # share surfaces there rather than taking down local-fs.target.
   fileSystems."/carverlinux" = {
     device = "carverlinux";
     fsType = "fuse.prl_fsd";
