@@ -10,11 +10,6 @@ build: ## build system image for Parallels Desktop (from macOS)
 	@cp result/*.img nixos-parallels.img
 	@chmod 644 nixos-parallels.img
 
-.PHONY: parallels-share
-parallels-share: ## register this repo as the 'carverlinux' Parallels shared folder
-	@prlctl set Carverlinux --shf-host on
-	@prlctl set Carverlinux --shf-host-add carverlinux --path $(CURDIR) --mode rw
-
 .PHONY: rebuild
 rebuild: ## rebuild system (from NixOS)
 	@sudo nixos-rebuild switch --flake ".#default"
