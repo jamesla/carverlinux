@@ -1,4 +1,4 @@
-{ config, lib, pkgs, modulesPath, unstable, ... }:
+{ config, lib, pkgs, modulesPath, unstable, master, ... }:
 
 {
   boot.initrd.kernelModules = ["virtio_gpu" "virtio_pci" "virtio" ];
@@ -28,7 +28,7 @@
   services.xserver.videoDrivers = [ "modesetting" ];
 
   hardware.parallels.enable = true;
-  hardware.parallels.package = unstable.prl-tools;
+  hardware.parallels.package = master.prl-tools;
 
   hardware.graphics = {
     enable = true;

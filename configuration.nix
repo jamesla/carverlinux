@@ -78,8 +78,9 @@ in
       Driver "modesetting"
       Option "AccelMethod" "glamor"
     '';
-    libinput.enable = true;
   };
+
+  services.libinput.enable = true;
 
   services.displayManager = {
     autoLogin = {

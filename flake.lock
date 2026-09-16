@@ -139,6 +139,22 @@
         "type": "github"
       }
     },
+    "masterpkgs": {
+      "locked": {
+        "lastModified": 1789518779,
+        "narHash": "sha256-0fxvuLEBHodvwiGPONITd4zCUe5KrjAL9PMC7IOitbA=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "c645ff4d8154630080b8419f0e71844d73b45918",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "master",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "multica-nix": {
       "inputs": {
         "nixpkgs": [
@@ -263,6 +279,7 @@
       "inputs": {
         "home-manager": "home-manager",
         "llm-agents": "llm-agents",
+        "masterpkgs": "masterpkgs",
         "multica-nix": "multica-nix",
         "nixpkgs": "nixpkgs_3",
         "peon-ping": "peon-ping",
@@ -323,11 +340,11 @@
     },
     "unstablepkgs": {
       "locked": {
-        "lastModified": 1780749050,
-        "narHash": "sha256-3av0pIjlOWQ6rDbNOmpUSvbNnJkGORQKKjb4LtCZsIY=",
+        "lastModified": 1789286504,
+        "narHash": "sha256-eiEK7cKZORNEvX0GeF3RtNEF/JXhgf2RqSp3230q13E=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "a799d3e3886da994fa307f817a6bc705ae538eeb",
+        "rev": "ef34387ddd751e1ab8857adf4676492d32eb24ec",
         "type": "github"
       },
       "original": {
