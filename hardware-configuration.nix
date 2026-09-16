@@ -1,4 +1,4 @@
-{ config, lib, pkgs, modulesPath, ... }:
+{ config, lib, pkgs, modulesPath, unstable, ... }:
 
 {
   boot.initrd.kernelModules = ["virtio_gpu" "virtio_pci" "virtio" ];
@@ -27,10 +27,18 @@
 
   services.xserver.videoDrivers = [ "modesetting" ];
 
+  hardware.parallels.enable = true;
+  hardware.parallels.package = unstable.prl-tools;
+
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
       mesa
+      vulkan-loader
+    ];
+    extraPackages32 = with pkgs.pkgsi686Linux; [
+      mesa
+      vulkan-loader
     ];
   };
 
@@ -45,26 +53,19 @@
     fsType = "vfat";
   };
 
-  fileSystems."/mnt/carverlinux-raw" = {
-    device = "share";
-    fsType = "9p";
-    options = [
-      "trans=virtio"
-      "version=9p2000.L"
-      "msize=104857600"
-      "access=any"
-      "cache=loose"
-      "nofail"
-    ];
-  };
-
   fileSystems."/carverlinux" = {
-    device = "/mnt/carverlinux-raw";
-    fsType = "fuse.bindfs";
+    device = "carverlinux";
+    fsType = "fuse.prl_fsd";
     options = [
-      "map=501/1000:@26/@100"
+      "nosuid"
+      "nodev"
+      "noatime"
+      "big_writes"
+      "uid=1000"
+      "gid=100"
       "nofail"
-      "x-systemd.requires-mounts-for=/mnt/carverlinux-raw"
+      "x-systemd.requires=prltoolsd.service"
+      "x-systemd.after=prltoolsd.service"
     ];
   };
 
