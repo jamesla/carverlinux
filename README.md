@@ -31,14 +31,12 @@ nix.settings.trusted-users = [ "@admin" ];
 darwin-rebuild switch
 ```
 
-4. Provision vm
+4. Create and start the VM
 ```bash
-make provision
+make up
 ```
 
-5. Can rebuild vm from inside itself with
+5. Inside the VM, you can rebuild the system with
 ```bash
 make rebuild
 ```
-# CI Testing
-# GitHub Actions Test

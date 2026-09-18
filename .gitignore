@@ -5,6 +5,7 @@ result
 keys/*
 nixos.img
 nixos.qcow2
+nixos-parallels.img
 /.env
 /knowledge/*
 !/knowledge/.gitkeep
