@@ -5,10 +5,10 @@ PACKAGE ?= carverlinux
 .ONESHELL:
 
 .PHONY: build
-build: ## build system (from MacOS)
-	@nix build .#nixosConfigurations.default.config.system.build.images.qemu-efi
-	@cp result/*.qcow2 nixos.qcow2
-	@chmod 644 nixos.qcow2
+build: ## build system image for Parallels Desktop (from macOS)
+	@nix build .#nixosConfigurations.default.config.system.build.images.raw-efi
+	@cp result/*.img nixos-parallels.img
+	@chmod 644 nixos-parallels.img
 
 .PHONY: rebuild
 rebuild: ## rebuild system (from NixOS)

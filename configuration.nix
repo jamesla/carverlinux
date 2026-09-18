@@ -2,10 +2,11 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, unstable, home-manager, llm-agents, peon-ping, workmux, multica-nix, ... }:
+{ config, pkgs, unstable, master, home-manager, llm-agents, peon-ping, workmux, multica-nix, ... }:
 
 let
   multica = pkgs.callPackage ./packages/multica.nix { };
+  agent-browser = pkgs.callPackage ./packages/agent-browser.nix { };
 in
 {
   imports = [
@@ -18,26 +19,16 @@ in
 
   time.timeZone = "Pacific/Auckland";
   networking.useDHCP = true;
-  # Keep dhcpcd off Docker/VirtualBox virtual interfaces; managing veths that come
-  # and go with containers made dhcpcd SIGSEGV in a crash-loop.
   networking.dhcpcd.denyInterfaces = [ "veth*" "docker*" "br-*" "vboxnet*" ];
 
-  # Compressed in-RAM swap: cheap headroom so a memory spike can't hard-freeze the VM.
-  # memoryPercent = 100 gives more compressed swap before real pressure; zstd is default.
   zramSwap.enable = true;
   zramSwap.memoryPercent = 100;
 
-  # Run /tmp in RAM so temp-heavy compiles and tool scratch avoid the virtio disk.
-  # Overflow spills to zram swap, so a large build can't hard-fail; point TMPDIR at
-  # a disk path for the rare multi-GB nix image build if it ever exhausts this.
   boot.tmp.useTmpfs = true;
   boot.tmp.tmpfsSize = "60%";
 
   boot.kernel.sysctl = {
-    # With zram, swapping to RAM is cheaper than evicting page cache, so bias hard
-    # toward keeping hot file cache resident for better interactive responsiveness.
     "vm.swappiness" = 180;
-    # Writeback in small frequent batches instead of large stalls -> fewer UI hitches.
     "vm.dirty_background_ratio" = 5;
     "vm.dirty_ratio" = 15;
   };
@@ -48,7 +39,7 @@ in
     home = "/home/james";
     createHome = true;
     homeMode = "700";
-    extraGroups = [ "wheel" "docker" "vboxusers" "video" "audio" ];
+    extraGroups = [ "wheel" "docker" "vboxusers" "video" "audio" "render" ];
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBlkZ7yS+y5Jp/K18ZE3Swi4sfEWokEdNv0BwfDzYVEfSEKmWr9zKXhfm4pvhyxcWtqshYOzKMS3u6a8tpChEPlmVW5AkZeAPJk+Rwn++eANjeXpkvQ8zvfV6ALBU2FUiE60oGIA+tZOEbzUcgZ15CilFpwatnbe0whVocYsYAn4F9d3CLbt8U6miG4NjdSDP3E5OukuVyhF2dXEBVa9N0erLKZyL7hkePTWqoCY9hOvoxgMgopBNHLy2Q0yxkL9M3zgi8qQwa0L0ORcolBk4AVMV6+Wjt+lqYoTtn7GupFC3pZLwWRIqOvneb2oo37JVeUeIRSNSKKrwE7SGSaSAX"
@@ -56,9 +47,6 @@ in
   };
 
   security.sudo.wheelNeedsPassword = false;
-
-  services.spice-vdagentd.enable = true;
-  services.spice-autorandr.enable = true;
 
   # Audio: PipeWire with ALSA + PulseAudio shim
   security.rtkit.enable = true;
@@ -68,10 +56,6 @@ in
     alsa.support32Bit = true;
     pulse.enable = true;
     wireplumber.enable = true;
-    # WirePlumber otherwise remembers and restores per-device route state from
-    # ~/.local/state/wireplumber/, and the UTM VirtIO sink/source get stuck
-    # restored as muted/zero-volume across reboots. Disable route restoration
-    # and pin sane defaults so audio always comes up unmuted.
     wireplumber.extraConfig."51-virtio-audio" = {
       "wireplumber.settings" = {
         "device.restore-routes" = false;
@@ -83,18 +67,20 @@ in
   services.pulseaudio.enable = false;
 
   services.xserver = {
-    autoRepeatDelay = 150;
-    autoRepeatInterval = 30;
+    autoRepeatDelay = 750;
+    autoRepeatInterval = 50;
     xkb.options = "caps:escape, altwin:ctrl_win";
     enable = true;
     windowManager.xmonad = import ./packages/xmonad.nix;
     exportConfiguration = true;
-    dpi = 254;
+    dpi = 120;
     deviceSection = ''
       Driver "modesetting"
       Option "AccelMethod" "glamor"
     '';
   };
+
+  services.libinput.enable = true;
 
   services.displayManager = {
     autoLogin = {
@@ -115,6 +101,7 @@ in
   systemd.services.multica-secrets = {
     description = "Install multica secrets from repo .env";
     wantedBy = [ "multi-user.target" ];
+    unitConfig.RequiresMountsFor = "/carverlinux";
     serviceConfig.Type = "oneshot";
     serviceConfig.RemainAfterExit = true;
     script = ''
@@ -150,6 +137,7 @@ in
     pkgs.inetutils
     pkgs.killall
     pkgs.mesa-demos
+    pkgs.vulkan-tools
     pkgs.alsa-utils
     pkgs.pavucontrol
     pkgs.pamixer
@@ -159,7 +147,8 @@ in
     (pkgs.callPackage ./packages/st { })
     (unstable.callPackage ./packages/claude.nix { })
     multica
-    pkgs.bindfs
+    agent-browser
+    pkgs.libglvnd
   ];
 
   fonts.packages = with pkgs; [
@@ -170,6 +159,8 @@ in
   environment.sessionVariables = {
     TERMINAL = "st";
     EDITOR = "nvim";
+    MESA_LOADER_DRIVER_OVERRIDE = "virtio_gpu";
+    LIBGL_ALWAYS_INDIRECT = "0";
   };
 
   programs.fish = import ./packages/fish.nix;
@@ -194,13 +185,9 @@ in
      programs.peon-ping = import ./packages/peon-ping.nix { inherit pkgs peon-ping; };
      home.packages = [ peon-ping.packages."${pkgs.stdenv.hostPlatform.system}".default ];
 
+
      # Multica agent daemon: auto-detects the coding agent CLIs on PATH (claude,
      # opencode) and registers each as a runtime the local server can assign tasks to.
-     # Credentials (token + workspace) are established once via `multica login --token`
-     # and then persist in ~/.multica/config.json; the daemon authenticates from there,
-     # so the service never runs the interactive (browser-spawning) login itself.
-     # One-time bootstrap after first boot (mint a PAT in the web UI, put it in .env):
-     #   multica login --token "$(sed -n 's/^MULTICA_TOKEN=//p' /carverlinux/.env)"
      systemd.user.services.multica-daemon = {
        Unit = {
          Description = "Multica agent daemon (registers local coding agents)";

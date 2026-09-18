@@ -4,3 +4,4 @@
     "dbepggeogbaibhgnhhndojpepiihcmeb" # vimium
   ];
 }
+
