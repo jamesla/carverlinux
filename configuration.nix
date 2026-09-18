@@ -159,7 +159,7 @@ in
   environment.sessionVariables = {
     TERMINAL = "st";
     EDITOR = "nvim";
-    MESA_LOADER_DRIVER_OVERRIDE = "zink";
+    MESA_LOADER_DRIVER_OVERRIDE = "virtio_gpu";
     LIBGL_ALWAYS_INDIRECT = "0";
   };
 
