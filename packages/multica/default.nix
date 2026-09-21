@@ -1,5 +1,5 @@
 # Our multica wiring: the multica-nix flake input provides the NixOS module;
-# services.multica config and the secrets service live here. Skill bodies live in
+# services.multica config lives here. Skill bodies live in
 # ./skills/*.md; agent instructions in ./agents/*.md.
 { multica-nix, ... }:
 
@@ -8,12 +8,12 @@
     multica-nix.nixosModules.multica
   ];
 
-  # Hardcode multica secrets directly (not exposed outside VM, and multica by design is not secure)
+  # Empty env file (still required to exist for Docker --env-file and systemd
+  # EnvironmentFile=, but no secrets live here — JWT_SECRET is generated
+  # inside the container by the multica-nix module's entrypoint wrapper).
   environment.etc."multica/multica.env" = {
-    text = ''
-      JWT_SECRET=5e725324fcefb921e151465397495bf8276e18a78630bc39b2b25bc6b56b94f8
-    '';
-    mode = "0600";
+    text = "";
+    mode = "0644";
   };
 
   # Multica self-hosted server (github.com/multica-ai/multica), run declaratively via
