@@ -67,8 +67,8 @@ in
   services.pulseaudio.enable = false;
 
   services.xserver = {
-    autoRepeatDelay = 750;
-    autoRepeatInterval = 50;
+    autoRepeatDelay = 500;
+    autoRepeatInterval = 25;
     xkb.options = "caps:escape, altwin:ctrl_win";
     enable = true;
     windowManager.xmonad = import ./packages/xmonad.nix;
@@ -96,17 +96,29 @@ in
   boot.binfmt.preferStaticEmulators = true;
 
 
+  # Disable prltoolsd's global shared-folder automount
+  environment.etc."prltools/prlfsmountd-disable".text = "";
+
   # Install secrets from the repo .env (gitignored) into a root-only file, keeping them
-  # out of the world-readable nix store.
+  # out of the world-readable nix store. Mount the shared folder on-demand before accessing it.
   systemd.services.multica-secrets = {
     description = "Install multica secrets from repo .env";
     wantedBy = [ "multi-user.target" ];
-    unitConfig.RequiresMountsFor = "/carverlinux";
     serviceConfig.Type = "oneshot";
     serviceConfig.RemainAfterExit = true;
     script = ''
-      install -d -m700 /etc/multica
-      install -m600 /carverlinux/.env /etc/multica/multica.env
+      set +e
+      # Mount the shared folder if not already mounted, with failures non-fatal
+      if ! mountpoint -q /carverlinux 2>/dev/null; then
+        ulimit -n 1048576 2>/dev/null || true
+        ${pkgs.util-linux}/bin/mount -t fuse.prl_fsd -o nosuid,nodev,noatime,big_writes,uid=1000,gid=100 carverlinux /carverlinux 2>/dev/null
+      fi
+      # Install secrets if the mount succeeded, otherwise skip silently
+      if [ -f /carverlinux/.env ]; then
+        install -d -m700 /etc/multica
+        install -m600 /carverlinux/.env /etc/multica/multica.env
+      fi
+      exit 0
     '';
   };
 

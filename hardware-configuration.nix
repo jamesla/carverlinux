@@ -55,22 +55,6 @@
     fsType = "vfat";
   };
 
-  fileSystems."/carverlinux" = {
-    device = "carverlinux";
-    fsType = "fuse.prl_fsd";
-    options = [
-      "nosuid"
-      "nodev"
-      "noatime"
-      "big_writes"
-      "uid=1000"
-      "gid=100"
-      "nofail"
-      "x-systemd.requires=prltoolsd.service"
-      "x-systemd.after=prltoolsd.service"
-    ];
-  };
-
   swapDevices = [ ];
 
   networking.useDHCP = lib.mkDefault true;
