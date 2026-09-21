@@ -7,7 +7,7 @@
     llm-agents.url = "github:numtide/llm-agents.nix";
     peon-ping.url = "github:PeonPing/peon-ping";
     workmux.url = "github:raine/workmux";
-    multica-nix.url = "git+file:///home/james/multica-nix";
+    multica-nix.url = "github:jamesla/multica-nix/1.0.2";
     multica-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs = { self, nixpkgs, unstablepkgs, masterpkgs, home-manager, llm-agents, peon-ping, workmux, multica-nix, ... }: let
