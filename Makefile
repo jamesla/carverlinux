@@ -18,7 +18,7 @@ build: ## build system image for Parallels Desktop (from macOS)
 
 .PHONY: rebuild
 rebuild: ## rebuild system (from NixOS)
-	@sudo nixos-rebuild switch --flake ".#default"
+	@sudo nixos-rebuild switch --flake ".#default" --impure
 
 .PHONY: version
 version: ## gets current version

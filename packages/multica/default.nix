@@ -8,7 +8,6 @@
   services.multica = {
     enable = true;
     installDesktop = true;
-    environmentFile = "/etc/multica/multica.env";
     devLoginEmail = "james@james.com";
     skills.agent-browser = {
       description = "Drive a headless Chromium from the CLI for UI evidence — rendered pages, screenshots, authenticated flows.";
