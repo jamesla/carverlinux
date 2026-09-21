@@ -99,6 +99,13 @@ in
   # Disable prltoolsd's global shared-folder automount
   environment.etc."prltools/prlfsmountd-disable".text = "";
 
+  # Mount /carverlinux shared folder from Parallels host
+  fileSystems."/carverlinux" = {
+    device = "carverlinux";
+    fsType = "fuse.prl_fsd";
+    options = [ "nofail" ];
+  };
+
   # List packages installed in system profile. To search, run:
   environment.systemPackages = [
     unstable.opencode
