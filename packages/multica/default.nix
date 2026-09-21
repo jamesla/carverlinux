@@ -8,10 +8,17 @@
     multica-nix.nixosModules.multica
   ];
 
+  # Hardcode multica secrets directly (not exposed outside VM, and multica by design is not secure)
+  environment.etc."multica/multica.env" = {
+    text = ''
+      JWT_SECRET=5e725324fcefb921e151465397495bf8276e18a78630bc39b2b25bc6b56b94f8
+    '';
+    mode = "0600";
+  };
+
   # Multica self-hosted server (github.com/multica-ai/multica), run declaratively via
   # the ../../multica-nix module: native Postgres 17 + pgvector, docker backend (:8080) and
-  # web (:3000) containers on host networking, all bound to loopback. JWT_SECRET comes
-  # from /etc/multica/multica.env, installed from the repo .env by multica-secrets below.
+  # web (:3000) containers on host networking, all bound to loopback.
   services.multica = {
     enable = true;
     installDesktop = true;
@@ -286,22 +293,4 @@
     };
   };
 
-  # Install secrets from the repo .env (gitignored) into a root-only file, keeping them
-  # out of the world-readable nix store.
-  systemd.services.multica-secrets = {
-    description = "Install multica secrets from repo .env";
-    wantedBy = [ "multi-user.target" ];
-    # Postgres is now native; the secret file (JWT_SECRET) is only needed by the
-    # backend/web containers, so order ahead of those.
-    before = [
-      "docker-multica-backend.service"
-      "docker-multica-web.service"
-    ];
-    serviceConfig.Type = "oneshot";
-    serviceConfig.RemainAfterExit = true;
-    script = ''
-      install -d -m700 /etc/multica
-      install -m600 /carverlinux/.env /etc/multica/multica.env
-    '';
-  };
 }
