@@ -1,20 +1,11 @@
-# Our multica wiring: the multica-nix flake input provides the NixOS module;
-# services.multica config lives here. Skill bodies live in
-# ./skills/*.md; agent instructions in ./agents/*.md.
+# Our multica wiring: the multica-nix flake input provides the NixOS module.
+# Skill bodies live in ./skills/*.md; agent instructions in ./agents/*.md.
 { multica-nix, ... }:
 
 {
   imports = [
     multica-nix.nixosModules.multica
   ];
-
-  # Empty env file (still required to exist for Docker --env-file and systemd
-  # EnvironmentFile=, but no secrets live here — JWT_SECRET is generated
-  # inside the container by the multica-nix module's entrypoint wrapper).
-  environment.etc."multica/multica.env" = {
-    text = "";
-    mode = "0644";
-  };
 
   # Multica self-hosted server (github.com/multica-ai/multica), run declaratively via
   # the ../../multica-nix module: native Postgres 17 + pgvector, docker backend (:8080) and
