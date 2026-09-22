@@ -127,7 +127,7 @@ check: ## run the guest acceptance checks against the running VM
 	for i in $$(seq 1 $(VM_BOOT_TIMEOUT)); do \
 	  state=$$(prlctl exec '$(VM)' \
 	    'PATH=/run/current-system/sw/bin; systemctl is-system-running || true' \
-	    2>/dev/null | tr -dc 'a-z-'); \
+	    2>/dev/null | tr -dc 'a-z-' || true); \
 	  case "$$state" in running|degraded) break;; esac; \
 	  sleep 1; \
 	done; \
@@ -145,7 +145,7 @@ check: ## run the guest acceptance checks against the running VM
 	printf 'The Parallels VM to check is named "%s".\n\n%s\n' \
 	  '$(VM)' "$$(cat tests/guest-checks.md)" \
 	  | claude -p --allowed-tools 'Bash(prlctl:*)' \
-	      --disallowed-tools Write Edit NotebookEdit | tee "$$log"; \
+	      --disallowed-tools Write Edit NotebookEdit | tee "$$log" || true; \
 	grep -qE '^ *RESULT: PASS *$$' "$$log" || \
 	{ rm -f "$$log"; echo "error: guest checks did not pass." >&2; exit 1; }; \
 	rm -f "$$log"

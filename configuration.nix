@@ -5,7 +5,91 @@
 { config, lib, pkgs, unstable, master, home-manager, llm-agents, peon-ping, workmux, multica-nix, ... }:
 
 let
-  multica = pkgs.callPackage ./packages/multica.nix { };
+  multicaCli = config.services.multica.package;
+  multicaServerUrl = "http://127.0.0.1:8080";
+
+  # Runtimes are not declarative: multica-reconcile skips agents and squads (and
+  # then quick actions and autopilots, for want of assignees) unless a running
+  # daemon has registered one. The daemon needs a credential to do that, and
+  # `multica config set` has no token key, so it has to log in.
+  #
+  # A dev-login JWT is not enough on its own -- `multica daemon start` wants a
+  # credential persisted by `multica login`, which only accepts a mul_… PAT. So
+  # bootstrap through the same dev login multica-reconcile uses, then spend that
+  # JWT once on minting a non-expiring PAT and hand that to `multica login`.
+  #
+  # Guarded on `multica auth status` so this runs once per VM, not once per
+  # restart: /auth/send-code is rate-limited and multica-reconcile competes for
+  # it, so logging in on every start starves both.
+  multica-daemon-start = pkgs.writeShellApplication {
+    name = "multica-daemon-start";
+    runtimeInputs = [ pkgs.curl pkgs.jq multicaCli ];
+    text = ''
+      server=${lib.escapeShellArg multicaServerUrl}
+      email=${lib.escapeShellArg config.services.multica.devLoginEmail}
+      code=${lib.escapeShellArg config.services.multica.devVerificationCode}
+      export MULTICA_SERVER_URL="$server"
+
+      for _ in $(seq 1 60); do
+        curl -fsS "$server/health" >/dev/null 2>&1 && break
+        sleep 2
+      done
+
+      # 127.0.0.1, not localhost: the backend is published on IPv4 only
+      # (docker 0.0.0.0:8080), but localhost resolves to ::1 first.
+      multica config set server_url "$server"
+      multica config set app_url http://127.0.0.1:3000
+
+      if ! multica auth status >/dev/null 2>&1; then
+        sent=0
+        for _ in $(seq 1 6); do
+          status=$(curl -s -o /dev/null -w '%{http_code}' -X POST \
+            -H 'Content-Type: application/json' \
+            -d "$(jq -nc --arg email "$email" '{email: $email}')" \
+            "$server/auth/send-code")
+          if [ "$status" = "200" ]; then sent=1; break; fi
+          sleep 10
+        done
+        if [ "$sent" != "1" ]; then
+          echo "multica-daemon: could not request a dev login code (rate limited?)" >&2
+          exit 1
+        fi
+
+        jwt=$(curl -fsS -X POST -H 'Content-Type: application/json' \
+          -d "$(jq -nc --arg email "$email" --arg code "$code" '{code: $code, email: $email}')" \
+          "$server/auth/verify-code" | jq -r '.token // empty')
+        if [ -z "$jwt" ]; then
+          echo "multica-daemon: dev login failed (no token in verify-code response)" >&2
+          exit 1
+        fi
+
+        # The API wants the workspace alongside the bearer token; without
+        # X-Workspace-Id it answers "missing authorization".
+        ws=$(MULTICA_TOKEN="$jwt" multica workspace list --output json \
+          | jq -r '.[0].id // empty')
+        if [ -z "$ws" ]; then
+          echo "multica-daemon: dev login token sees no workspace" >&2
+          exit 1
+        fi
+
+        pat=$(curl -fsS -X POST \
+          -H "Authorization: Bearer $jwt" \
+          -H "X-Workspace-Id: $ws" \
+          -H 'Content-Type: application/json' \
+          -d '{"name":"carverlinux-daemon"}' \
+          "$server/api/tokens" | jq -r '.token // empty')
+        if [ -z "$pat" ]; then
+          echo "multica-daemon: could not mint a daemon access token" >&2
+          exit 1
+        fi
+
+        multica login --token "$pat" >/dev/null
+      fi
+
+      exec multica daemon start --foreground
+    '';
+  };
+
   agent-browser = pkgs.callPackage ./packages/agent-browser.nix { inherit unstable; };
 in
 {
@@ -152,7 +236,6 @@ in
     pkgs.obsidian
     (pkgs.callPackage ./packages/st { })
     (unstable.callPackage ./packages/claude.nix { })
-    multica
     agent-browser
     pkgs.libglvnd
   ];
@@ -211,15 +294,9 @@ in
            # Ensure the detected agent CLIs are on the daemon's PATH.
            "PATH=/run/current-system/sw/bin:/etc/profiles/per-user/james/bin:%h/.nix-profile/bin"
          ];
-         # Idempotent, browser-free; keeps the server/app URLs pinned across restarts.
-         ExecStartPre = [
-           # Use 127.0.0.1, not localhost: the backend is published on IPv4 only
-           # (docker 0.0.0.0:8080), but localhost resolves to ::1 first -> connection
-           # refused and the daemon crash-loops.
-           "${multica}/bin/multica config set server_url http://127.0.0.1:8080"
-           "${multica}/bin/multica config set app_url http://127.0.0.1:3000"
-         ];
-         ExecStart = "${multica}/bin/multica daemon start --foreground";
+         # Waits for the backend, pins the server/app URLs, then dev-logs-in and
+         # execs the daemon. Idempotent and browser-free.
+         ExecStart = lib.getExe multica-daemon-start;
          Restart = "on-failure";
          RestartSec = 10;
        };
