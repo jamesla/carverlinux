@@ -40,3 +40,24 @@ make up
 ```bash
 make rebuild
 ```
+
+## Testing
+
+`make check` verifies a running VM: OpenGL acceleration, Rosetta x86 emulation,
+`linux/amd64` docker containers, and the `/carverlinux` shared-folder mount. The
+checks are written in English in `tests/guest-checks.md` and driven by an agent
+over `prlctl exec`; it prints a line per check and exits non-zero unless all four
+pass.
+
+```bash
+make check
+```
+
+`make test` is the full loop — it destroys the VM, rebuilds it from the image,
+waits for the guest to boot, then runs the checks. Expect it to take a while.
+
+```bash
+make test
+```
+
+`make destroy` stops and deletes the VM on its own. It does not prompt.

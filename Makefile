@@ -5,6 +5,7 @@ VM_DIR    ?= $(HOME)/Parallels
 VM_CPUS   ?= 8
 VM_MEM    ?= 32768
 VM_DISK_MB ?= 122880
+VM_BOOT_TIMEOUT ?= 300
 IMAGE_ATTR_PATH := nixosConfigurations.default.config.system.build.images.raw-efi
 
 .DEFAULT_GOAL := help
@@ -92,6 +93,65 @@ up: ## create and start the Parallels VM from the built disk image
 	prlctl list -i '$(VM)' | grep -qE '^  Rosetta Linux: on' || \
 	{ echo "error: Rosetta for Linux is not enabled; x86_64 binaries will not run." >&2; exit 1; }; \
 	prlctl start '$(VM)'
+
+.PHONY: destroy
+destroy: ## stop and delete the Parallels VM
+	@set -euo pipefail; \
+	prlctl list -a -o name --no-header | grep -qxF '$(VM)' || \
+	{ echo "no Parallels VM named '$(VM)'; nothing to destroy."; exit 0; }; \
+	if [ "$$(prlctl list -a -o status --no-header '$(VM)' | tr -d ' ')" != stopped ]; then \
+	  prlctl stop '$(VM)' --kill >/dev/null; \
+	  for i in $$(seq 1 30); do \
+	    [ "$$(prlctl list -a -o status --no-header '$(VM)' | tr -d ' ')" = stopped ] && break; \
+	    sleep 1; \
+	  done; \
+	fi; \
+	prlctl delete '$(VM)'
+
+.PHONY: check
+check: ## run the guest acceptance checks against the running VM
+	@set -euo pipefail; \
+	prlctl list -a -o name --no-header | grep -qxF '$(VM)' || \
+	{ echo "error: no Parallels VM named '$(VM)'; run 'make up' first." >&2; exit 1; }; \
+	[ "$$(prlctl list -a -o status --no-header '$(VM)' | tr -d ' ')" = running ] || \
+	{ echo "error: VM '$(VM)' is not running." >&2; \
+	  echo "  start it: prlctl start '$(VM)'" >&2; exit 1; }; \
+	echo "waiting for the Parallels Tools guest agent"; \
+	for i in $$(seq 1 $(VM_BOOT_TIMEOUT)); do \
+	  prlctl exec '$(VM)' true >/dev/null 2>&1 && break; \
+	  [ "$$i" = $(VM_BOOT_TIMEOUT) ] && \
+	  { echo "error: no response from the guest agent after $(VM_BOOT_TIMEOUT)s." >&2; exit 1; }; \
+	  sleep 1; \
+	done; \
+	echo "waiting for the guest to finish booting"; \
+	for i in $$(seq 1 $(VM_BOOT_TIMEOUT)); do \
+	  state=$$(prlctl exec '$(VM)' 'PATH=/run/current-system/sw/bin systemctl is-system-running' \
+	    2>/dev/null | tr -dc 'a-z-'); \
+	  case "$$state" in running|degraded) break;; esac; \
+	  [ "$$i" = $(VM_BOOT_TIMEOUT) ] && \
+	  { echo "error: guest never reached multi-user (last state: $$state)." >&2; exit 1; }; \
+	  sleep 1; \
+	done; \
+	if [ "$$state" = degraded ]; then \
+	  echo "warning: the guest booted degraded; failed units:" >&2; \
+	  prlctl exec '$(VM)' 'PATH=/run/current-system/sw/bin systemctl --failed --no-legend' >&2 || true; \
+	fi; \
+	echo "running the guest checks"; \
+	log=$$(mktemp); \
+	printf 'The Parallels VM to check is named "%s".\n\n%s\n' \
+	  '$(VM)' "$$(cat tests/guest-checks.md)" \
+	  | claude -p --allowed-tools 'Bash(prlctl:*)' \
+	      --disallowed-tools Write Edit NotebookEdit | tee "$$log"; \
+	grep -qE '^ *RESULT: PASS *$$' "$$log" || \
+	{ rm -f "$$log"; echo "error: guest checks did not pass." >&2; exit 1; }; \
+	rm -f "$$log"
+
+.PHONY: test
+test: ## destroy the VM, rebuild it from scratch, and verify the guest
+	@set -euo pipefail; \
+	$(MAKE) destroy; \
+	$(MAKE) up; \
+	$(MAKE) check
 
 .PHONY: help
 help:
