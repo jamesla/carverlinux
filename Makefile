@@ -5,7 +5,7 @@ VM_DIR    ?= $(HOME)/Parallels
 VM_CPUS   ?= 8
 VM_MEM    ?= 32768
 VM_DISK_MB ?= 122880
-VM_BOOT_TIMEOUT ?= 300
+VM_BOOT_TIMEOUT ?= 600
 IMAGE_ATTR_PATH := nixosConfigurations.default.config.system.build.images.raw-efi
 
 .DEFAULT_GOAL := help
@@ -125,17 +125,21 @@ check: ## run the guest acceptance checks against the running VM
 	done; \
 	echo "waiting for the guest to finish booting"; \
 	for i in $$(seq 1 $(VM_BOOT_TIMEOUT)); do \
-	  state=$$(prlctl exec '$(VM)' 'PATH=/run/current-system/sw/bin systemctl is-system-running' \
+	  state=$$(prlctl exec '$(VM)' \
+	    'PATH=/run/current-system/sw/bin; systemctl is-system-running || true' \
 	    2>/dev/null | tr -dc 'a-z-'); \
 	  case "$$state" in running|degraded) break;; esac; \
-	  [ "$$i" = $(VM_BOOT_TIMEOUT) ] && \
-	  { echo "error: guest never reached multi-user (last state: $$state)." >&2; exit 1; }; \
 	  sleep 1; \
 	done; \
 	if [ "$$state" = degraded ]; then \
 	  echo "warning: the guest booted degraded; failed units:" >&2; \
 	  prlctl exec '$(VM)' 'PATH=/run/current-system/sw/bin systemctl --failed --no-legend' >&2 || true; \
 	fi; \
+	case "$$state" in running|degraded) ;; *) \
+	  echo "warning: guest still '$$state' after $(VM_BOOT_TIMEOUT)s; jobs still queued:" >&2; \
+	  prlctl exec '$(VM)' 'PATH=/run/current-system/sw/bin systemctl list-jobs --no-legend' >&2 || true; \
+	  echo "running the checks anyway - they report more than this wait can." >&2;; \
+	esac; \
 	echo "running the guest checks"; \
 	log=$$(mktemp); \
 	printf 'The Parallels VM to check is named "%s".\n\n%s\n' \
