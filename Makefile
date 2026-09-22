@@ -2,8 +2,8 @@ PACKAGE ?= carverlinux
 
 VM        ?= $(notdir $(CURDIR))
 VM_DIR    ?= $(HOME)/Parallels
-VM_CPUS   ?= 4
-VM_MEM    ?= 16384
+VM_CPUS   ?= 8
+VM_MEM    ?= 32768
 VM_DISK_MB ?= 122880
 IMAGE_ATTR_PATH := nixosConfigurations.default.config.system.build.images.raw-efi
 
@@ -70,7 +70,13 @@ up: ## create and start the Parallels VM from the built disk image
 	prl_disk_tool convert --hdd "$$hdd" --expanding; \
 	prlctl set '$(VM)' --device-set hdd0 --online-compact on; \
 	prlctl set '$(VM)' --cpus $(VM_CPUS) --memsize $(VM_MEM); \
-	prlctl set '$(VM)' --video-adapter-type virtio --3d-accelerate highest; \
+	prlctl set '$(VM)' --video-adapter-type virtio --3d-accelerate highest --vertical-sync off; \
+	prlctl set '$(VM)' --rosetta-linux on; \
+	prlctl set '$(VM)' --tools-autoupdate no; \
+	prlctl set '$(VM)' --autostop shutdown --on-window-close keep-running; \
+	prlctl set '$(VM)' --time-sync-smart-mode on; \
+	prlctl set '$(VM)' --sh-app-host-to-guest off --sh-app-guest-to-host off; \
+	prlctl set '$(VM)' --smart-mount off --shared-cloud off --share-host-location off; \
 	prlctl list -i '$(VM)' | grep -qF '$(CURDIR)' || \
 	{ echo "error: shared folder 'carverlinux' -> $(CURDIR) was not registered." >&2; \
 	  echo "  inspect: prlctl list -i '$(VM)'   remove: prlctl delete '$(VM)'" >&2; \
@@ -83,6 +89,8 @@ up: ## create and start the Parallels VM from the built disk image
 	{ echo "error: cpus not pinned to $(VM_CPUS) (still auto-sized)." >&2; exit 1; }; \
 	prlctl list -i '$(VM)' | grep -qE '^  memory size=$(VM_MEM)Mb auto=off' || \
 	{ echo "error: memory not pinned to $(VM_MEM)Mb (still auto-sized)." >&2; exit 1; }; \
+	prlctl list -i '$(VM)' | grep -qE '^  Rosetta Linux: on' || \
+	{ echo "error: Rosetta for Linux is not enabled; x86_64 binaries will not run." >&2; exit 1; }; \
 	prlctl start '$(VM)'
 
 .PHONY: help

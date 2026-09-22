@@ -2,11 +2,11 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, unstable, master, home-manager, llm-agents, peon-ping, workmux, multica-nix, ... }:
+{ config, lib, pkgs, unstable, master, home-manager, llm-agents, peon-ping, workmux, multica-nix, ... }:
 
 let
   multica = pkgs.callPackage ./packages/multica.nix { };
-  agent-browser = pkgs.callPackage ./packages/agent-browser.nix { };
+  agent-browser = pkgs.callPackage ./packages/agent-browser.nix { inherit unstable; };
 in
 {
   imports = [
@@ -92,14 +92,24 @@ in
   programs.ssh.startAgent = true;
 
   virtualisation.docker.enable = true;
-  boot.binfmt.emulatedSystems = [ "x86_64-linux" ];
-  boot.binfmt.preferStaticEmulators = true;
 
+  # Parallels serves the Rosetta runtime as a prl_fsd shared folder rather than
+  # the virtiofs share virtualisation.rosetta assumes.
+  virtualisation.rosetta.enable = true;
+  virtualisation.rosetta.mountTag = "RosettaLinux";
+  fileSystems."/run/rosetta" = {
+    fsType = lib.mkForce "fuse.prl_fsd";
+    options = [ "nofail" "nosuid" "nodev" "noatime" ];
+  };
+
+  systemd.services.systemd-binfmt = {
+    after = [ "run-rosetta.mount" ];
+    requires = [ "run-rosetta.mount" ];
+  };
 
   # Disable prltoolsd's global shared-folder automount
   environment.etc."prltools/prlfsmountd-disable".text = "";
 
-  # Mount /carverlinux shared folder from Parallels host
   fileSystems."/carverlinux" = {
     device = "carverlinux";
     fsType = "fuse.prl_fsd";
