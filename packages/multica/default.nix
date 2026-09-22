@@ -1,6 +1,3 @@
-# Our multica wiring: the multica-nix flake input provides the NixOS module;
-# services.multica config and the secrets service live here. Skill bodies live in
-# ./skills/*.md; agent instructions in ./agents/*.md.
 { multica-nix, ... }:
 
 {
@@ -8,25 +5,10 @@
     multica-nix.nixosModules.multica
   ];
 
-  # Multica self-hosted server (github.com/multica-ai/multica), run declaratively via
-  # the ../../multica-nix module: native Postgres 17 + pgvector, docker backend (:8080) and
-  # web (:3000) containers on host networking, all bound to loopback. JWT_SECRET comes
-  # from /etc/multica/multica.env, installed from the repo .env by multica-secrets below.
   services.multica = {
     enable = true;
     installDesktop = true;
-    environmentFile = "/etc/multica/multica.env";
-    # Log in as the account that owns the "test" workspace so declared skills
-    # land where they are visible in the app.
     devLoginEmail = "james@james.com";
-    # Default skill + agent set, genericised from a working workspace export.
-    # Skill bodies live in ./skills/*.md; agent instructions in
-    # ./agents/*.md. The 8 integration skills carry <PLACEHOLDER> tokens
-    # (see each skill's "Configure for your workspace" section) — fill them in per
-    # customer. The source agents each carried 11 secret integration env vars; those
-    # are NOT reproduced here (recreate per agent via `customEnvFile` when needed).
-    # Models: the source used claude-opus-5 / -sonnet-5 / -haiku; mapped to this
-    # runtime's current IDs below — bump if your runtime exposes the -5 line.
     skills.agent-browser = {
       description = "Drive a headless Chromium from the CLI for UI evidence — rendered pages, screenshots, authenticated flows.";
       source = ./skills/agent-browser.md;
@@ -111,7 +93,6 @@
       thinkingLevel = "high";
       visibility = "private";
       maxConcurrentTasks = 1;
-      # Source carried a personal --settings path in customArgs; dropped.
       instructions = builtins.readFile ./agents/code-simplifier.md;
       skills = [ "agent-browser" ];
     };
@@ -262,11 +243,6 @@
       assignee = "scrum-master";
     };
 
-    # Software delivery squad, genericised from a working workspace export
-    # (multica-squad-export.md). Leader is auto-added as a member by the reconciler,
-    # so scrum-master is not listed under members. Instructions live in
-    # ./squads/dream-team.md. The researcher member/agent is added here so the
-    # instructions' Researcher routing target resolves.
     squads."Dream team" = {
       description = "";
       leader = "scrum-master";
@@ -286,22 +262,4 @@
     };
   };
 
-  # Install secrets from the repo .env (gitignored) into a root-only file, keeping them
-  # out of the world-readable nix store.
-  systemd.services.multica-secrets = {
-    description = "Install multica secrets from repo .env";
-    wantedBy = [ "multi-user.target" ];
-    # Postgres is now native; the secret file (JWT_SECRET) is only needed by the
-    # backend/web containers, so order ahead of those.
-    before = [
-      "docker-multica-backend.service"
-      "docker-multica-web.service"
-    ];
-    serviceConfig.Type = "oneshot";
-    serviceConfig.RemainAfterExit = true;
-    script = ''
-      install -d -m700 /etc/multica
-      install -m600 /carverlinux/.env /etc/multica/multica.env
-    '';
-  };
 }

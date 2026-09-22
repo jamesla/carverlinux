@@ -3,8 +3,5 @@
 result
 *.fd
 keys/*
-nixos.img
-nixos.qcow2
-/.env
 /knowledge/*
 !/knowledge/.gitkeep

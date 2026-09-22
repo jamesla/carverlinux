@@ -2,10 +2,142 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, unstable, home-manager, llm-agents, peon-ping, workmux, multica-nix, ... }:
+{ config, lib, pkgs, unstable, master, home-manager, llm-agents, peon-ping, workmux, multica-nix, ... }:
 
 let
-  multica = pkgs.callPackage ./packages/multica.nix { };
+  multicaCli = config.services.multica.package;
+  multicaServerUrl = "http://127.0.0.1:8080";
+
+  multicaEnvFile = config.services.multica.environmentFile;
+  multicaTokenFile = "/run/multica-token/token";
+
+  # Runtimes are not declarative: multica-reconcile skips agents and squads (and
+  # then quick actions and autopilots, for want of assignees) unless a running
+  # daemon has registered one, and the daemon needs a credential to register.
+  #
+  # One unit mints that credential so there is a single dev-mode login for the
+  # whole VM. /auth/send-code is rate-limited, so a daemon and a reconciler each
+  # logging in separately starve one another.
+  #
+  # It lands in the module's own environmentFile, which multica-reconcile already
+  # reads as EnvironmentFile -- so once this has run, reconcile stops minting its
+  # own throwaway JWT and shares this token.
+  multica-token-bootstrap = pkgs.writeShellApplication {
+    name = "multica-token-bootstrap";
+    runtimeInputs = [ pkgs.curl pkgs.jq pkgs.coreutils pkgs.gnugrep pkgs.gnused multicaCli ];
+    text = ''
+      server=${lib.escapeShellArg multicaServerUrl}
+      email=${lib.escapeShellArg config.services.multica.devLoginEmail}
+      code=${lib.escapeShellArg config.services.multica.devVerificationCode}
+      env_file=${lib.escapeShellArg multicaEnvFile}
+      token_file=${lib.escapeShellArg multicaTokenFile}
+      export MULTICA_SERVER_URL="$server"
+
+      for _ in $(seq 1 60); do
+        curl -fsS "$server/health" >/dev/null 2>&1 && break
+        sleep 2
+      done
+
+      # Exit 0 means authenticated, 3 means the credential is absent or rejected.
+      # `multica auth status` cannot be used here -- it exits 0 either way.
+      pat=""
+      if [ -r "$env_file" ]; then
+        existing=$(sed -n 's/^MULTICA_TOKEN=//p' "$env_file" | head -1)
+        if [ -n "$existing" ] && MULTICA_TOKEN="$existing" multica user profile get >/dev/null 2>&1; then
+          pat="$existing"
+        fi
+      fi
+
+      if [ -z "$pat" ]; then
+        sent=0
+        for _ in $(seq 1 6); do
+          status=$(curl -s -o /dev/null -w '%{http_code}' -X POST \
+            -H 'Content-Type: application/json' \
+            -d "$(jq -nc --arg email "$email" '{email: $email}')" \
+            "$server/auth/send-code")
+          if [ "$status" = "200" ]; then sent=1; break; fi
+          sleep 10
+        done
+        if [ "$sent" != "1" ]; then
+          echo "multica-token: could not request a dev login code (rate limited?)" >&2
+          exit 1
+        fi
+
+        jwt=$(curl -fsS -X POST -H 'Content-Type: application/json' \
+          -d "$(jq -nc --arg email "$email" --arg code "$code" '{code: $code, email: $email}')" \
+          "$server/auth/verify-code" | jq -r '.token // empty')
+        if [ -z "$jwt" ]; then
+          echo "multica-token: dev login failed (no token in verify-code response)" >&2
+          exit 1
+        fi
+
+        # The dev-login JWT is transient and `multica login` only accepts mul_/mcn_
+        # tokens, so trade it for a PAT. PATs are user-scoped, which is why this
+        # works before any workspace exists.
+        pat=$(curl -fsS -X POST \
+          -H "Authorization: Bearer $jwt" \
+          -H 'Content-Type: application/json' \
+          -d '{"name":"carverlinux"}' \
+          "$server/api/tokens" | jq -r '.token // empty')
+        if [ -z "$pat" ]; then
+          echo "multica-token: could not mint an access token" >&2
+          exit 1
+        fi
+
+        # Readable by james (primary group users), not world: it is a credential.
+        tmp=$(mktemp "$env_file.XXXXXX")
+        grep -v '^MULTICA_TOKEN=' "$env_file" > "$tmp" 2>/dev/null || true
+        printf 'MULTICA_TOKEN=%s\n' "$pat" >> "$tmp"
+        chown root:users "$tmp"
+        chmod 0640 "$tmp"
+        mv "$tmp" "$env_file"
+      fi
+
+      # /var/lib/multica is 0750 root:root, so james cannot traverse into it no
+      # matter how the env file itself is chmodded. Publish a copy the daemon can
+      # actually read. Written on every run, not just when the token is minted,
+      # because RuntimeDirectory lives on tmpfs and is empty again after a reboot.
+      install -m 0640 -o root -g users /dev/null "$token_file"
+      printf '%s\n' "$pat" > "$token_file"
+    '';
+  };
+
+  # Consumes the token above; never logs in itself.
+  multica-daemon-start = pkgs.writeShellApplication {
+    name = "multica-daemon-start";
+    runtimeInputs = [ pkgs.coreutils pkgs.gnused multicaCli ];
+    text = ''
+      server=${lib.escapeShellArg multicaServerUrl}
+      token_file=${lib.escapeShellArg multicaTokenFile}
+      export MULTICA_SERVER_URL="$server"
+
+      pat=""
+      for _ in $(seq 1 150); do
+        if [ -r "$token_file" ]; then
+          pat=$(head -1 "$token_file")
+          [ -n "$pat" ] && break
+        fi
+        sleep 2
+      done
+      if [ -z "$pat" ]; then
+        echo "multica-daemon: no readable token at $token_file" >&2
+        exit 1
+      fi
+
+      # 127.0.0.1, not localhost: the backend is published on IPv4 only
+      # (docker 0.0.0.0:8080), but localhost resolves to ::1 first.
+      multica config set server_url "$server"
+      multica config set app_url http://127.0.0.1:3000
+
+      # The daemon reads its credential only from the CLI config, never from the
+      # environment, so the shared token has to be persisted with `multica login`.
+      multica user profile get >/dev/null 2>&1 || multica login --token "$pat" >/dev/null
+
+      exec multica daemon start --foreground
+    '';
+  };
+
+  agent-browser = pkgs.callPackage ./packages/agent-browser.nix { inherit unstable; };
 in
 {
   imports = [
@@ -18,26 +150,16 @@ in
 
   time.timeZone = "Pacific/Auckland";
   networking.useDHCP = true;
-  # Keep dhcpcd off Docker/VirtualBox virtual interfaces; managing veths that come
-  # and go with containers made dhcpcd SIGSEGV in a crash-loop.
   networking.dhcpcd.denyInterfaces = [ "veth*" "docker*" "br-*" "vboxnet*" ];
 
-  # Compressed in-RAM swap: cheap headroom so a memory spike can't hard-freeze the VM.
-  # memoryPercent = 100 gives more compressed swap before real pressure; zstd is default.
   zramSwap.enable = true;
   zramSwap.memoryPercent = 100;
 
-  # Run /tmp in RAM so temp-heavy compiles and tool scratch avoid the virtio disk.
-  # Overflow spills to zram swap, so a large build can't hard-fail; point TMPDIR at
-  # a disk path for the rare multi-GB nix image build if it ever exhausts this.
   boot.tmp.useTmpfs = true;
   boot.tmp.tmpfsSize = "60%";
 
   boot.kernel.sysctl = {
-    # With zram, swapping to RAM is cheaper than evicting page cache, so bias hard
-    # toward keeping hot file cache resident for better interactive responsiveness.
     "vm.swappiness" = 180;
-    # Writeback in small frequent batches instead of large stalls -> fewer UI hitches.
     "vm.dirty_background_ratio" = 5;
     "vm.dirty_ratio" = 15;
   };
@@ -48,7 +170,7 @@ in
     home = "/home/james";
     createHome = true;
     homeMode = "700";
-    extraGroups = [ "wheel" "docker" "vboxusers" "video" "audio" ];
+    extraGroups = [ "wheel" "docker" "vboxusers" "video" "audio" "render" ];
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBlkZ7yS+y5Jp/K18ZE3Swi4sfEWokEdNv0BwfDzYVEfSEKmWr9zKXhfm4pvhyxcWtqshYOzKMS3u6a8tpChEPlmVW5AkZeAPJk+Rwn++eANjeXpkvQ8zvfV6ALBU2FUiE60oGIA+tZOEbzUcgZ15CilFpwatnbe0whVocYsYAn4F9d3CLbt8U6miG4NjdSDP3E5OukuVyhF2dXEBVa9N0erLKZyL7hkePTWqoCY9hOvoxgMgopBNHLy2Q0yxkL9M3zgi8qQwa0L0ORcolBk4AVMV6+Wjt+lqYoTtn7GupFC3pZLwWRIqOvneb2oo37JVeUeIRSNSKKrwE7SGSaSAX"
@@ -56,9 +178,6 @@ in
   };
 
   security.sudo.wheelNeedsPassword = false;
-
-  services.spice-vdagentd.enable = true;
-  services.spice-autorandr.enable = true;
 
   # Audio: PipeWire with ALSA + PulseAudio shim
   security.rtkit.enable = true;
@@ -68,10 +187,6 @@ in
     alsa.support32Bit = true;
     pulse.enable = true;
     wireplumber.enable = true;
-    # WirePlumber otherwise remembers and restores per-device route state from
-    # ~/.local/state/wireplumber/, and the UTM VirtIO sink/source get stuck
-    # restored as muted/zero-volume across reboots. Disable route restoration
-    # and pin sane defaults so audio always comes up unmuted.
     wireplumber.extraConfig."51-virtio-audio" = {
       "wireplumber.settings" = {
         "device.restore-routes" = false;
@@ -83,18 +198,20 @@ in
   services.pulseaudio.enable = false;
 
   services.xserver = {
-    autoRepeatDelay = 150;
-    autoRepeatInterval = 30;
+    autoRepeatDelay = 500;
+    autoRepeatInterval = 25;
     xkb.options = "caps:escape, altwin:ctrl_win";
     enable = true;
     windowManager.xmonad = import ./packages/xmonad.nix;
     exportConfiguration = true;
-    dpi = 254;
+    dpi = 120;
     deviceSection = ''
       Driver "modesetting"
       Option "AccelMethod" "glamor"
     '';
   };
+
+  services.libinput.enable = true;
 
   services.displayManager = {
     autoLogin = {
@@ -106,21 +223,49 @@ in
   programs.ssh.startAgent = true;
 
   virtualisation.docker.enable = true;
-  boot.binfmt.emulatedSystems = [ "x86_64-linux" ];
-  boot.binfmt.preferStaticEmulators = true;
 
+  # Parallels serves the Rosetta runtime as a prl_fsd shared folder rather than
+  # the virtiofs share virtualisation.rosetta assumes.
+  virtualisation.rosetta.enable = true;
+  virtualisation.rosetta.mountTag = "RosettaLinux";
+  fileSystems."/run/rosetta" = {
+    fsType = lib.mkForce "fuse.prl_fsd";
+    options = [ "nofail" "nosuid" "nodev" "noatime" ];
+  };
 
-  # Install secrets from the repo .env (gitignored) into a root-only file, keeping them
-  # out of the world-readable nix store.
-  systemd.services.multica-secrets = {
-    description = "Install multica secrets from repo .env";
+  systemd.services.systemd-binfmt = {
+    after = [ "run-rosetta.mount" ];
+    requires = [ "run-rosetta.mount" ];
+  };
+
+  systemd.services.multica-token = {
+    description = "Mint the shared Multica access token (dev-mode login)";
+    after = [ "docker-multica-backend.service" ];
+    requires = [ "docker-multica-backend.service" ];
     wantedBy = [ "multi-user.target" ];
-    serviceConfig.Type = "oneshot";
-    serviceConfig.RemainAfterExit = true;
-    script = ''
-      install -d -m700 /etc/multica
-      install -m600 /carverlinux/.env /etc/multica/multica.env
-    '';
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      RuntimeDirectory = "multica-token";
+      RuntimeDirectoryMode = "0755";
+    };
+    script = lib.getExe multica-token-bootstrap;
+  };
+
+  # Ordered so reconcile picks the token up through its EnvironmentFile instead
+  # of performing a second dev login of its own.
+  systemd.services.multica-reconcile = {
+    after = [ "multica-token.service" ];
+    wants = [ "multica-token.service" ];
+  };
+
+  # Disable prltoolsd's global shared-folder automount
+  environment.etc."prltools/prlfsmountd-disable".text = "";
+
+  fileSystems."/carverlinux" = {
+    device = "carverlinux";
+    fsType = "fuse.prl_fsd";
+    options = [ "nofail" ];
   };
 
   # List packages installed in system profile. To search, run:
@@ -150,6 +295,7 @@ in
     pkgs.inetutils
     pkgs.killall
     pkgs.mesa-demos
+    pkgs.vulkan-tools
     pkgs.alsa-utils
     pkgs.pavucontrol
     pkgs.pamixer
@@ -158,8 +304,8 @@ in
     pkgs.obsidian
     (pkgs.callPackage ./packages/st { })
     (unstable.callPackage ./packages/claude.nix { })
-    multica
-    pkgs.bindfs
+    agent-browser
+    pkgs.libglvnd
   ];
 
   fonts.packages = with pkgs; [
@@ -170,6 +316,8 @@ in
   environment.sessionVariables = {
     TERMINAL = "st";
     EDITOR = "nvim";
+    MESA_LOADER_DRIVER_OVERRIDE = "virtio_gpu";
+    LIBGL_ALWAYS_INDIRECT = "0";
   };
 
   programs.fish = import ./packages/fish.nix;
@@ -177,6 +325,9 @@ in
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
   programs.ssh.askPassword = "";
+
+  # Returns freed blocks to the host so the expanding Parallels disk can shrink.
+  services.fstrim.enable = true;
 
    home-manager.backupFileExtension = "backup";
    home-manager.users.james = {
@@ -194,13 +345,9 @@ in
      programs.peon-ping = import ./packages/peon-ping.nix { inherit pkgs peon-ping; };
      home.packages = [ peon-ping.packages."${pkgs.stdenv.hostPlatform.system}".default ];
 
+
      # Multica agent daemon: auto-detects the coding agent CLIs on PATH (claude,
      # opencode) and registers each as a runtime the local server can assign tasks to.
-     # Credentials (token + workspace) are established once via `multica login --token`
-     # and then persist in ~/.multica/config.json; the daemon authenticates from there,
-     # so the service never runs the interactive (browser-spawning) login itself.
-     # One-time bootstrap after first boot (mint a PAT in the web UI, put it in .env):
-     #   multica login --token "$(sed -n 's/^MULTICA_TOKEN=//p' /carverlinux/.env)"
      systemd.user.services.multica-daemon = {
        Unit = {
          Description = "Multica agent daemon (registers local coding agents)";
@@ -215,15 +362,9 @@ in
            # Ensure the detected agent CLIs are on the daemon's PATH.
            "PATH=/run/current-system/sw/bin:/etc/profiles/per-user/james/bin:%h/.nix-profile/bin"
          ];
-         # Idempotent, browser-free; keeps the server/app URLs pinned across restarts.
-         ExecStartPre = [
-           # Use 127.0.0.1, not localhost: the backend is published on IPv4 only
-           # (docker 0.0.0.0:8080), but localhost resolves to ::1 first -> connection
-           # refused and the daemon crash-loops.
-           "${multica}/bin/multica config set server_url http://127.0.0.1:8080"
-           "${multica}/bin/multica config set app_url http://127.0.0.1:3000"
-         ];
-         ExecStart = "${multica}/bin/multica daemon start --foreground";
+         # Waits for the backend, pins the server/app URLs, then dev-logs-in and
+         # execs the daemon. Idempotent and browser-free.
+         ExecStart = lib.getExe multica-daemon-start;
          Restart = "on-failure";
          RestartSec = 10;
        };

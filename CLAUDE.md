@@ -1,1 +1,27 @@
-AGENTS.md
+# Carverlinux Agent Guidelines
+
+## Build Commands
+- `make build` - Build Parallels Desktop image (from macOS)
+- `make up` - Create and start the Parallels VM from the built disk image
+- `make rebuild` - Rebuild system from NixOS  
+- `make clean` - Clean nix garbage
+- `make update` - Update flake lock file
+
+## Code Style Guidelines
+- Use Nix functional style with proper indentation (2 spaces)
+- Follow NixOS module patterns with imports and config sections
+- Use descriptive variable names (snake_case for packages, camelCase for functions)
+- Keep configuration modular - separate concerns into individual .nix files
+- Use overlays for package customization
+- Include proper SHA256 hashes for fetchurl
+- Use `inherit` for passing arguments between modules
+- Maintain consistent ordering: inputs, overlays, pkgs, configurations
+- Use comments sparingly - Nix should be self-documenting
+- Follow Nixpkgs conventions for package definitions
+- Only write to flake.nix if necessary - prefer writing to configuration.nix, hardware-configuration.nix or the nix files in the packages directory.
+
+## Important
+
+- Never git commit or push unless specifically asked
+- Do not create git branches
+- Don't make changes to the system directly. Make them to the nixos configuration so that the change is made for all applies going forward.
