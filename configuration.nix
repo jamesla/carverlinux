@@ -8,26 +8,29 @@ let
   multicaCli = config.services.multica.package;
   multicaServerUrl = "http://127.0.0.1:8080";
 
+  multicaEnvFile = config.services.multica.environmentFile;
+  multicaTokenFile = "/run/multica-token/token";
+
   # Runtimes are not declarative: multica-reconcile skips agents and squads (and
   # then quick actions and autopilots, for want of assignees) unless a running
-  # daemon has registered one. The daemon needs a credential to do that, and
-  # `multica config set` has no token key, so it has to log in.
+  # daemon has registered one, and the daemon needs a credential to register.
   #
-  # A dev-login JWT is not enough on its own -- `multica daemon start` wants a
-  # credential persisted by `multica login`, which only accepts a mul_… PAT. So
-  # bootstrap through the same dev login multica-reconcile uses, then spend that
-  # JWT once on minting a non-expiring PAT and hand that to `multica login`.
+  # One unit mints that credential so there is a single dev-mode login for the
+  # whole VM. /auth/send-code is rate-limited, so a daemon and a reconciler each
+  # logging in separately starve one another.
   #
-  # Guarded on `multica auth status` so this runs once per VM, not once per
-  # restart: /auth/send-code is rate-limited and multica-reconcile competes for
-  # it, so logging in on every start starves both.
-  multica-daemon-start = pkgs.writeShellApplication {
-    name = "multica-daemon-start";
-    runtimeInputs = [ pkgs.curl pkgs.jq multicaCli ];
+  # It lands in the module's own environmentFile, which multica-reconcile already
+  # reads as EnvironmentFile -- so once this has run, reconcile stops minting its
+  # own throwaway JWT and shares this token.
+  multica-token-bootstrap = pkgs.writeShellApplication {
+    name = "multica-token-bootstrap";
+    runtimeInputs = [ pkgs.curl pkgs.jq pkgs.coreutils pkgs.gnugrep pkgs.gnused multicaCli ];
     text = ''
       server=${lib.escapeShellArg multicaServerUrl}
       email=${lib.escapeShellArg config.services.multica.devLoginEmail}
       code=${lib.escapeShellArg config.services.multica.devVerificationCode}
+      env_file=${lib.escapeShellArg multicaEnvFile}
+      token_file=${lib.escapeShellArg multicaTokenFile}
       export MULTICA_SERVER_URL="$server"
 
       for _ in $(seq 1 60); do
@@ -35,12 +38,17 @@ let
         sleep 2
       done
 
-      # 127.0.0.1, not localhost: the backend is published on IPv4 only
-      # (docker 0.0.0.0:8080), but localhost resolves to ::1 first.
-      multica config set server_url "$server"
-      multica config set app_url http://127.0.0.1:3000
+      # Exit 0 means authenticated, 3 means the credential is absent or rejected.
+      # `multica auth status` cannot be used here -- it exits 0 either way.
+      pat=""
+      if [ -r "$env_file" ]; then
+        existing=$(sed -n 's/^MULTICA_TOKEN=//p' "$env_file" | head -1)
+        if [ -n "$existing" ] && MULTICA_TOKEN="$existing" multica user profile get >/dev/null 2>&1; then
+          pat="$existing"
+        fi
+      fi
 
-      if ! multica auth status >/dev/null 2>&1; then
+      if [ -z "$pat" ]; then
         sent=0
         for _ in $(seq 1 6); do
           status=$(curl -s -o /dev/null -w '%{http_code}' -X POST \
@@ -51,7 +59,7 @@ let
           sleep 10
         done
         if [ "$sent" != "1" ]; then
-          echo "multica-daemon: could not request a dev login code (rate limited?)" >&2
+          echo "multica-token: could not request a dev login code (rate limited?)" >&2
           exit 1
         fi
 
@@ -59,32 +67,71 @@ let
           -d "$(jq -nc --arg email "$email" --arg code "$code" '{code: $code, email: $email}')" \
           "$server/auth/verify-code" | jq -r '.token // empty')
         if [ -z "$jwt" ]; then
-          echo "multica-daemon: dev login failed (no token in verify-code response)" >&2
+          echo "multica-token: dev login failed (no token in verify-code response)" >&2
           exit 1
         fi
 
-        # The API wants the workspace alongside the bearer token; without
-        # X-Workspace-Id it answers "missing authorization".
-        ws=$(MULTICA_TOKEN="$jwt" multica workspace list --output json \
-          | jq -r '.[0].id // empty')
-        if [ -z "$ws" ]; then
-          echo "multica-daemon: dev login token sees no workspace" >&2
-          exit 1
-        fi
-
+        # The dev-login JWT is transient and `multica login` only accepts mul_/mcn_
+        # tokens, so trade it for a PAT. PATs are user-scoped, which is why this
+        # works before any workspace exists.
         pat=$(curl -fsS -X POST \
           -H "Authorization: Bearer $jwt" \
-          -H "X-Workspace-Id: $ws" \
           -H 'Content-Type: application/json' \
-          -d '{"name":"carverlinux-daemon"}' \
+          -d '{"name":"carverlinux"}' \
           "$server/api/tokens" | jq -r '.token // empty')
         if [ -z "$pat" ]; then
-          echo "multica-daemon: could not mint a daemon access token" >&2
+          echo "multica-token: could not mint an access token" >&2
           exit 1
         fi
 
-        multica login --token "$pat" >/dev/null
+        # Readable by james (primary group users), not world: it is a credential.
+        tmp=$(mktemp "$env_file.XXXXXX")
+        grep -v '^MULTICA_TOKEN=' "$env_file" > "$tmp" 2>/dev/null || true
+        printf 'MULTICA_TOKEN=%s\n' "$pat" >> "$tmp"
+        chown root:users "$tmp"
+        chmod 0640 "$tmp"
+        mv "$tmp" "$env_file"
       fi
+
+      # /var/lib/multica is 0750 root:root, so james cannot traverse into it no
+      # matter how the env file itself is chmodded. Publish a copy the daemon can
+      # actually read. Written on every run, not just when the token is minted,
+      # because RuntimeDirectory lives on tmpfs and is empty again after a reboot.
+      install -m 0640 -o root -g users /dev/null "$token_file"
+      printf '%s\n' "$pat" > "$token_file"
+    '';
+  };
+
+  # Consumes the token above; never logs in itself.
+  multica-daemon-start = pkgs.writeShellApplication {
+    name = "multica-daemon-start";
+    runtimeInputs = [ pkgs.coreutils pkgs.gnused multicaCli ];
+    text = ''
+      server=${lib.escapeShellArg multicaServerUrl}
+      token_file=${lib.escapeShellArg multicaTokenFile}
+      export MULTICA_SERVER_URL="$server"
+
+      pat=""
+      for _ in $(seq 1 150); do
+        if [ -r "$token_file" ]; then
+          pat=$(head -1 "$token_file")
+          [ -n "$pat" ] && break
+        fi
+        sleep 2
+      done
+      if [ -z "$pat" ]; then
+        echo "multica-daemon: no readable token at $token_file" >&2
+        exit 1
+      fi
+
+      # 127.0.0.1, not localhost: the backend is published on IPv4 only
+      # (docker 0.0.0.0:8080), but localhost resolves to ::1 first.
+      multica config set server_url "$server"
+      multica config set app_url http://127.0.0.1:3000
+
+      # The daemon reads its credential only from the CLI config, never from the
+      # environment, so the shared token has to be persisted with `multica login`.
+      multica user profile get >/dev/null 2>&1 || multica login --token "$pat" >/dev/null
 
       exec multica daemon start --foreground
     '';
@@ -189,6 +236,27 @@ in
   systemd.services.systemd-binfmt = {
     after = [ "run-rosetta.mount" ];
     requires = [ "run-rosetta.mount" ];
+  };
+
+  systemd.services.multica-token = {
+    description = "Mint the shared Multica access token (dev-mode login)";
+    after = [ "docker-multica-backend.service" ];
+    requires = [ "docker-multica-backend.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      RuntimeDirectory = "multica-token";
+      RuntimeDirectoryMode = "0755";
+    };
+    script = lib.getExe multica-token-bootstrap;
+  };
+
+  # Ordered so reconcile picks the token up through its EnvironmentFile instead
+  # of performing a second dev login of its own.
+  systemd.services.multica-reconcile = {
+    after = [ "multica-token.service" ];
+    wants = [ "multica-token.service" ];
   };
 
   # Disable prltoolsd's global shared-folder automount
