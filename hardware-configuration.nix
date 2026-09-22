@@ -30,9 +30,6 @@
   hardware.parallels.enable = true;
   hardware.parallels.package = master.prl-tools;
 
-  # Fix Parallels 27 prlcc crash on aarch64: use virtio_gpu DRI driver for OpenGL acceleration
-  # Note: Mesa names the on-disk driver "virtio_gpu_dri.so" after the kernel DRM driver,
-  # even though the gallium implementation is internally "virgl"
   systemd.user.services.prlcc.serviceConfig.Environment = [
     "MESA_LOADER_DRIVER_OVERRIDE=virtio_gpu"
   ];
