@@ -165,6 +165,9 @@ in
   services.openssh.enable = true;
   programs.ssh.askPassword = "";
 
+  # Returns freed blocks to the host so the expanding Parallels disk can shrink.
+  services.fstrim.enable = true;
+
    home-manager.backupFileExtension = "backup";
    home-manager.users.james = {
      imports = [

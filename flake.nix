@@ -66,7 +66,6 @@
 
           ./hardware-configuration.nix
           ./configuration.nix
-          { virtualisation.diskSize = 120 * 1024; }
         ];
         specialArgs = {
           inherit unstable master home-manager llm-agents peon-ping workmux multica-nix;

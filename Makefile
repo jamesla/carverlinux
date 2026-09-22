@@ -3,7 +3,8 @@ PACKAGE ?= carverlinux
 VM        ?= $(notdir $(CURDIR))
 VM_DIR    ?= $(HOME)/Parallels
 VM_CPUS   ?= 4
-VM_MEM    ?= 24576
+VM_MEM    ?= 16384
+VM_DISK_MB ?= 122880
 IMAGE_ATTR_PATH := nixosConfigurations.default.config.system.build.images.raw-efi
 
 .DEFAULT_GOAL := help
@@ -13,8 +14,7 @@ IMAGE_ATTR_PATH := nixosConfigurations.default.config.system.build.images.raw-ef
 .PHONY: build
 build: ## build system image for Parallels Desktop (from macOS)
 	@nix build ".#$(IMAGE_ATTR_PATH)"
-	@cp result/*.img nixos-parallels.img
-	@chmod 644 nixos-parallels.img
+	@ls -lh result/*.img
 
 .PHONY: rebuild
 rebuild: ## rebuild system (from NixOS)
@@ -45,16 +45,44 @@ up: ## create and start the Parallels VM from the built disk image
 	bytes=$$(stat -f %z "$$img"); \
 	size_mb=$$(( (bytes + 1048575) / 1048576 )); \
 	prlctl create '$(VM)' --distribution linux --no-hdd --dst '$(VM_DIR)'; \
-	prlctl set '$(VM)' --device-add hdd --size "$$size_mb" --type plain \
+	prlctl set '$(VM)' --shf-host-add carverlinux --path '$(CURDIR)' --mode rw; \
+	echo "priming the VM so Parallels applies the shared-folder setting"; \
+	prlctl start '$(VM)' >/dev/null; \
+	for i in $$(seq 1 30); do \
+	  [ "$$(prlctl list -a -o status --no-header '$(VM)' | tr -d ' ')" = running ] && break; \
+	  sleep 1; \
+	done; \
+	sleep 5; \
+	prlctl stop '$(VM)' --kill >/dev/null; \
+	for i in $$(seq 1 30); do \
+	  [ "$$(prlctl list -a -o status --no-header '$(VM)' | tr -d ' ')" = stopped ] && break; \
+	  sleep 1; \
+	done; \
+	prlctl set '$(VM)' --shf-host on; \
+	prlctl set '$(VM)' --device-add hdd --size $(VM_DISK_MB) --type plain \
 	  --iface sata --position 0 --alloc-policy sparse; \
 	home=$$(prlctl list -i '$(VM)' | awk '/^Home: /{print $$2}'); \
 	hds=$$(ls "$$home"/*.hdd/*.hds | head -1); \
-	echo "writing $$img -> $$hds (~$$size_mb MB, this takes a few minutes)"; \
-	dd if="$$img" of="$$hds" bs=4m conv=notrunc; \
+	hdd=$$(dirname "$$hds"); \
+	echo "writing $$img ($$size_mb MB) -> $$hds in a $(VM_DISK_MB) MB disk"; \
+	dd if="$$img" of="$$hds" bs=4m conv=notrunc,sparse; \
+	echo "converting to an expanding disk"; \
+	prl_disk_tool convert --hdd "$$hdd" --expanding; \
+	prlctl set '$(VM)' --device-set hdd0 --online-compact on; \
 	prlctl set '$(VM)' --cpus $(VM_CPUS) --memsize $(VM_MEM); \
 	prlctl set '$(VM)' --video-adapter-type virtio --3d-accelerate highest; \
-	prlctl set '$(VM)' --shf-host on; \
-	prlctl set '$(VM)' --shf-host-add carverlinux --path '$(CURDIR)' --mode rw; \
+	prlctl list -i '$(VM)' | grep -qF '$(CURDIR)' || \
+	{ echo "error: shared folder 'carverlinux' -> $(CURDIR) was not registered." >&2; \
+	  echo "  inspect: prlctl list -i '$(VM)'   remove: prlctl delete '$(VM)'" >&2; \
+	  exit 1; }; \
+	prlctl list -i '$(VM)' | grep -q '^Host Shared Folders: (+)' || \
+	{ echo "error: folder 'carverlinux' is registered but host sharing is disabled." >&2; \
+	  echo "  Parallels only applies it after the VM has been started once (the priming step)." >&2; \
+	  exit 1; }; \
+	prlctl list -i '$(VM)' | grep -qE '^  cpu cpus=$(VM_CPUS) auto=off' || \
+	{ echo "error: cpus not pinned to $(VM_CPUS) (still auto-sized)." >&2; exit 1; }; \
+	prlctl list -i '$(VM)' | grep -qE '^  memory size=$(VM_MEM)Mb auto=off' || \
+	{ echo "error: memory not pinned to $(VM_MEM)Mb (still auto-sized)." >&2; exit 1; }; \
 	prlctl start '$(VM)'
 
 .PHONY: help
