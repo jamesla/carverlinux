@@ -338,6 +338,10 @@ in
      ];
      programs.git = import ./packages/git.nix;
      programs.ssh = import ./packages/ssh.nix;
+     home.file.".ssh/config".enable = false;
+     home.activation.sshConfigCopy = home-manager.lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+       run install -m 0600 ${config.home-manager.users.james.home.file.".ssh/config".source} "$HOME/.ssh/config"
+     '';
      programs.chromium = import ./packages/chromium.nix;
      programs.tmux = import ./packages/tmux.nix { inherit config pkgs; };
      programs.neovim = import ./packages/neovim.nix { inherit config pkgs; };
