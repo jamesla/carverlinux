@@ -66,13 +66,11 @@ you cloned into, so in this checkout the VM is named `carverlinux-acm2`.
 
 ## Testing
 
-`make check` verifies a running VM. It covers five checks — `opengl` (real
+`make check` verifies a running VM. It covers four checks — `opengl` (real
 virgl acceleration, not an llvmpipe fallback), `rosetta` (x86_64 binaries
-actually execute), `docker-x86` (`linux/amd64` containers run),
+actually execute), `docker-x86` (`linux/amd64` containers run), and
 `carverlinux-mount` (the Parallels shared folder is mounted and readable as
-your user), and `multica-resources` (every skill, agent, squad, autopilot and
-quick action declared in `packages/multica/default.nix` exists in the running
-Multica instance).
+your user).
 
 The checks are written in English in `tests/guest-checks.md` and driven by an
 agent over `prlctl exec`; it prints a line per check and exits non-zero unless

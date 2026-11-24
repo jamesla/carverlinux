@@ -22,7 +22,7 @@
   boot.kernelModules = [ "virtio_snd" ];
   boot.extraModulePackages = [ ];
   boot.loader.systemd-boot.enable = true;
-  boot.loader.systemd-boot.configurationLimit = 10;
+  boot.loader.systemd-boot.configurationLimit = 3;
   boot.loader.timeout = 1;
 
   services.xserver.videoDrivers = [ "modesetting" ];

@@ -66,6 +66,20 @@
     {
       plugin = pkgs.vimPlugins.vim-tmux-navigator;
       config = ''
+        -- vim-tmux-navigator only leaves vim when $TMUX is set; do the same for herdr.
+        if vim.env.HERDR_ENV then
+          vim.g.tmux_navigator_no_mappings = 1
+          for key, direction in pairs({ h = 'left', j = 'down', k = 'up', l = 'right' }) do
+            vim.keymap.set('n', '<C-' .. key .. '>', function()
+              local win = vim.api.nvim_get_current_win()
+              vim.cmd('wincmd ' .. key)
+              if vim.api.nvim_get_current_win() == win then
+                vim.fn.system({ 'herdr', 'pane', 'focus', '--current', '--direction', direction })
+              end
+            end)
+          end
+        end
+
         vim.keymap.set('n', '<C-n>', ':NERDTree<CR>')
 
         vim.api.nvim_create_autocmd('VimEnter', {

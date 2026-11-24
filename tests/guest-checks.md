@@ -78,34 +78,6 @@ The Parallels shared folder must be mounted:
 Treat this check as read-only: do not write into `/carverlinux`, it is the
 user's live repo checkout on the host.
 
-### 5. multica-resources
-
-The skills, agents, squads, autopilots and quick actions declared in
-`packages/multica/default.nix` must actually exist in the running Multica
-instance, not merely be declared.
-
-`multica-reconcile.service` is what pushes them. Work out what was declared
-rather than trusting a number in this file — `systemctl cat
-multica-reconcile.service` leads to the reconcile script, which names a JSON
-manifest in the nix store holding every declared `agents`, `autopilots`,
-`quickActions`, `skills` and `squads` entry. That manifest is the expected set.
-
-Then confirm they were created. Useful signals, roughly in order of strength:
-
-- `multica-reconcile.service` is `active (exited)`. It is a `RemainAfterExit`
-  oneshot, so anything else — especially still `activating` — means reconcile
-  never finished and the later resource types were never pushed.
-- Its journal logs a `creating <name>` line per resource.
-- The backend on `http://127.0.0.1:8080` can be queried for what actually
-  exists, and the `multica` CLI has `agent`, `autopilot`, `skill` and `squad`
-  subcommands. If the CLI reports it is not authenticated, say so in the
-  result rather than attempting to log in.
-
-Report a count per resource type — declared versus present — and name anything
-missing. Every declared resource must exist for this check to pass. Do not
-create, delete or modify any Multica resource, and never print the contents of
-`/var/lib/multica/env`.
-
 ## Reporting
 
 This report is parsed by `make check`, so the format is not optional. Emit it

@@ -7,10 +7,8 @@
     llm-agents.url = "github:numtide/llm-agents.nix";
     peon-ping.url = "github:PeonPing/peon-ping";
     workmux.url = "github:raine/workmux";
-    multica-nix.url = "github:jamesla/multica-nix/1.0.2";
-    multica-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
-  outputs = { self, nixpkgs, unstablepkgs, masterpkgs, home-manager, llm-agents, peon-ping, workmux, multica-nix, ... }: let
+  outputs = { self, nixpkgs, unstablepkgs, masterpkgs, home-manager, llm-agents, peon-ping, workmux, ... }: let
     system = "aarch64-linux";
 
     unstable = import unstablepkgs {
@@ -52,7 +50,7 @@
           ./configuration.nix
         ];
         specialArgs = {
-          inherit unstable master home-manager llm-agents peon-ping workmux multica-nix;
+          inherit unstable master home-manager llm-agents peon-ping workmux;
         };
      };
     };

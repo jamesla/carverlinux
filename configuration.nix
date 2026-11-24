@@ -2,147 +2,14 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, lib, pkgs, unstable, master, home-manager, llm-agents, peon-ping, workmux, multica-nix, ... }:
+{ config, lib, pkgs, unstable, master, home-manager, llm-agents, peon-ping, workmux, ... }:
 
 let
-  multicaCli = config.services.multica.package;
-  multicaServerUrl = "http://127.0.0.1:8080";
-
-  multicaEnvFile = config.services.multica.environmentFile;
-  multicaTokenFile = "/run/multica-token/token";
-
-  # Runtimes are not declarative: multica-reconcile skips agents and squads (and
-  # then quick actions and autopilots, for want of assignees) unless a running
-  # daemon has registered one, and the daemon needs a credential to register.
-  #
-  # One unit mints that credential so there is a single dev-mode login for the
-  # whole VM. /auth/send-code is rate-limited, so a daemon and a reconciler each
-  # logging in separately starve one another.
-  #
-  # It lands in the module's own environmentFile, which multica-reconcile already
-  # reads as EnvironmentFile -- so once this has run, reconcile stops minting its
-  # own throwaway JWT and shares this token.
-  multica-token-bootstrap = pkgs.writeShellApplication {
-    name = "multica-token-bootstrap";
-    runtimeInputs = [ pkgs.curl pkgs.jq pkgs.coreutils pkgs.gnugrep pkgs.gnused multicaCli ];
-    text = ''
-      server=${lib.escapeShellArg multicaServerUrl}
-      email=${lib.escapeShellArg config.services.multica.devLoginEmail}
-      code=${lib.escapeShellArg config.services.multica.devVerificationCode}
-      env_file=${lib.escapeShellArg multicaEnvFile}
-      token_file=${lib.escapeShellArg multicaTokenFile}
-      export MULTICA_SERVER_URL="$server"
-
-      for _ in $(seq 1 60); do
-        curl -fsS "$server/health" >/dev/null 2>&1 && break
-        sleep 2
-      done
-
-      # Exit 0 means authenticated, 3 means the credential is absent or rejected.
-      # `multica auth status` cannot be used here -- it exits 0 either way.
-      pat=""
-      if [ -r "$env_file" ]; then
-        existing=$(sed -n 's/^MULTICA_TOKEN=//p' "$env_file" | head -1)
-        if [ -n "$existing" ] && MULTICA_TOKEN="$existing" multica user profile get >/dev/null 2>&1; then
-          pat="$existing"
-        fi
-      fi
-
-      if [ -z "$pat" ]; then
-        sent=0
-        for _ in $(seq 1 6); do
-          status=$(curl -s -o /dev/null -w '%{http_code}' -X POST \
-            -H 'Content-Type: application/json' \
-            -d "$(jq -nc --arg email "$email" '{email: $email}')" \
-            "$server/auth/send-code")
-          if [ "$status" = "200" ]; then sent=1; break; fi
-          sleep 10
-        done
-        if [ "$sent" != "1" ]; then
-          echo "multica-token: could not request a dev login code (rate limited?)" >&2
-          exit 1
-        fi
-
-        jwt=$(curl -fsS -X POST -H 'Content-Type: application/json' \
-          -d "$(jq -nc --arg email "$email" --arg code "$code" '{code: $code, email: $email}')" \
-          "$server/auth/verify-code" | jq -r '.token // empty')
-        if [ -z "$jwt" ]; then
-          echo "multica-token: dev login failed (no token in verify-code response)" >&2
-          exit 1
-        fi
-
-        # The dev-login JWT is transient and `multica login` only accepts mul_/mcn_
-        # tokens, so trade it for a PAT. PATs are user-scoped, which is why this
-        # works before any workspace exists.
-        pat=$(curl -fsS -X POST \
-          -H "Authorization: Bearer $jwt" \
-          -H 'Content-Type: application/json' \
-          -d '{"name":"carverlinux"}' \
-          "$server/api/tokens" | jq -r '.token // empty')
-        if [ -z "$pat" ]; then
-          echo "multica-token: could not mint an access token" >&2
-          exit 1
-        fi
-
-        # Readable by james (primary group users), not world: it is a credential.
-        tmp=$(mktemp "$env_file.XXXXXX")
-        grep -v '^MULTICA_TOKEN=' "$env_file" > "$tmp" 2>/dev/null || true
-        printf 'MULTICA_TOKEN=%s\n' "$pat" >> "$tmp"
-        chown root:users "$tmp"
-        chmod 0640 "$tmp"
-        mv "$tmp" "$env_file"
-      fi
-
-      # /var/lib/multica is 0750 root:root, so james cannot traverse into it no
-      # matter how the env file itself is chmodded. Publish a copy the daemon can
-      # actually read. Written on every run, not just when the token is minted,
-      # because RuntimeDirectory lives on tmpfs and is empty again after a reboot.
-      install -m 0640 -o root -g users /dev/null "$token_file"
-      printf '%s\n' "$pat" > "$token_file"
-    '';
-  };
-
-  # Consumes the token above; never logs in itself.
-  multica-daemon-start = pkgs.writeShellApplication {
-    name = "multica-daemon-start";
-    runtimeInputs = [ pkgs.coreutils pkgs.gnused multicaCli ];
-    text = ''
-      server=${lib.escapeShellArg multicaServerUrl}
-      token_file=${lib.escapeShellArg multicaTokenFile}
-      export MULTICA_SERVER_URL="$server"
-
-      pat=""
-      for _ in $(seq 1 150); do
-        if [ -r "$token_file" ]; then
-          pat=$(head -1 "$token_file")
-          [ -n "$pat" ] && break
-        fi
-        sleep 2
-      done
-      if [ -z "$pat" ]; then
-        echo "multica-daemon: no readable token at $token_file" >&2
-        exit 1
-      fi
-
-      # 127.0.0.1, not localhost: the backend is published on IPv4 only
-      # (docker 0.0.0.0:8080), but localhost resolves to ::1 first.
-      multica config set server_url "$server"
-      multica config set app_url http://127.0.0.1:3000
-
-      # The daemon reads its credential only from the CLI config, never from the
-      # environment, so the shared token has to be persisted with `multica login`.
-      multica user profile get >/dev/null 2>&1 || multica login --token "$pat" >/dev/null
-
-      exec multica daemon start --foreground
-    '';
-  };
-
   agent-browser = pkgs.callPackage ./packages/agent-browser.nix { inherit unstable; };
 in
 {
   imports = [
     home-manager.nixosModules.home-manager
-    ./packages/multica
   ];
 
   networking.hostName = "carverlinux";
@@ -238,27 +105,6 @@ in
     requires = [ "run-rosetta.mount" ];
   };
 
-  systemd.services.multica-token = {
-    description = "Mint the shared Multica access token (dev-mode login)";
-    after = [ "docker-multica-backend.service" ];
-    requires = [ "docker-multica-backend.service" ];
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      RuntimeDirectory = "multica-token";
-      RuntimeDirectoryMode = "0755";
-    };
-    script = lib.getExe multica-token-bootstrap;
-  };
-
-  # Ordered so reconcile picks the token up through its EnvironmentFile instead
-  # of performing a second dev login of its own.
-  systemd.services.multica-reconcile = {
-    after = [ "multica-token.service" ];
-    wants = [ "multica-token.service" ];
-  };
-
   # Disable prltoolsd's global shared-folder automount
   environment.etc."prltools/prlfsmountd-disable".text = "";
 
@@ -272,6 +118,7 @@ in
   environment.systemPackages = [
     unstable.opencode
     pkgs.ngrok
+    unstable.pi-coding-agent
     pkgs.zip
     pkgs.lsof
     pkgs.gh
@@ -335,6 +182,7 @@ in
        ./packages/peon-ping-fixed.nix
        (import ./packages/workmux.nix { inherit pkgs workmux; })
        ./packages/opencode.nix
+       (import ./packages/herdr.nix { inherit pkgs unstable; })
      ];
      programs.git = import ./packages/git.nix;
      programs.ssh = import ./packages/ssh.nix;
@@ -344,32 +192,6 @@ in
      programs.ghostty = import ./packages/ghostty.nix { inherit pkgs; };
      programs.peon-ping = import ./packages/peon-ping.nix { inherit pkgs peon-ping; };
      home.packages = [ peon-ping.packages."${pkgs.stdenv.hostPlatform.system}".default ];
-
-
-     # Multica agent daemon: auto-detects the coding agent CLIs on PATH (claude,
-     # opencode) and registers each as a runtime the local server can assign tasks to.
-     systemd.user.services.multica-daemon = {
-       Unit = {
-         Description = "Multica agent daemon (registers local coding agents)";
-         After = [ "network-online.target" ];
-         Wants = [ "network-online.target" ];
-       };
-       Service = {
-         Type = "simple";
-         Environment = [
-           "MULTICA_WORKSPACES_ROOT=%h/multica_workspaces"
-           "OBSIDIAN_VAULT=/carverlinux/knowledge"
-           # Ensure the detected agent CLIs are on the daemon's PATH.
-           "PATH=/run/current-system/sw/bin:/etc/profiles/per-user/james/bin:%h/.nix-profile/bin"
-         ];
-         # Waits for the backend, pins the server/app URLs, then dev-logs-in and
-         # execs the daemon. Idempotent and browser-free.
-         ExecStart = lib.getExe multica-daemon-start;
-         Restart = "on-failure";
-         RestartSec = 10;
-       };
-       Install.WantedBy = [ "default.target" ];
-     };
 
      home.stateVersion = "26.05";
    };

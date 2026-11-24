@@ -30,6 +30,7 @@
         }
         `additionalKeys`
         [ ((mod1Mask .|. shiftMask, xK_Return), spawn "st -e tmux new-session -A -s main")
+        , ((mod1Mask .|. controlMask, xK_Return), spawn "st -e herdr --session main")
         ]
   '';
 }
