@@ -2,7 +2,9 @@
 {
   enable = true;
   package = peon-ping.packages."${pkgs.stdenv.hostPlatform.system}".default;
-  claudeCodeIntegration = true;
+  # Sounds are driven by herdr agent status (see peonPlugin in herdr.nix), not
+  # by Claude Code hooks.
+  claudeCodeIntegration = false;
   settings = {
     default_pack = "sc_scv";
     volume = 0.7;

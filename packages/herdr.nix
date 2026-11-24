@@ -54,6 +54,100 @@ let
     EOF
   '';
 
+  # Runs on pane.agent_status_changed: turns herdr's agent status transitions
+  # into the Claude Code hook events peon-ping expects, so sounds follow
+  # herdr's view of every agent instead of Claude Code's own hooks.
+  peonSettleSeconds = "2";
+
+  peonHook = pkgs.writeShellScript "herdr-peon-hook" ''
+    data=$(printf '%s' "''${HERDR_PLUGIN_EVENT_JSON:-}" | ${jq} -c '.data // .' 2> /dev/null) || exit 0
+    pane=$(printf '%s' "$data" | ${jq} -r '.pane_id // empty')
+    pane="''${pane:-''${HERDR_PANE_ID:-}}"
+    [ -n "$pane" ] || exit 0
+
+    session="herdr-$(printf '%s' "$pane" | tr -c 'A-Za-z0-9_.-' '_')"
+    status_file="$HERDR_PLUGIN_STATE_DIR/$session.status"
+    # Exists while the agent is mid-turn: from the first "working" until it
+    # has stayed finished for ${peonSettleSeconds}s.
+    turn_file="$HERDR_PLUGIN_STATE_DIR/$session.turn"
+
+    # A pane that closes, or gains or loses an agent, starts from a clean
+    # slate. Closing a whole tab emits no pane.closed, so the next agent
+    # detected in a reused pane id is what clears a stale turn.
+    case "''${HERDR_PLUGIN_EVENT:-}" in
+      pane.closed | pane.agent_detected)
+        rm -f "$status_file" "$turn_file"
+        exit 0
+        ;;
+    esac
+
+    status=$(printf '%s' "$data" | ${jq} -r '.agent_status // empty')
+    [ -n "$status" ] || exit 0
+    mkdir -p "$HERDR_PLUGIN_STATE_DIR"
+    previous=$(cut -d' ' -f1 "$status_file" 2> /dev/null)
+    stamp="$status $$ $(date +%s%N)"
+    printf '%s' "$stamp" > "$status_file"
+
+    case "$status" in
+      working)
+        # Already mid-turn: resuming after a prompt, or status flicker.
+        [ -e "$turn_file" ] && exit 0
+        : > "$turn_file"
+        event=UserPromptSubmit
+        ;;
+      idle | done)
+        [ -e "$turn_file" ] || exit 0
+        # Herdr reads status off the screen and can flicker working -> idle ->
+        # working; only a finish that outlasts the settle window counts.
+        sleep ${peonSettleSeconds}
+        [ "$(cat "$status_file" 2> /dev/null)" = "$stamp" ] || exit 0
+        rm -f "$turn_file"
+        event=Stop
+        ;;
+      blocked)
+        [ "$previous" = blocked ] && exit 0
+        event=PermissionRequest
+        ;;
+      *)
+        # unknown: the agent left the pane.
+        rm -f "$turn_file"
+        exit 0
+        ;;
+    esac
+
+    cwd=$("''${HERDR_BIN_PATH:-${herdr}}" agent get "$pane" 2> /dev/null | ${jq} -r '.result.agent.cwd // empty' 2> /dev/null)
+
+    ${jq} -nc --arg event "$event" --arg session "$session" --arg cwd "''${cwd:-$HOME}" \
+      '{hook_event_name: $event, session_id: $session, cwd: $cwd, notification_type: "", permission_mode: "", source: "herdr"}' \
+      | "$HOME/.openpeon/peon.sh" > /dev/null 2>&1
+    exit 0
+  '';
+
+  peonPlugin = pkgs.runCommand "herdr-peon-ping-plugin" { } ''
+    mkdir -p $out
+    cp ${peonHook} $out/peon-hook.sh
+    cat > $out/herdr-plugin.toml <<EOF
+    id = "local.peon-ping"
+    name = "Peon Ping"
+    version = "0.1.0"
+    min_herdr_version = "0.9.0"
+    description = "Play peon-ping sounds when agents change state"
+    platforms = ["linux"]
+
+    [[events]]
+    on = "pane.agent_status_changed"
+    command = ["$out/peon-hook.sh"]
+
+    [[events]]
+    on = "pane.agent_detected"
+    command = ["$out/peon-hook.sh"]
+
+    [[events]]
+    on = "pane.closed"
+    command = ["$out/peon-hook.sh"]
+    EOF
+  '';
+
   resize = direction: amount:
     "${herdr} pane resize --pane $HERDR_ACTIVE_PANE_ID --direction ${direction} --amount ${amount}";
 
@@ -75,6 +169,8 @@ let
     ui = {
       mouse_capture = false;
       tab_bar_position = "bottom";
+      # peon-ping plays the agent sounds (see peonPlugin).
+      sound.enabled = false;
     };
 
     experimental.pane_history = true;
@@ -109,5 +205,7 @@ in
   home.activation.herdrWorkspaceLayout = ''
     ${herdr} plugin unlink local.workspace-layout > /dev/null 2>&1 || true
     ${herdr} plugin link ${workspacePlugin} > /dev/null 2>&1 || true
+    ${herdr} plugin unlink local.peon-ping > /dev/null 2>&1 || true
+    ${herdr} plugin link ${peonPlugin} > /dev/null 2>&1 || true
   '';
 }

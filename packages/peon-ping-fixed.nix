@@ -276,6 +276,46 @@ settings_path.write_text(json.dumps(settings, indent=2) + "\n")
 PY
     '');
 
+    # The activation above only ever adds hooks to the mutable settings.json, so
+    # turning claudeCodeIntegration off has to strip them again.
+    home.activation.peonPingClaudeCodeHooksCleanup = mkIf (!cfg.claudeCodeIntegration) (lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      settings_path="$HOME/.claude/settings.json"
+      if [ -f "$settings_path" ]; then
+        ${pkgs.python3}/bin/python3 - "$settings_path" <<'PY'
+import json
+import pathlib
+import sys
+
+settings_path = pathlib.Path(sys.argv[1])
+settings = json.loads(settings_path.read_text())
+hooks = settings.get("hooks")
+if not isinstance(hooks, dict):
+    sys.exit(0)
+
+def is_peon(hook):
+    return "/hooks/peon-ping/" in hook.get("command", "")
+
+cleaned = {}
+for event, entries in hooks.items():
+    kept = []
+    for entry in entries:
+        entry_hooks = entry.get("hooks", [])
+        remaining = [hook for hook in entry_hooks if not is_peon(hook)]
+        if len(remaining) == len(entry_hooks):
+            kept.append(entry)
+        elif remaining:
+            kept.append({**entry, "hooks": remaining})
+    # Keep events that were already empty; only drop the ones peon-ping emptied.
+    if kept or not entries:
+        cleaned[event] = kept
+
+if cleaned != hooks:
+    settings["hooks"] = cleaned
+    settings_path.write_text(json.dumps(settings, indent=2) + "\n")
+PY
+      fi
+    '');
+
     # Install sound packs from og-packs and/or custom sources
     home.file.".openpeon/packs" = lib.mkIf (cfg.installPacks != [ ]) (let
       # Separate string pack names (og-packs) from custom pack specs
