@@ -1,21 +1,16 @@
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
-    home-manager.url = "github:nix-community/home-manager/release-26.05";
     unstablepkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    masterpkgs.url = "github:nixos/nixpkgs/master";
-    llm-agents.url = "github:numtide/llm-agents.nix";
+    home-manager.url = "github:nix-community/home-manager/release-26.05";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
     peon-ping.url = "github:PeonPing/peon-ping";
+    peon-ping.inputs.nixpkgs.follows = "nixpkgs";
   };
-  outputs = { self, nixpkgs, unstablepkgs, masterpkgs, home-manager, llm-agents, peon-ping, ... }: let
+  outputs = { nixpkgs, unstablepkgs, home-manager, peon-ping, ... }: let
     system = "aarch64-linux";
 
     unstable = import unstablepkgs {
-      inherit system;
-      config.allowUnfree = true;
-    };
-
-    master = import masterpkgs {
       inherit system;
       config.allowUnfree = true;
     };
@@ -49,9 +44,9 @@
           ./configuration.nix
         ];
         specialArgs = {
-          inherit unstable master home-manager llm-agents peon-ping;
+          inherit unstable home-manager peon-ping;
         };
-     };
+      };
     };
   };
 }

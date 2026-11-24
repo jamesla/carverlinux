@@ -55,14 +55,13 @@ make rebuild
 | `make rebuild` | NixOS guest | rebuild the system from the flake |
 | `make clean` | NixOS guest | ⚠ collect nix garbage |
 | `make update` | either | update the flake lock file |
-| `make version` | either | print the NixOS version |
 
 ⚠ destroys state. `destroy` and `test` delete the VM without prompting.
 
 The `VM_*` variables at the top of the Makefile — `VM`, `VM_DIR`, `VM_CPUS`,
 `VM_MEM`, `VM_DISK_MB`, `VM_BOOT_TIMEOUT` — can be overridden on the command
 line, e.g. `make up VM_MEM=16384`. `VM` defaults to the name of the directory
-you cloned into, so in this checkout the VM is named `carverlinux-acm2`.
+you cloned into.
 
 ## Testing
 

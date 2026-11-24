@@ -1,7 +1,7 @@
-{ config, lib, pkgs, modulesPath, unstable, master, ... }:
+{ pkgs, unstable, ... }:
 
 {
-  boot.initrd.kernelModules = ["virtio_gpu" "virtio_pci" "virtio" ];
+  boot.initrd.kernelModules = [ "virtio_gpu" "virtio_pci" "virtio" ];
 
   boot.initrd.availableKernelModules = [
     "xhci_pci"
@@ -10,7 +10,6 @@
     "ahci"
     "usbhid"
     "sd_mod"
-    "virtio_pci"
     "virtio_blk"
     "virtio_scsi"
     "virtio_net"
@@ -20,7 +19,6 @@
   ];
 
   boot.kernelModules = [ "virtio_snd" ];
-  boot.extraModulePackages = [ ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 3;
   boot.loader.timeout = 1;
@@ -28,7 +26,7 @@
   services.xserver.videoDrivers = [ "modesetting" ];
 
   hardware.parallels.enable = true;
-  hardware.parallels.package = master.prl-tools;
+  hardware.parallels.package = unstable.prl-tools;
 
   systemd.user.services.prlcc.serviceConfig.Environment = [
     "MESA_LOADER_DRIVER_OVERRIDE=virtio_gpu"
@@ -51,8 +49,4 @@
     device = "/dev/disk/by-label/ESP";
     fsType = "vfat";
   };
-
-  swapDevices = [ ];
-
-  networking.useDHCP = lib.mkDefault true;
 }

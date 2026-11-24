@@ -1,8 +1,4 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ config, lib, pkgs, unstable, master, home-manager, llm-agents, peon-ping, ... }:
+{ lib, pkgs, unstable, home-manager, peon-ping, ... }:
 
 let
   agent-browser = pkgs.callPackage ./packages/agent-browser.nix { inherit unstable; };
@@ -17,7 +13,7 @@ in
 
   time.timeZone = "Pacific/Auckland";
   networking.useDHCP = true;
-  networking.dhcpcd.denyInterfaces = [ "veth*" "docker*" "br-*" "vboxnet*" ];
+  networking.dhcpcd.denyInterfaces = [ "veth*" "docker*" "br-*" ];
 
   zramSwap.enable = true;
   zramSwap.memoryPercent = 100;
@@ -33,11 +29,7 @@ in
 
   users.users.james = {
     isNormalUser = true;
-    group = "users";
-    home = "/home/james";
-    createHome = true;
-    homeMode = "700";
-    extraGroups = [ "wheel" "docker" "vboxusers" "video" "audio" "render" ];
+    extraGroups = [ "wheel" "docker" "video" "audio" "render" ];
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBlkZ7yS+y5Jp/K18ZE3Swi4sfEWokEdNv0BwfDzYVEfSEKmWr9zKXhfm4pvhyxcWtqshYOzKMS3u6a8tpChEPlmVW5AkZeAPJk+Rwn++eANjeXpkvQ8zvfV6ALBU2FUiE60oGIA+tZOEbzUcgZ15CilFpwatnbe0whVocYsYAn4F9d3CLbt8U6miG4NjdSDP3E5OukuVyhF2dXEBVa9N0erLKZyL7hkePTWqoCY9hOvoxgMgopBNHLy2Q0yxkL9M3zgi8qQwa0L0ORcolBk4AVMV6+Wjt+lqYoTtn7GupFC3pZLwWRIqOvneb2oo37JVeUeIRSNSKKrwE7SGSaSAX"
@@ -51,9 +43,7 @@ in
   services.pipewire = {
     enable = true;
     alsa.enable = true;
-    alsa.support32Bit = true;
     pulse.enable = true;
-    wireplumber.enable = true;
     wireplumber.extraConfig."51-virtio-audio" = {
       "wireplumber.settings" = {
         "device.restore-routes" = false;
@@ -62,7 +52,6 @@ in
       };
     };
   };
-  services.pulseaudio.enable = false;
 
   services.xserver = {
     autoRepeatDelay = 500;
@@ -72,10 +61,6 @@ in
     windowManager.xmonad = import ./packages/xmonad.nix;
     exportConfiguration = true;
     dpi = 120;
-    deviceSection = ''
-      Driver "modesetting"
-      Option "AccelMethod" "glamor"
-    '';
   };
 
   services.libinput.enable = true;
@@ -114,21 +99,13 @@ in
     options = [ "nofail" ];
   };
 
-  # List packages installed in system profile. To search, run:
   environment.systemPackages = [
-    unstable.opencode
-    pkgs.ngrok
     unstable.pi-coding-agent
     pkgs.zip
     pkgs.lsof
     pkgs.gh
-    pkgs.awscli2
-    pkgs.terraform
-    pkgs.kubectl
     pkgs.nodejs
     pkgs.docker-compose
-    pkgs.spice-vdagent
-    pkgs.git-lfs
     pkgs.gcc
     pkgs.jq
     pkgs.openssl
@@ -147,62 +124,52 @@ in
     pkgs.pavucontrol
     pkgs.pamixer
     pkgs.ffmpeg
-    pkgs.firefox
     pkgs.obsidian
     (pkgs.callPackage ./packages/st { })
     (unstable.callPackage ./packages/claude.nix { })
     agent-browser
-    pkgs.libglvnd
   ];
 
   fonts.packages = with pkgs; [
     nerd-fonts.liberation
   ];
 
-  #terminal
   environment.sessionVariables = {
     TERMINAL = "st";
     EDITOR = "nvim";
     MESA_LOADER_DRIVER_OVERRIDE = "virtio_gpu";
-    LIBGL_ALWAYS_INDIRECT = "0";
   };
 
   programs.fish = import ./packages/fish.nix;
 
-  # Enable the OpenSSH daemon.
   services.openssh.enable = true;
   programs.ssh.askPassword = "";
 
   # Returns freed blocks to the host so the expanding Parallels disk can shrink.
   services.fstrim.enable = true;
 
-   home-manager.backupFileExtension = "backup";
-   home-manager.users.james = {
-     imports = [
-       ./packages/peon-ping-fixed.nix
-       ./packages/opencode.nix
-       (import ./packages/herdr.nix { inherit pkgs unstable; })
-     ];
-     programs.git = import ./packages/git.nix;
-     programs.ssh = import ./packages/ssh.nix;
-     programs.chromium = import ./packages/chromium.nix;
-     programs.neovim = import ./packages/neovim.nix { inherit config pkgs; };
-     programs.peon-ping = import ./packages/peon-ping.nix { inherit pkgs peon-ping; };
-     home.packages = [ peon-ping.packages."${pkgs.stdenv.hostPlatform.system}".default ];
+  home-manager.backupFileExtension = "backup";
+  home-manager.users.james = {
+    imports = [
+      peon-ping.homeManagerModules.default
+      (import ./packages/herdr.nix { inherit pkgs unstable; })
+    ];
+    programs.git = import ./packages/git.nix;
+    programs.ssh = import ./packages/ssh.nix;
+    programs.chromium = import ./packages/chromium.nix;
+    programs.neovim = import ./packages/neovim.nix { inherit pkgs; };
+    programs.peon-ping = import ./packages/peon-ping.nix { inherit pkgs peon-ping; };
+    home.packages = [ peon-ping.packages."${pkgs.stdenv.hostPlatform.system}".default ];
 
-     home.stateVersion = "26.05";
-   };
+    home.stateVersion = "26.05";
+  };
 
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
-    # Use all 8 vCPUs for parallel builds (max-jobs) and per-build compilation (cores).
-    max-jobs = "auto";
-    cores = 0;
     # Keep build outputs/derivations so back-to-back `make rebuild`s don't refetch or
     # rebuild dev dependencies.
     keep-outputs = true;
     keep-derivations = true;
-    builders-use-substitutes = true;
   };
   system.stateVersion = "26.05";
 }

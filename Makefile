@@ -1,5 +1,3 @@
-PACKAGE ?= carverlinux
-
 VM        ?= $(notdir $(CURDIR))
 VM_DIR    ?= $(HOME)/Parallels
 VM_CPUS   ?= 8
@@ -10,8 +8,6 @@ IMAGE_ATTR_PATH := nixosConfigurations.default.config.system.build.images.raw-ef
 
 .DEFAULT_GOAL := help
 
-.ONESHELL:
-
 .PHONY: build
 build: ## build system image for Parallels Desktop (from macOS)
 	@nix build ".#$(IMAGE_ATTR_PATH)"
@@ -21,17 +17,13 @@ build: ## build system image for Parallels Desktop (from macOS)
 rebuild: ## rebuild system (from NixOS)
 	@sudo nixos-rebuild switch --flake ".#default"
 
-.PHONY: version
-version: ## gets current version
-	@nix-instantiate --eval --expr '(import <nixos> {}).lib.version'
-
 .PHONY: clean
 clean: ## clean nixos
-	@sudo nix-collect-garbage -d; sudo nix-store --gc
+	@sudo nix-collect-garbage -d
 
 .PHONY: update
 update: ## update flake lock file
-	@sudo nix flake update --extra-experimental-features nix-command --extra-experimental-features flakes
+	@nix flake update
 
 .PHONY: up
 up: ## create and start the Parallels VM from the built disk image
@@ -112,11 +104,7 @@ destroy: ## stop and delete the Parallels VM
 check: ## run the guest acceptance checks (run inside the guest)
 	@set -euo pipefail; \
 	echo "waiting for the guest to finish booting"; \
-	for i in $$(seq 1 $(VM_BOOT_TIMEOUT)); do \
-	  state=$$(systemctl is-system-running 2>/dev/null || true); \
-	  case "$$state" in running|degraded) break;; esac; \
-	  sleep 1; \
-	done; \
+	state=$$(timeout $(VM_BOOT_TIMEOUT) systemctl is-system-running --wait 2>/dev/null || true); \
 	if [ "$$state" = degraded ]; then \
 	  echo "warning: the guest booted degraded; failed units:" >&2; \
 	  systemctl --failed --no-legend >&2 || true; \
@@ -136,11 +124,8 @@ check: ## run the guest acceptance checks (run inside the guest)
 	rm -f "$$log"
 
 .PHONY: test
-test: ## destroy the VM and recreate it from the image (from macOS); then run make check in the guest
-	@set -euo pipefail; \
-	$(MAKE) destroy; \
-	$(MAKE) up; \
-	echo "VM rebuilt. Log into the guest and run: make check"
+test: destroy up ## destroy the VM and recreate it from the image (from macOS); then run make check in the guest
+	@echo "VM rebuilt. Log into the guest and run: make check"
 
 .PHONY: help
 help:

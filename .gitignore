@@ -1,7 +1,3 @@
 *.swp
 .DS_Store
 result
-*.fd
-keys/*
-/knowledge/*
-!/knowledge/.gitkeep

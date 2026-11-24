@@ -7,4 +7,4 @@ argument-hint: "[what to include or leave out]"
 
 1. runs make rebuild and verifies rebuild works
 2. reads the test cases defined in @./tests/* and checks everything
-2. git add and commit changes atomically using git conventional commits and then pushes
+3. git add and commit changes atomically using git conventional commits and then pushes

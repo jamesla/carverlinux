@@ -1,7 +1,6 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 {
   enable = true;
-  defaultEditor = true;
   viAlias = true;
   vimAlias = true;
   withRuby = false;
@@ -24,12 +23,9 @@
   '';
 
   plugins = [
-    pkgs.vimPlugins.nvim-lspconfig
     {
       plugin = pkgs.vimPlugins.nvim-lspconfig;
       config = ''
-        local lspconfig = require('lspconfig')
-
         vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
         vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
         vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
@@ -98,46 +94,30 @@
         })
       '';
     }
-    pkgs.vimPlugins.vim-gitgutter
     {
       plugin = pkgs.vimPlugins.vim-gitgutter;
       config = ''
         vim.opt.updatetime = 100
       '';
     }
-    pkgs.vimPlugins.mason-nvim
     {
       plugin = pkgs.vimPlugins.mason-nvim;
       config = ''
         require("mason").setup()
       '';
     }
-    pkgs.vimPlugins.mason-lspconfig-nvim
     {
       plugin = pkgs.vimPlugins.mason-lspconfig-nvim;
       config = ''
         require("mason-lspconfig").setup({
-          ensure_installed = { "ts_ls", "terraformls", "eslint" }
+          ensure_installed = { "ts_ls", "eslint" }
         })
-      '';
-    }
-    pkgs.vimPlugins.nvim-lspconfig
-    {
-      plugin = pkgs.vimPlugins.nvim-lspconfig;
-      config = ''
+
         local lspconfig = require('lspconfig')
         lspconfig.ts_ls.setup {}
         lspconfig.eslint.setup {}
-        lspconfig.terraformls.setup {}
       '';
     }
-    #{
-    #  plugin = pkgs.vimPlugins.hardtime-nvim;
-    #  config = ''
-    #    require("hardtime").setup()
-    #  '';
-    #}
-    pkgs.vimPlugins.neoscroll-nvim
     {
       plugin = pkgs.vimPlugins.neoscroll-nvim;
       config = ''
@@ -145,8 +125,6 @@
       '';
     }
     pkgs.vimPlugins.vim-sensible
-    pkgs.vimPlugins.nvim-treesitter
-    pkgs.vimPlugins.telescope-nvim
     {
       plugin = pkgs.vimPlugins.telescope-nvim;
       config = ''
