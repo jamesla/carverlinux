@@ -188,7 +188,6 @@ in
      programs.chromium = import ./packages/chromium.nix;
      programs.tmux = import ./packages/tmux.nix { inherit config pkgs; };
      programs.neovim = import ./packages/neovim.nix { inherit config pkgs; };
-     programs.ghostty = import ./packages/ghostty.nix { inherit pkgs; };
      programs.peon-ping = import ./packages/peon-ping.nix { inherit pkgs peon-ping; };
      home.packages = [ peon-ping.packages."${pkgs.stdenv.hostPlatform.system}".default ];
 
