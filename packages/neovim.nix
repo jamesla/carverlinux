@@ -62,13 +62,11 @@
         })
       '';
     }
-    pkgs.vimPlugins.nerdtree
     {
-      plugin = pkgs.vimPlugins.vim-tmux-navigator;
+      plugin = pkgs.vimPlugins.nerdtree;
       config = ''
-        -- vim-tmux-navigator only leaves vim when $TMUX is set; do the same for herdr.
+        -- Ctrl-h/j/k/l move between vim splits and herdr panes.
         if vim.env.HERDR_ENV then
-          vim.g.tmux_navigator_no_mappings = 1
           for key, direction in pairs({ h = 'left', j = 'down', k = 'up', l = 'right' }) do
             vim.keymap.set('n', '<C-' .. key .. '>', function()
               local win = vim.api.nvim_get_current_win()
@@ -147,7 +145,6 @@
       '';
     }
     pkgs.vimPlugins.vim-sensible
-    pkgs.vimPlugins.vim-tmux-navigator
     pkgs.vimPlugins.nvim-treesitter
     pkgs.vimPlugins.telescope-nvim
     {

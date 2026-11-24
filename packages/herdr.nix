@@ -3,7 +3,7 @@ let
   herdr = "${unstable.herdr}/bin/herdr";
   jq = "${pkgs.jq}/bin/jq";
 
-  # tmux's is_vim check: pass the key through to vim, otherwise move pane focus.
+  # Pass the key through to vim when it's focused, otherwise move pane focus.
   navigate = pkgs.writeShellScript "herdr-navigate" ''
     direction="$1"
     key="$2"
@@ -16,7 +16,7 @@ let
     fi
   '';
 
-  # tmux's `bind c`: new tab in ~, split side by side, focus the right pane.
+  # New tab in ~, split side by side, focus the right pane.
   newTab = pkgs.writeShellScript "herdr-new-tab" ''
     left=$(${herdr} tab create --workspace "$HERDR_ACTIVE_WORKSPACE_ID" --cwd "$HOME" --focus | ${jq} -r '.result.root_pane.pane_id')
     ${herdr} pane split --pane "$left" --direction right --cwd "$HOME" > /dev/null

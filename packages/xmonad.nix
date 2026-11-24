@@ -26,10 +26,10 @@
         , layoutHook = spacingRaw True (Border 0 10 10 10) True (Border 10 10 10 10) True $
             layoutHook def
         , startupHook = do
-          spawnOnce "tmux start-server; sleep 0.5; st -e tmux new-session -A -s main"
+          spawnOnce "st"
         }
         `additionalKeys`
-        [ ((mod1Mask .|. shiftMask, xK_Return), spawn "st -e tmux new-session -A -s main")
+        [ ((mod1Mask .|. shiftMask, xK_Return), spawn "st")
         , ((mod1Mask .|. controlMask, xK_Return), spawn "st -e herdr --session main")
         ]
   '';
