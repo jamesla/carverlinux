@@ -14,11 +14,11 @@
     #annoyed_threshold = 1;
     #annoyed_window_seconds = 10;
     categories = {
-      "session.start" = false;
-      "session.end" = false;
-      "task.complete" = true;
-      "task.acknowledge" = true;
-      "task.error" = false;
+      "session.start" = true;
+      "session.end" = true;
+      "task.complete" = false;
+      "task.acknowledge" = false;
+      "task.error" = true;
       "task.progress" = false;
       "input.required" = false;
       "resource.limit" = true;

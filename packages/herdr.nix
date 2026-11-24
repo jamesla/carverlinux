@@ -1,4 +1,4 @@
-{ pkgs, unstable }:
+{ lib, pkgs, unstable }:
 let
   herdr = "${unstable.herdr}/bin/herdr";
   jq = "${pkgs.jq}/bin/jq";
@@ -56,72 +56,64 @@ let
     EOF
   '';
 
-  # Runs on pane.agent_status_changed: turns herdr's agent status transitions
-  # into the Claude Code hook events peon-ping expects, so sounds follow
-  # herdr's view of every agent instead of Claude Code's own hooks.
-  peonSettleSeconds = "2";
+  # Plays a random SCV clip from a hardcoded list for each herdr event:
+  #   workspace.created       -> peonSounds.start
+  #   workspace.closed        -> peonSounds.end
+  #   agent status -> blocked -> peonSounds.blocked
+  # Everything else is silent. Clips come from the sc_scv pack peon-ping
+  # installs; peon's pause, enabled and volume settings are still honoured.
+  peonSounds = {
+    start = [ "ReportinForDuty.mp3" "OrdersCapn.mp3" "YesSir.mp3" "GoodToGoSir.mp3" ];
+    end = [ "JobsFinished.mp3" ];
+    blocked = [ "SomethingsInTheWay.mp3" "CantBuildThere.mp3" ];
+  };
 
   peonHook = pkgs.writeShellScript "herdr-peon-hook" ''
+    peon_dir="$HOME/.openpeon"
+    log="$HERDR_PLUGIN_STATE_DIR/peon-hook.log"
+    mkdir -p "$HERDR_PLUGIN_STATE_DIR"
     data=$(printf '%s' "''${HERDR_PLUGIN_EVENT_JSON:-}" | ${jq} -c '.data // .' 2> /dev/null) || exit 0
+
+    # play <clip>...: play one of the given clips at random.
+    play() {
+      [ -e "$peon_dir/.paused" ] && return 0
+      [ "$(${jq} -r '.enabled // true' "$peon_dir/config.json" 2> /dev/null)" = false ] && return 0
+      volume=$(${jq} -r '.volume // 0.5' "$peon_dir/config.json" 2> /dev/null)
+      shift $((RANDOM % $#))
+      ${pkgs.pipewire}/bin/pw-play --volume "$volume" "$peon_dir/packs/sc_scv/sounds/$1" 2>> "$log"
+    }
+
+    case "''${HERDR_PLUGIN_EVENT:-}" in
+      workspace.created)
+        play ${lib.escapeShellArgs peonSounds.start}
+        exit 0
+        ;;
+      workspace.closed)
+        play ${lib.escapeShellArgs peonSounds.end}
+        exit 0
+        ;;
+    esac
+
     pane=$(printf '%s' "$data" | ${jq} -r '.pane_id // empty')
     pane="''${pane:-''${HERDR_PANE_ID:-}}"
     [ -n "$pane" ] || exit 0
+    status_file="$HERDR_PLUGIN_STATE_DIR/herdr-$(printf '%s' "$pane" | tr -c 'A-Za-z0-9_.-' '_').status"
 
-    session="herdr-$(printf '%s' "$pane" | tr -c 'A-Za-z0-9_.-' '_')"
-    status_file="$HERDR_PLUGIN_STATE_DIR/$session.status"
-    # Exists while the agent is mid-turn: from the first "working" until it
-    # has stayed finished for ${peonSettleSeconds}s.
-    turn_file="$HERDR_PLUGIN_STATE_DIR/$session.turn"
-
-    # A pane that closes, or gains or loses an agent, starts from a clean
-    # slate. Closing a whole tab emits no pane.closed, so the next agent
-    # detected in a reused pane id is what clears a stale turn.
+    # A pane that closes, or gains or loses an agent, starts from a clean slate.
     case "''${HERDR_PLUGIN_EVENT:-}" in
       pane.closed | pane.agent_detected)
-        rm -f "$status_file" "$turn_file"
+        rm -f "$status_file"
         exit 0
         ;;
     esac
 
     status=$(printf '%s' "$data" | ${jq} -r '.agent_status // empty')
     [ -n "$status" ] || exit 0
-    mkdir -p "$HERDR_PLUGIN_STATE_DIR"
-    previous=$(cut -d' ' -f1 "$status_file" 2> /dev/null)
-    stamp="$status $$ $(date +%s%N)"
-    printf '%s' "$stamp" > "$status_file"
-
-    case "$status" in
-      working)
-        # Already mid-turn: resuming after a prompt, or status flicker.
-        [ -e "$turn_file" ] && exit 0
-        : > "$turn_file"
-        event=UserPromptSubmit
-        ;;
-      idle | done)
-        [ -e "$turn_file" ] || exit 0
-        # Herdr reads status off the screen and can flicker working -> idle ->
-        # working; only a finish that outlasts the settle window counts.
-        sleep ${peonSettleSeconds}
-        [ "$(cat "$status_file" 2> /dev/null)" = "$stamp" ] || exit 0
-        rm -f "$turn_file"
-        event=Stop
-        ;;
-      blocked)
-        [ "$previous" = blocked ] && exit 0
-        event=PermissionRequest
-        ;;
-      *)
-        # unknown: the agent left the pane.
-        rm -f "$turn_file"
-        exit 0
-        ;;
-    esac
-
-    cwd=$("''${HERDR_BIN_PATH:-${herdr}}" agent get "$pane" 2> /dev/null | ${jq} -r '.result.agent.cwd // empty' 2> /dev/null)
-
-    ${jq} -nc --arg event "$event" --arg session "$session" --arg cwd "''${cwd:-$HOME}" \
-      '{hook_event_name: $event, session_id: $session, cwd: $cwd, notification_type: "", permission_mode: "", source: "herdr"}' \
-      | "$HOME/.openpeon/peon.sh" > /dev/null 2>&1
+    previous=$(cat "$status_file" 2> /dev/null)
+    printf '%s' "$status" > "$status_file"
+    # Only a change into blocked counts, not a repeat of it.
+    [ "$status" = blocked ] && [ "$previous" != blocked ] || exit 0
+    play ${lib.escapeShellArgs peonSounds.blocked}
     exit 0
   '';
 
@@ -133,7 +125,7 @@ let
     name = "Peon Ping"
     version = "0.1.0"
     min_herdr_version = "0.9.0"
-    description = "Play peon-ping sounds when agents change state"
+    description = "Play SCV sounds for workspace open/close and blocked agents"
     platforms = ["linux"]
 
     [[events]]
@@ -146,6 +138,14 @@ let
 
     [[events]]
     on = "pane.closed"
+    command = ["$out/peon-hook.sh"]
+
+    [[events]]
+    on = "workspace.created"
+    command = ["$out/peon-hook.sh"]
+
+    [[events]]
+    on = "workspace.closed"
     command = ["$out/peon-hook.sh"]
     EOF
   '';
