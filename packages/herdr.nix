@@ -23,6 +23,37 @@ let
     ${herdr} pane focus --pane "$left" --direction right > /dev/null
   '';
 
+  # Runs on workspace.created: nvim on the left, claude on the right. Only
+  # acts on a workspace that still has its single initial pane.
+  workspaceLayout = pkgs.writeShellScript "herdr-workspace-layout" ''
+    panes=$(${herdr} pane list --workspace "$HERDR_WORKSPACE_ID" | ${jq} -r '.result.panes[].pane_id')
+    if [ "$(printf '%s\n' "$panes" | grep -c .)" -ne 1 ]; then
+      exit 0
+    fi
+    left="$panes"
+    ${herdr} pane run "$left" nvim > /dev/null
+    right=$(${herdr} pane split --pane "$left" --direction right --cwd "$HOME" | ${jq} -r '.result.pane.pane_id')
+    ${herdr} pane run "$right" claude > /dev/null
+    ${herdr} pane focus --pane "$left" --direction right > /dev/null
+  '';
+
+  workspacePlugin = pkgs.runCommand "herdr-workspace-layout-plugin" { } ''
+    mkdir -p $out
+    cp ${workspaceLayout} $out/layout.sh
+    cat > $out/herdr-plugin.toml <<EOF
+    id = "local.workspace-layout"
+    name = "Workspace Layout"
+    version = "0.1.0"
+    min_herdr_version = "0.7.0"
+    description = "Open new workspaces with nvim and claude side by side"
+    platforms = ["linux"]
+
+    [[events]]
+    on = "workspace.created"
+    command = ["$out/layout.sh"]
+    EOF
+  '';
+
   resize = direction: amount:
     "${herdr} pane resize --pane $HERDR_ACTIVE_PANE_ID --direction ${direction} --amount ${amount}";
 
@@ -72,4 +103,11 @@ in
 
   xdg.configFile."herdr/config.toml".source =
     (pkgs.formats.toml { }).generate "herdr-config.toml" settings;
+
+  # Herdr keeps linked plugins in its own user-global state, so re-link on every
+  # switch: the store path changes whenever the script does.
+  home.activation.herdrWorkspaceLayout = ''
+    ${herdr} plugin unlink local.workspace-layout > /dev/null 2>&1 || true
+    ${herdr} plugin link ${workspacePlugin} > /dev/null 2>&1 || true
+  '';
 }
