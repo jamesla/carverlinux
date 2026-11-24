@@ -23,16 +23,18 @@ let
     ${herdr} pane focus --pane "$left" --direction right > /dev/null
   '';
 
-  # Runs on workspace.created: nvim on the left, claude on the right. Only
-  # acts on a workspace that still has its single initial pane.
+  # Runs on workspace.created: nvim on the left, claude on the right, both in
+  # the workspace's directory. Only acts on a workspace that still has its
+  # single initial pane.
   workspaceLayout = pkgs.writeShellScript "herdr-workspace-layout" ''
-    panes=$(${herdr} pane list --workspace "$HERDR_WORKSPACE_ID" | ${jq} -r '.result.panes[].pane_id')
-    if [ "$(printf '%s\n' "$panes" | grep -c .)" -ne 1 ]; then
+    panes=$(${herdr} pane list --workspace "$HERDR_WORKSPACE_ID" | ${jq} -c '.result.panes')
+    if [ "$(printf '%s' "$panes" | ${jq} 'length')" -ne 1 ]; then
       exit 0
     fi
-    left="$panes"
+    left=$(printf '%s' "$panes" | ${jq} -r '.[0].pane_id')
+    cwd=$(printf '%s' "$panes" | ${jq} -r '.[0].cwd // empty')
     ${herdr} pane run "$left" nvim > /dev/null
-    right=$(${herdr} pane split --pane "$left" --direction right --cwd "$HOME" | ${jq} -r '.result.pane.pane_id')
+    right=$(${herdr} pane split --pane "$left" --direction right --cwd "''${cwd:-$HOME}" | ${jq} -r '.result.pane.pane_id')
     ${herdr} pane run "$right" claude > /dev/null
     ${herdr} pane focus --pane "$left" --direction right > /dev/null
   '';
