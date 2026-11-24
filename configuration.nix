@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, lib, pkgs, unstable, master, home-manager, llm-agents, peon-ping, workmux, ... }:
+{ config, lib, pkgs, unstable, master, home-manager, llm-agents, peon-ping, ... }:
 
 let
   agent-browser = pkgs.callPackage ./packages/agent-browser.nix { inherit unstable; };
@@ -180,7 +180,6 @@ in
    home-manager.users.james = {
      imports = [
        ./packages/peon-ping-fixed.nix
-       (import ./packages/workmux.nix { inherit pkgs workmux; })
        ./packages/opencode.nix
        (import ./packages/herdr.nix { inherit pkgs unstable; })
      ];

@@ -6,9 +6,8 @@
     masterpkgs.url = "github:nixos/nixpkgs/master";
     llm-agents.url = "github:numtide/llm-agents.nix";
     peon-ping.url = "github:PeonPing/peon-ping";
-    workmux.url = "github:raine/workmux";
   };
-  outputs = { self, nixpkgs, unstablepkgs, masterpkgs, home-manager, llm-agents, peon-ping, workmux, ... }: let
+  outputs = { self, nixpkgs, unstablepkgs, masterpkgs, home-manager, llm-agents, peon-ping, ... }: let
     system = "aarch64-linux";
 
     unstable = import unstablepkgs {
@@ -50,7 +49,7 @@
           ./configuration.nix
         ];
         specialArgs = {
-          inherit unstable master home-manager llm-agents peon-ping workmux;
+          inherit unstable master home-manager llm-agents peon-ping;
         };
      };
     };
