@@ -152,7 +152,7 @@ in
   home-manager.users.james = {
     imports = [
       peon-ping.homeManagerModules.default
-      (import ./packages/herdr.nix { inherit pkgs unstable; })
+      (import ./packages/herdr.nix { inherit pkgs unstable peon-ping; })
     ];
     programs.git = import ./packages/git.nix;
     programs.ssh = import ./packages/ssh.nix;

@@ -1,7 +1,8 @@
-{ pkgs, unstable }:
+{ pkgs, unstable, peon-ping }:
 let
   herdr = "${unstable.herdr}/bin/herdr";
   jq = "${pkgs.jq}/bin/jq";
+  peon = "${peon-ping.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/peon";
 
   # Pass the key through to vim when it's focused, otherwise move pane focus.
   navigate = pkgs.writeShellScript "herdr-navigate" ''
@@ -121,7 +122,7 @@ let
 
     ${jq} -nc --arg event "$event" --arg session "$session" --arg cwd "''${cwd:-$HOME}" \
       '{hook_event_name: $event, session_id: $session, cwd: $cwd, notification_type: "", permission_mode: "", source: "herdr"}' \
-      | "$HOME/.openpeon/peon.sh" > /dev/null 2>&1
+      | ${peon} > /dev/null 2>> "$HERDR_PLUGIN_STATE_DIR/peon-hook.log"
     exit 0
   '';
 
