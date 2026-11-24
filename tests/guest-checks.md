@@ -1,33 +1,25 @@
 # carverlinux guest acceptance checks
 
-Verify that the features below actually work inside the running carverlinux VM.
-Report what you find; do not fix anything, do not touch the NixOS configuration,
-and do not rebuild. A failing check is a useful result.
+Verify that the features below actually work inside this running carverlinux
+VM. You are running inside the guest as `james` (or as root via `sudo` where a
+step says so). Report what you find; do not fix anything, do not touch the NixOS
+configuration, and do not rebuild. A failing check is a useful result.
 
 Run every check even if an earlier one fails, and even if the guest has not
 finished booting — a check that cannot be run yet is a `FAIL` with the reason,
 not a reason to stop.
 
-## Running commands in the guest
-
-Use `prlctl exec "$VM" '<command>'` from the macOS host. Things to know:
-
-- It runs as **root** with an **empty `PATH`**, so start every command with
-  `export PATH=/run/current-system/sw/bin:/run/wrappers/bin;`.
-- The command string is limited to roughly 3 KB. Keep each invocation short and
-  run several rather than one big one. A command containing a literal
-  backslash-newline is rejected outright, so keep each one on a single line.
-- The guest command's exit code comes back to the host, and stdout/stderr are
-  returned as normal.
+Keep the work read-only. Do not write into `/carverlinux`; it is the user's live
+repo checkout.
 
 ## Checks
 
 ### 1. opengl
 
-3D acceleration must be real, not a software fallback. X autologins as `james`,
-so query the running display:
+3D acceleration must be real, not a software fallback. Query the X display that
+`james` autologins to:
 
-    export DISPLAY=:0 XAUTHORITY=/home/james/.Xauthority; glxinfo -B
+    export DISPLAY=:0 XAUTHORITY=$HOME/.Xauthority; glxinfo -B
 
 Expect `direct rendering: Yes`, `Accelerated: yes`, and an `OpenGL renderer
 string` naming **virgl**. Any of `llvmpipe`, `softpipe` or `swrast` means Mesa
@@ -47,8 +39,7 @@ x86_64 binaries must run on the host kernel through Parallels' Rosetta:
   `extra-platforms = x86_64-linux`, and the binary substitutes from the cache,
   so no x86_64 builder is involved:
 
-      export HOME=/root NIX_CONFIG='experimental-features = nix-command flakes'
-      nix build --no-link --print-out-paths nixpkgs#legacyPackages.x86_64-linux.hello
+      NIX_CONFIG='experimental-features = nix-command flakes' nix build --no-link --print-out-paths nixpkgs#legacyPackages.x86_64-linux.hello
 
   Run `<store path>/bin/hello` and expect `Hello, world!`. On a fresh VM this
   also fetches the nixpkgs flake, so allow it a few minutes.
@@ -60,9 +51,10 @@ binfmt registration — no qemu, no `tonistiigi/binfmt` bootstrap:
 
     docker run --rm --platform linux/amd64 alpine:3 uname -m
 
-Expect `x86_64`. Also confirm `docker.service` is active, and that `james`
-reaches the docker socket without root (`sudo -u james docker version`) — that
-proves the `docker` group membership, which `prlctl exec` as root would hide.
+Expect `x86_64`. Also confirm `docker.service` is active
+(`systemctl is-active docker.service`), and that `james` reaches the docker
+socket without root (`docker version`, run as `james`, with no sudo) — that
+proves the `docker` group membership.
 
 ### 4. carverlinux-mount
 
@@ -72,11 +64,8 @@ The Parallels shared folder must be mounted:
   fstype `fuse.prl_fsd`.
 - The repo is readable through it — `/carverlinux/flake.nix` exists and contains
   `nixosConfigurations`.
-- `sudo -u james ls /carverlinux` succeeds. The share is mounted by root, so
+- `ls /carverlinux` succeeds as `james`. The share is mounted by root, so
   without FUSE `allow_other` the user who actually works in it gets `EACCES`.
-
-Treat this check as read-only: do not write into `/carverlinux`, it is the
-user's live repo checkout on the host.
 
 ## Reporting
 

@@ -109,53 +109,38 @@ destroy: ## stop and delete the Parallels VM
 	prlctl delete '$(VM)'
 
 .PHONY: check
-check: ## run the guest acceptance checks against the running VM
+check: ## run the guest acceptance checks (run inside the guest)
 	@set -euo pipefail; \
-	prlctl list -a -o name --no-header | grep -qxF '$(VM)' || \
-	{ echo "error: no Parallels VM named '$(VM)'; run 'make up' first." >&2; exit 1; }; \
-	[ "$$(prlctl list -a -o status --no-header '$(VM)' | tr -d ' ')" = running ] || \
-	{ echo "error: VM '$(VM)' is not running." >&2; \
-	  echo "  start it: prlctl start '$(VM)'" >&2; exit 1; }; \
-	echo "waiting for the Parallels Tools guest agent"; \
-	for i in $$(seq 1 $(VM_BOOT_TIMEOUT)); do \
-	  prlctl exec '$(VM)' true >/dev/null 2>&1 && break; \
-	  [ "$$i" = $(VM_BOOT_TIMEOUT) ] && \
-	  { echo "error: no response from the guest agent after $(VM_BOOT_TIMEOUT)s." >&2; exit 1; }; \
-	  sleep 1; \
-	done; \
 	echo "waiting for the guest to finish booting"; \
 	for i in $$(seq 1 $(VM_BOOT_TIMEOUT)); do \
-	  state=$$(prlctl exec '$(VM)' \
-	    'PATH=/run/current-system/sw/bin; systemctl is-system-running || true' \
-	    2>/dev/null | tr -dc 'a-z-' || true); \
+	  state=$$(systemctl is-system-running 2>/dev/null || true); \
 	  case "$$state" in running|degraded) break;; esac; \
 	  sleep 1; \
 	done; \
 	if [ "$$state" = degraded ]; then \
 	  echo "warning: the guest booted degraded; failed units:" >&2; \
-	  prlctl exec '$(VM)' 'PATH=/run/current-system/sw/bin systemctl --failed --no-legend' >&2 || true; \
+	  systemctl --failed --no-legend >&2 || true; \
 	fi; \
 	case "$$state" in running|degraded) ;; *) \
 	  echo "warning: guest still '$$state' after $(VM_BOOT_TIMEOUT)s; jobs still queued:" >&2; \
-	  prlctl exec '$(VM)' 'PATH=/run/current-system/sw/bin systemctl list-jobs --no-legend' >&2 || true; \
+	  systemctl list-jobs --no-legend >&2 || true; \
 	  echo "running the checks anyway - they report more than this wait can." >&2;; \
 	esac; \
 	echo "running the guest checks"; \
 	log=$$(mktemp); \
-	printf 'The Parallels VM to check is named "%s".\n\n%s\n' \
-	  '$(VM)' "$$(cat tests/guest-checks.md)" \
-	  | claude -p --allowed-tools 'Bash(prlctl:*)' \
+	cat tests/guest-checks.md \
+	  | claude -p --allowed-tools 'Bash' \
 	      --disallowed-tools Write Edit NotebookEdit | tee "$$log" || true; \
 	grep -qE '^ *RESULT: PASS *$$' "$$log" || \
 	{ rm -f "$$log"; echo "error: guest checks did not pass." >&2; exit 1; }; \
 	rm -f "$$log"
 
 .PHONY: test
-test: ## destroy the VM, rebuild it from scratch, and verify the guest
+test: ## destroy the VM and recreate it from the image (from macOS); then run make check in the guest
 	@set -euo pipefail; \
 	$(MAKE) destroy; \
 	$(MAKE) up; \
-	$(MAKE) check
+	echo "VM rebuilt. Log into the guest and run: make check"
 
 .PHONY: help
 help:

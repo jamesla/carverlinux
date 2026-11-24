@@ -49,8 +49,8 @@ make rebuild
 | --- | --- | --- |
 | `make build` | macOS host | build the system image for Parallels Desktop |
 | `make up` | macOS host | create and start the Parallels VM from the built disk image |
-| `make check` | macOS host | run the guest acceptance checks against the running VM |
-| `make test` | macOS host | ⚠ destroy the VM, rebuild it from scratch, and verify the guest |
+| `make check` | NixOS guest | run the guest acceptance checks inside the guest |
+| `make test` | macOS host | ⚠ destroy the VM and recreate it from the image; then run `make check` in the guest |
 | `make destroy` | macOS host | ⚠ stop and delete the Parallels VM |
 | `make rebuild` | NixOS guest | rebuild the system from the flake |
 | `make clean` | NixOS guest | ⚠ collect nix garbage |
@@ -66,28 +66,28 @@ you cloned into, so in this checkout the VM is named `carverlinux-acm2`.
 
 ## Testing
 
-`make check` verifies a running VM. It covers four checks — `opengl` (real
-virgl acceleration, not an llvmpipe fallback), `rosetta` (x86_64 binaries
-actually execute), `docker-x86` (`linux/amd64` containers run), and
-`carverlinux-mount` (the Parallels shared folder is mounted and readable as
+`make check` verifies the running VM from inside the guest. It covers four
+checks — `opengl` (real virgl acceleration, not an llvmpipe fallback), `rosetta`
+(x86_64 binaries actually execute), `docker-x86` (`linux/amd64` containers run),
+and `carverlinux-mount` (the Parallels shared folder is mounted and readable as
 your user).
 
-The checks are written in English in `tests/guest-checks.md` and driven by an
-agent over `prlctl exec`; it prints a line per check and exits non-zero unless
-every check passes.
+The checks are written in English in `tests/guest-checks.md` and run by an agent
+in the guest; it prints a line per check and exits non-zero unless every check
+passes.
 
 ```bash
 make check
 ```
 
-It runs on the macOS host and needs both `prlctl` and the `claude` CLI there.
-The VM must already be running — start it with `prlctl start` or `make up`
-first. `make check` waits for the guest agent and for the guest to finish
-booting (up to `VM_BOOT_TIMEOUT`, 600s by default); a guest that is still
-booting after that is a warning, not a failure, and the checks run anyway.
+Run it inside the guest, as `james`. It needs the `claude` CLI on the guest's
+PATH. `make check` waits for the guest to finish booting (up to
+`VM_BOOT_TIMEOUT`, 600s by default); a guest that is still booting after that is
+a warning, not a failure, and the checks run anyway.
 
-`make test` is the full loop — it destroys the VM, rebuilds it from the image,
-waits for the guest to boot, then runs the checks. Expect it to take a while.
+`make test` is host-only. It destroys the VM and recreates it from the image,
+then tells you to run `make check` inside the guest. Expect the rebuild to take a
+while.
 
 ```bash
 make test
