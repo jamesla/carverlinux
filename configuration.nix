@@ -29,6 +29,8 @@ in
 
   users.users.james = {
     isNormalUser = true;
+    # Keeps the herdr-core backend (hc) running after logout so remote machines can attach.
+    linger = true;
     extraGroups = [ "wheel" "docker" "video" "audio" "render" ];
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [
@@ -101,6 +103,7 @@ in
 
   environment.systemPackages = [
     unstable.pi-coding-agent
+    unstable.herdr-core
     pkgs.zip
     pkgs.lsof
     pkgs.gh
