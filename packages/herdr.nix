@@ -60,12 +60,15 @@ let
   #   workspace.created       -> peonSounds.start
   #   workspace.closed        -> peonSounds.end
   #   agent status -> blocked -> peonSounds.blocked
+  #   agent status -> working -> peonSounds.working
+  #   agent status working -> idle -> peonSounds.end
   # Everything else is silent. Clips come from the sc_scv pack peon-ping
   # installs; peon's pause, enabled and volume settings are still honoured.
   peonSounds = {
     start = [ "ReportinForDuty.mp3" "OrdersCapn.mp3" "YesSir.mp3" "GoodToGoSir.mp3" ];
     end = [ "JobsFinished.mp3" ];
     blocked = [ "SomethingsInTheWay.mp3" "CantBuildThere.mp3" ];
+    working = [ "Affirmative.mp3" "RogerThat.mp3" "RightAwaySir.mp3" "OrdersReceived.mp3" ];
   };
 
   peonHook = pkgs.writeShellScript "herdr-peon-hook" ''
@@ -111,9 +114,14 @@ let
     [ -n "$status" ] || exit 0
     previous=$(cat "$status_file" 2> /dev/null)
     printf '%s' "$status" > "$status_file"
-    # Only a change into blocked counts, not a repeat of it.
-    [ "$status" = blocked ] && [ "$previous" != blocked ] || exit 0
-    play ${lib.escapeShellArgs peonSounds.blocked}
+    # Only a change into a status counts, not a repeat of it.
+    [ "$status" != "$previous" ] || exit 0
+    case "$status" in
+      blocked) play ${lib.escapeShellArgs peonSounds.blocked} ;;
+      working) play ${lib.escapeShellArgs peonSounds.working} ;;
+      # Only a finished turn, not a new agent settling or a done pane being viewed.
+      idle) [ "$previous" = working ] && play ${lib.escapeShellArgs peonSounds.end} ;;
+    esac
     exit 0
   '';
 
@@ -125,7 +133,7 @@ let
     name = "Peon Ping"
     version = "0.1.0"
     min_herdr_version = "0.9.0"
-    description = "Play SCV sounds for workspace open/close and blocked agents"
+    description = "Play SCV sounds for workspace open/close and agents starting, finishing or blocked"
     platforms = ["linux"]
 
     [[events]]
